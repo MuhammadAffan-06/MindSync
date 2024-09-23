@@ -15,8 +15,10 @@ const userSchema = mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     minlength: 8,
+    required: function () {
+      return !this.googleId; // Only require password if there's no Google ID
+    },
   },
   dateCreated: {
     type: Date,
@@ -27,7 +29,17 @@ const userSchema = mongoose.Schema({
     default: Date.now,
   },
   role: {
-    type: String
+    type: String,
+    default: "presenter",
+  },
+  // Fields specific to Google users
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true, // This allows this field to be unique only when present
+  },
+  picture: {
+    type: String,
   },
 });
 
