@@ -2,3 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+    font-family: 'poppins';
+    src: url('/static/Poppins-Regular.otf') format('opentype');
+}
+
+html{
+    font-family: "poppins";
+}
