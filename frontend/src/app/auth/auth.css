@@ -5,20 +5,27 @@
 }
 
 .main-section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  position: relative;
+  width: 100vw; /* Full viewport width */
+  height: 100vh; /* Full viewport height */
+  overflow: hidden; /* Prevent overflow during transition */
+  display: flex; /* Use flex to align sections */
+  justify-content: space-between;
 }
 
 /* Left Section Styles */
 .main-section-left {
+  flex: 1; /* Use flex to take up equal space */
+  /* margin-right: 10px; */
   background-image: linear-gradient(#591cba, #4830e2);
   text-align: center;
   color: white;
-  height: 100vh;
   padding: 5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Centers content vertically */
+  justify-content: center;
+  transition: transform 0.5s ease;
+  z-index: 1;
 }
 
 .main-section-left h1,
@@ -26,39 +33,49 @@
 .main-section-left button {
   margin: 1rem;
 }
-.main-section-left h1
-{
+
+.main-section-left h1 {
   font-size: xx-large;
 }
+
 .main-section-left button {
   padding: 0.5rem 1.5rem;
   border: 1px solid white;
   border-radius: 1rem;
   background-color: transparent;
-  width: fit-content; /* Maintain button width based on content */
-  margin: 0 auto; /* Center button horizontally */
+  width: fit-content;
+  margin: 0 auto;
+  transition: all 0.5s ease;
 }
 
 /* Right Section Styles */
 .main-section-right {
+  flex: 1;
+  transition: transform 0.5s ease;
   margin: auto;
+  margin-left: 90px;
+  margin-right: 10px;
 }
 
+/* Signup and Login Forms */
 .hero-heading,
 .registration {
   margin-top: 1rem;
 }
 
 .registration input,
-.registration button {
-  width: 350px;
-  padding: 1rem;
+.registration button,
+.login-form input,
+.login-form button {
+  width: 350px; /* Ensure both forms have the same width */
+  padding: 10px;
   border-radius: 8px;
   margin: 0.5rem 0;
   border: none;
 }
 
-.registration input {
+.registration input,
+.login-form input {
   background-color: rgb(222, 214, 214);
 }
 
@@ -73,7 +90,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 10px;
   border-radius: 8px;
   margin: 1rem 0;
   border: none;
@@ -82,5 +99,39 @@
 }
 
 .google-signup span {
-  margin-left: 14px; /* Space between icon and text */
+  margin-left: 14px;
+}
+
+/* Login form hidden by default */
+.login-form {
+  display: none;
+  transition: all 0.5s ease;
+}
+
+.show-login .login-form {
+  display: block;
+  animation: slideIn 0.5s forwards;
+}
+
+.hide-signup .registration {
+  display: none;
+}
+
+/* Transitions */
+.switch-mode .main-section-left {
+  transform: translateX(100%);
+}
+
+.switch-mode .main-section-right {
+  transform: translateX(-100%);
+}
+
+/* Animation */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0%);
+  }
 }
