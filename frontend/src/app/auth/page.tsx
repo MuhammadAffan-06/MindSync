@@ -82,7 +82,7 @@ export default function Auth() {
       return;
     }
     try {
-      const response = await fetch("http://localhost:5000/auth/signup", {
+      const response = await fetch("https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export default function Auth() {
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://localhost:5000/auth/login", {
+      const response = await fetch("https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

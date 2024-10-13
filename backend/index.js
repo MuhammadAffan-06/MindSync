@@ -13,6 +13,9 @@ app.use(
 );
 
 app.use(express.json());
+app.get('/health-check', (req, res) => {
+  res.json({ message: "server up. all ok." })
+})
 app.use("/", routes);
 
 connectDB();
