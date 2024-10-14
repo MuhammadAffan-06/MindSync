@@ -63,7 +63,15 @@ export default function Auth() {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRequirements.test(password)) {
       toast.error(
-        "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character."
+        <>
+          <ol>
+            <li>Password must be at least 8 characters long</li>
+            <li>Include at least one uppercase letter</li>
+            <li>One lowercase letter</li>
+            <li>One number</li>
+            <li>One special character</li>
+          </ol>
+        </>
       );
       console.log("Password validation failed: Does not meet requirements");
       return false;
@@ -82,13 +90,16 @@ export default function Auth() {
       return;
     }
     try {
-      const response = await fetch("https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/signup", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(signupData),
-      });
+      const response = await fetch(
+        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(signupData),
+        }
+      );
 
       const data = await response.json();
 
@@ -106,13 +117,16 @@ export default function Auth() {
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(loginData),
-      });
+      const response = await fetch(
+        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(loginData),
+        }
+      );
 
       const data = await response.json();
 
@@ -199,6 +213,19 @@ export default function Auth() {
                 <button className="form-signup" type="submit">
                   Sign Up
                 </button>
+                <button className="google-signup">
+                  <Image
+                    src="/GoogleIcon.svg"
+                    alt="Google Icon"
+                    width={20}
+                    height={20}
+                  />
+                  <span>
+                    {isLoginMode
+                      ? "Or Sign In with Google"
+                      : "Or Sign Up with Google"}
+                  </span>
+                </button>
               </form>
             )}
 
@@ -225,6 +252,19 @@ export default function Auth() {
                 />
                 <button className="form-login" type="submit">
                   Sign In
+                </button>
+                <button className="google-signup">
+                  <Image
+                    src="/GoogleIcon.svg"
+                    alt="Google Icon"
+                    width={20}
+                    height={20}
+                  />
+                  <span>
+                    {isLoginMode
+                      ? "Or Sign In with Google"
+                      : "Or Sign Up with Google"}
+                  </span>
                 </button>
               </form>
             )}

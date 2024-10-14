@@ -80,7 +80,7 @@
 }
 
 /* Signup Form Background */
-.form-signup {
+.form-signup, .form-login {
   background-image: linear-gradient(180deg, #591cba, #4830e2);
   color: white;
 }
