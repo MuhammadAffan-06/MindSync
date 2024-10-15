@@ -6,9 +6,9 @@ const connectDB = require("./dbconfig/dbconfig");
 port = process.env.PORT || 8080;
 app.use(
   cors({
-    origin: "https://mind-sync-u9h4.vercel.app/", // Allow requests from your frontend
-    methods: ["GET", "POST"], // Specify allowed methods
-    credentials: true, // If you're using cookies or session data
+    origin: ["http://localhost:3000", "https://mind-sync-u9h4.vercel.app/"],
+    methods: ["GET", "POST"],
+    credentials: true,
   })
 );
 
