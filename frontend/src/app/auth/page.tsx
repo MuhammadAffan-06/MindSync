@@ -5,12 +5,12 @@ import "@/app/auth/auth.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// Define form data structure
+// Define form data structure for both login and signup
 interface FormData {
   email: string;
   password: string;
-  name?: string; // Make name optional for login
-  role?: string; // Added role for signup
+  name?: string;
+  role?: string;
 }
 
 export default function Auth() {
@@ -21,12 +21,13 @@ export default function Auth() {
     role: "presenter", // Default role
   });
 
-  const [loginData, setLoginData] = useState<Omit<FormData, "name" | "role">>({
+  const [loginData, setLoginData] = useState<FormData>({
     email: "",
     password: "",
   });
 
-  const [isLoginMode, setIsLoginMode] = useState<boolean>(false);
+  // State to toggle between signup and login forms
+  const [isSignup, setIsSignup] = useState(true); // true = signup, false = login
 
   const handleSignupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSignupData((prevData) => ({
@@ -43,19 +44,17 @@ export default function Auth() {
   };
 
   const validateSignupData = () => {
-    console.log("Validating signup data:", signupData); // Log the data being validated
+    console.log("Validating signup data:", signupData);
     const { name, password } = signupData;
 
     if (!name) {
       toast.error("Name cannot be empty.");
-      console.log("Name validation failed: Empty name");
       return false;
     }
 
     const nameHasInvalidChars = /[^a-zA-Z\s]/.test(name);
     if (nameHasInvalidChars) {
       toast.error("Name should only contain letters and spaces.");
-      console.log("Name validation failed: Invalid characters in name");
       return false;
     }
 
@@ -73,20 +72,16 @@ export default function Auth() {
           </ol>
         </>
       );
-      console.log("Password validation failed: Does not meet requirements");
       return false;
     }
 
-    console.log("Validation passed.");
     return true;
   };
 
   const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log("Submitting signup form"); // Debugging line
     if (!validateSignupData()) {
-      console.log("Validation failed, stopping submission."); // Debugging line
       return;
     }
     try {
@@ -116,6 +111,7 @@ export default function Auth() {
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     try {
       const response = await fetch(
         "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login",
@@ -131,41 +127,30 @@ export default function Auth() {
       const data = await response.json();
 
       if (response.ok) {
-        toast.success("Logged in successfully");
+        toast.success("Logged in successfully!");
+        setLoginData({ email: "", password: "" });
       } else {
-        toast.error(data.message || "Credentials are wrong");
+        toast.error(data.message || "Invalid email or password.");
       }
     } catch (error) {
       toast.error("Something went wrong. Please try again.");
     }
   };
 
-  const toggleMode = () => {
-    setIsLoginMode((prev) => !prev);
-    if (isLoginMode) {
-      setLoginData({ email: "", password: "" });
-    } else {
-      setSignupData({ email: "", password: "", name: "", role: "presenter" });
-    }
+  // Function to toggle between signup and login
+  const toggleForm = () => {
+    setIsSignup((prev) => !prev);
   };
 
   return (
     <>
       <ToastContainer />
-      <div className={`main-section ${isLoginMode ? "switch-mode" : ""}`}>
+      <div
+        className={`main-section ${
+          isSignup ? "signup-active" : "login-active"
+        }`}
+      >
         <div className="main-section-left">
-          <h1>{isLoginMode ? "Start Your Journey" : "Welcome to MindSync"}</h1>
-          <p>
-            {isLoginMode
-              ? "Unlock the tools to collaborate with real-time insights and interaction experiences."
-              : "Create an account to start engaging with your audience in real-time."}
-          </p>
-          <button onClick={toggleMode}>
-            {isLoginMode ? "SIGN UP" : "SIGN IN"}
-          </button>
-        </div>
-
-        <div className="main-section-right">
           <div>
             <Image
               className="hero-image"
@@ -175,12 +160,13 @@ export default function Auth() {
               height={125}
             />
             <h2 className="hero-heading">
-              {isLoginMode ? "Sign In to Your Account" : "Create an Account"}
+              {isSignup ? "Create an Account" : "Nice to see you again"}
             </h2>
           </div>
 
           <div className="registration">
-            {!isLoginMode && (
+            {isSignup ? (
+              // Signup form
               <form onSubmit={handleSignupSubmit}>
                 <input
                   type="text"
@@ -210,26 +196,13 @@ export default function Auth() {
                   onChange={handleSignupChange}
                   required
                 />
+                <br />
                 <button className="form-signup" type="submit">
                   Sign Up
                 </button>
-                <button className="google-signup">
-                  <Image
-                    src="/GoogleIcon.svg"
-                    alt="Google Icon"
-                    width={20}
-                    height={20}
-                  />
-                  <span>
-                    {isLoginMode
-                      ? "Or Sign In with Google"
-                      : "Or Sign Up with Google"}
-                  </span>
-                </button>
               </form>
-            )}
-
-            {isLoginMode && (
+            ) : (
+              // Login form
               <form onSubmit={handleLoginSubmit}>
                 <input
                   type="email"
@@ -250,25 +223,43 @@ export default function Auth() {
                   onChange={handleLoginChange}
                   required
                 />
-                <button className="form-login" type="submit">
+                <br />
+                <button className="form-signin" type="submit">
                   Sign In
-                </button>
-                <button className="google-signup">
-                  <Image
-                    src="/GoogleIcon.svg"
-                    alt="Google Icon"
-                    width={20}
-                    height={20}
-                  />
-                  <span>
-                    {isLoginMode
-                      ? "Or Sign In with Google"
-                      : "Or Sign Up with Google"}
-                  </span>
                 </button>
               </form>
             )}
+            <button className="google-signup">
+              <Image
+                src="/GoogleIcon.svg"
+                alt="Google Icon"
+                width={20}
+                height={20}
+              />
+              <span>Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
+            </button>
           </div>
+        </div>
+        <div className="main-section-right">
+          {isSignup ? (
+            <>
+              <h1>Got an Account?</h1>
+              <p>
+                Reconnect and enhance your presentations with real-time
+                engagement tools. Ready to dive back in?
+              </p>
+              <button onClick={toggleForm}>Sign In</button>
+            </>
+          ) : (
+            <>
+              <h1>Need an Account?</h1>
+              <p>
+                Create one and explore real-time engagement tools for your
+                presentations.
+              </p>
+              <button onClick={toggleForm}>Sign Up</button>
+            </>
+          )}
         </div>
       </div>
     </>

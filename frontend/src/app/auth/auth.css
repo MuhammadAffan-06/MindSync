@@ -1,3 +1,6 @@
+/* https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/signup */
+/* https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login */
+
 * {
   padding: 0;
   margin: 0;
@@ -5,17 +8,16 @@
 }
 
 .main-section {
-  position: relative;
   width: 100vw;
   height: 100vh;
   overflow: hidden;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row; /* Default horizontal layout */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  position: relative;
 }
 
-/* Left Section Styles */
-.main-section-left {
+/* Right Section Styles */
+.main-section-right {
   flex: 1;
   background-image: linear-gradient(#591cba, #4830e2);
   text-align: center;
@@ -23,23 +25,23 @@
   padding: 5rem;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically center */
-  align-items: center; /* Horizontally center */
-  transition: transform 0.5s ease;
-  z-index: 1;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 0.5s ease-in-out;
 }
 
-.main-section-left h1,
-.main-section-left p,
-.main-section-left button {
+.main-section-right h1,
+.main-section-right p,
+.main-section-right button {
   margin: 1rem;
 }
 
-.main-section-left h1 {
+.main-section-right h1 {
   font-size: xx-large;
+  transition: opacity 0.5s ease, transform 0.5s ease;
 }
 
-.main-section-left button {
+.main-section-right button {
   padding: 0.5rem 1.5rem;
   border: 1px solid white;
   border-radius: 1rem;
@@ -48,27 +50,49 @@
   transition: all 0.5s ease;
 }
 
-/* Right Section Styles */
-.main-section-right {
-  flex: 1;
+/* On form toggle (signup/login), apply fade-out/in */
+.signup-active .main-section-right,
+.login-active .main-section-right {
+  opacity: 0; /* Fade out */
+  transform: translateY(20px); /* Slight upward shift */
+}
+
+.signup-active .main-section-right,
+.login-active .main-section-right {
+  opacity: 1; /* Fade back in */
+  transform: translateY(0); /* Reset */
+}
+
+/* Left Section Styles */
+.main-section-left {
   display: flex;
   flex-direction: column;
-  justify-content: center; /* Vertically center */
-  align-items: center; /* Horizontally center */
-  transition: transform 0.5s ease;
+  justify-content: center;
   padding: 20px;
   margin: auto;
 }
 
-.hero-heading,
-.registration {
+/* Hero Heading Styles */
+.hero-heading {
   margin-top: 1rem;
+  opacity: 1; /* Start fully visible */
+  transform: translate(0, 0); /* No movement initially */
+  transition: transform 0.8s ease, opacity 0.8s ease;
+}
+
+/* On form toggle, hero-heading moves diagonally and fades */
+.signup-active .hero-heading {
+  transform: translate(50px, 50px); /* Move diagonally right and up */
+  opacity: 0; /* Fade out */
+}
+
+.login-active .hero-heading {
+  transform: translate(0, 0); /* Move back to original position */
+  opacity: 1; /* Fade back in */
 }
 
 .registration input,
-.registration button,
-.login-form input,
-.login-form button {
+.registration button {
   width: 350px;
   padding: 10px;
   border-radius: 8px;
@@ -76,13 +100,12 @@
   border: none;
 }
 
-.registration input,
-.login-form input {
+.registration input {
   background-color: rgb(222, 214, 214);
 }
 
 .form-signup,
-.form-login {
+.form-signin {
   background-image: linear-gradient(180deg, #591cba, #4830e2);
   color: white;
 }
@@ -98,91 +121,17 @@
   border: none;
   background-color: rgba(54, 54, 54, 1);
   color: white;
-  width: 100%; /* Ensure it takes full width in small screens */
-  max-width: 350px; /* Max width for larger screens */
-  box-sizing: border-box; /* Ensure padding doesn't overflow */
+  width: 100%;
+  max-width: 350px;
+  box-sizing: border-box;
 }
 
 .google-signup span {
   margin-left: 14px;
 }
 
-/* Login form hidden by default */
-.login-form {
-  display: none;
-  transition: all 0.5s ease;
-}
-
-.show-login .login-form {
-  display: block;
-  animation: slideIn 0.5s forwards;
-}
-
-.hide-signup .registration {
-  display: none;
-}
-
-/* Transitions for Desktop and Laptop (Horizontal Switch) */
-.switch-mode .main-section-left {
-  transform: translateX(100%);
-}
-
-.switch-mode .main-section-right {
-  transform: translateX(-100%);
-}
-
-/* Animation for Horizontal Slide */
-@keyframes slideIn {
-  from {
-    transform: translateX(100%);
-  }
-  to {
-    transform: translateX(0%);
-  }
-}
-
-/* Media Queries for Tablet and Mobile - Vertical Switch */
-@media (max-width: 768px) {
-  .main-section {
-    flex-direction: column; /* Stack sections vertically */
-  }
-
-  .main-section-left,
-  .main-section-right {
-    width: 100%;
-    height: 50vh; /* Adjust height for vertical stacking */
-    justify-content: center;
-    align-items: center;
-    transform: translateY(0); /* Ensure it resets */
-  }
-
-  .switch-mode .main-section-left {
-    transform: translateY(100%); /* Vertical transition */
-  }
-
-  .switch-mode .main-section-right {
-    transform: translateY(-100%);
-  }
-
-  /* Full width for forms in smaller screens */
-  .registration input,
-  .registration button,
-  .login-form input,
-  .login-form button {
-    width: 100%;
-  }
-  .google-signup {
-    width: 100%; /* Full width on tablet and mobile */
-    max-width: none; /* Remove max-width constraint on smaller screens */
-  }
-
-  /* Animation for Vertical Slide */
-  @keyframes slideIn {
-    from {
-      transform: translateY(100%);
-    }
-    to {
-      transform: translateY(0%);
-    }
-  }
+/* Button Hover Effects */
+button:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease;
 }
