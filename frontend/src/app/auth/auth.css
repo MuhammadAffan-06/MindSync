@@ -1,6 +1,4 @@
-/* https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/signup */
-/* https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login */
-
+/* Base Styles */
 * {
   padding: 0;
   margin: 0;
@@ -29,8 +27,7 @@
   align-items: center;
   transition: opacity 0.5s ease-in-out;
 }
-
-.main-section-right h1,
+main-section-right h1,
 .main-section-right p,
 .main-section-right button {
   margin: 1rem;
@@ -38,9 +35,7 @@
 
 .main-section-right h1 {
   font-size: xx-large;
-  transition: opacity 0.5s ease, transform 0.5s ease;
 }
-
 .main-section-right button {
   padding: 0.5rem 1.5rem;
   border: 1px solid white;
@@ -50,47 +45,17 @@
   transition: all 0.5s ease;
 }
 
-/* On form toggle (signup/login), apply fade-out/in */
-.signup-active .main-section-right,
-.login-active .main-section-right {
-  opacity: 0; /* Fade out */
-  transform: translateY(20px); /* Slight upward shift */
-}
-
-.signup-active .main-section-right,
-.login-active .main-section-right {
-  opacity: 1; /* Fade back in */
-  transform: translateY(0); /* Reset */
-}
-
 /* Left Section Styles */
 .main-section-left {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: center; /* Center content horizontally */
   padding: 20px;
   margin: auto;
 }
 
-/* Hero Heading Styles */
-.hero-heading {
-  margin-top: 1rem;
-  opacity: 1; /* Start fully visible */
-  transform: translate(0, 0); /* No movement initially */
-  transition: transform 0.8s ease, opacity 0.8s ease;
-}
-
-/* On form toggle, hero-heading moves diagonally and fades */
-.signup-active .hero-heading {
-  transform: translate(50px, 50px); /* Move diagonally right and up */
-  opacity: 0; /* Fade out */
-}
-
-.login-active .hero-heading {
-  transform: translate(0, 0); /* Move back to original position */
-  opacity: 1; /* Fade back in */
-}
-
+/* Registration Form */
 .registration input,
 .registration button {
   width: 350px;
@@ -103,7 +68,6 @@
 .registration input {
   background-color: rgb(222, 214, 214);
 }
-
 .form-signup,
 .form-signin {
   background-image: linear-gradient(180deg, #591cba, #4830e2);
@@ -130,8 +94,75 @@
   margin-left: 14px;
 }
 
-/* Button Hover Effects */
-button:hover {
-  transform: scale(1.05);
-  transition: all 0.3s ease;
+/* Responsive Styles */
+
+/* Mobile View for screens smaller than 480px */
+@media screen and (max-width: 480px) {
+  .main-section {
+    grid-template-columns: 1fr; /* Only show the left section */
+  }
+
+  .main-section-right {
+    display: none; /* Hide right section */
+  }
+
+  .main-section-left {
+    width: 100%; /* Make the form take up full width */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    font-size: 12px;
+  }
+  .main-section-left .hero-heading {
+    /* background-color: red; */
+    margin-right: 130px;
+    width: 100%;
+  }
+  .registration input,
+  .registration button {
+    width: 100%; /* Adjust input and button width to fit mobile screens */
+  }
+
+  .google-signup {
+    width: 100%; /* Adjust Google signup button width for mobile */
+  }
+
+  .hero-image {
+    width: 220px; /* Adjust hero image size */
+    margin-left: 10px;
+  }
+}
+
+/* Tablet View for screens between 481px and 768px */
+@media screen and (min-width: 481px) and (max-width: 768px) {
+  .main-section {
+    grid-template-columns: 1fr; /* Only show the left section */
+  }
+
+  .main-section-right {
+    display: none; /* Hide right section */
+  }
+  .main-section-left .hero-heading {
+    /* background-color: red; */
+    margin-right: 180px;
+    width: 100%;
+  }
+  .main-section-left {
+    width: 100%; /* Make the form take up a good portion of the screen */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+  }
+  .hero-image {
+    width: 270px; /* Adjust hero image size */
+    margin-left: 30px;
+  }
+  .registration input,
+  .registration button {
+    width: 100%; /* Adjust input and button width to fit tablet screens */
+  }
+
+  .google-signup {
+    width: 100%; /* Adjust Google signup button width for tablet */
+  }
 }
