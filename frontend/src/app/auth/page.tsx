@@ -166,7 +166,6 @@ export default function Auth() {
 
           <div className="registration">
             {isSignup ? (
-              // Signup form
               <form onSubmit={handleSignupSubmit}>
                 <input
                   type="text"
@@ -202,7 +201,6 @@ export default function Auth() {
                 </button>
               </form>
             ) : (
-              // Login form
               <form onSubmit={handleLoginSubmit}>
                 <input
                   type="email"
@@ -238,6 +236,24 @@ export default function Auth() {
               />
               <span>Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
             </button>
+            {/* Mobile/Tablet View Toggle */}
+            <div className="mobile-toggle">
+              {isSignup ? (
+                <>
+                  <p>Got an Account?</p>
+                  <button onClick={toggleForm} className="mobile-toggle-btn">
+                    Sign In
+                  </button>
+                </>
+              ) : (
+                <>
+                  <p>No Account Yet? </p>
+                  <button onClick={toggleForm} className="mobile-toggle-btn">
+                    Sign Up
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
         <div className="main-section-right">
