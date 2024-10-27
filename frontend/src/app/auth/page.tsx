@@ -4,6 +4,9 @@ import Image from "next/image";
 import "@/app/auth/auth.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useCallback } from "react";
+import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
+import AuthWrapper from "@/app/auth/auth-wrapper";
 
 // Define form data structure for both login and signup
 interface FormData {
@@ -141,93 +144,124 @@ export default function Auth() {
   const toggleForm = () => {
     setIsSignup((prev) => !prev);
   };
+  const handleGoogleLoginSuccess = useCallback(
+    (response: CredentialResponse) => {
+      const { credential } = response;
+
+      if (credential) {
+        console.log("Google Token:", credential);
+
+        // Post token to the backend endpoint
+        fetch("/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token: credential }),
+        }).then((res) => {
+          if (res.ok) {
+            console.log("Logged in successfully");
+            // Handle success, such as redirecting or storing token
+          }
+        });
+      } else {
+        console.error("No credential received.");
+      }
+    },
+    []
+  );
 
   return (
-    <>
-      <ToastContainer />
-      <div
-        className={`main-section ${
-          isSignup ? "signup-active" : "login-active"
-        }`}
-      >
-        <div className="main-section-left">
-          <div>
-            <Image
-              className="hero-image"
-              src="/header.png"
-              alt="Image Not Loaded Yet"
-              width={350}
-              height={125}
-            />
-            <h2 className="hero-heading">
-              {isSignup ? "Create an Account" : "Nice to see you again"}
-            </h2>
-          </div>
+    <AuthWrapper>
+      <>
+        <ToastContainer />
+        <div
+          className={`main-section ${
+            isSignup ? "signup-active" : "login-active"
+          }`}
+        >
+          <div className="main-section-left">
+            <div>
+              <Image
+                className="hero-image"
+                src="/header.png"
+                alt="Image Not Loaded Yet"
+                width={350}
+                height={125}
+              />
+              <h2 className="hero-heading">
+                {isSignup ? "Create an Account" : "Nice to see you again"}
+              </h2>
+            </div>
 
-          <div className="registration">
-            {isSignup ? (
-              <form onSubmit={handleSignupSubmit}>
-                <input
-                  type="text"
-                  name="name"
-                  placeholder="Name"
-                  value={signupData.name}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <br />
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={signupData.email}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <br />
-                <label htmlFor="password">Password</label>
-                <br />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter Password"
-                  value={signupData.password}
-                  onChange={handleSignupChange}
-                  required
-                />
-                <br />
-                <button className="form-signup" type="submit">
-                  Sign Up
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleLoginSubmit}>
-                <input
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                  value={loginData.email}
-                  onChange={handleLoginChange}
-                  required
-                />
-                <br />
-                <label htmlFor="password">Password</label>
-                <br />
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Enter Password"
-                  value={loginData.password}
-                  onChange={handleLoginChange}
-                  required
-                />
-                <br />
-                <button className="form-signin" type="submit">
-                  Sign In
-                </button>
-              </form>
-            )}
-            <button className="google-signup">
+            <div className="registration">
+              {isSignup ? (
+                <form onSubmit={handleSignupSubmit}>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="Name"
+                    value={signupData.name}
+                    onChange={handleSignupChange}
+                    required
+                  />
+                  <br />
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={signupData.email}
+                    onChange={handleSignupChange}
+                    required
+                  />
+                  <br />
+                  <label htmlFor="password">Password</label>
+                  <br />
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    value={signupData.password}
+                    onChange={handleSignupChange}
+                    required
+                  />
+                  <br />
+                  <button className="form-signup" type="submit">
+                    Sign Up
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={handleLoginSubmit}>
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={loginData.email}
+                    onChange={handleLoginChange}
+                    required
+                  />
+                  <br />
+                  <label htmlFor="password">Password</label>
+                  <br />
+                  <input
+                    type="password"
+                    name="password"
+                    placeholder="Enter Password"
+                    value={loginData.password}
+                    onChange={handleLoginChange}
+                    required
+                  />
+                  <br />
+                  <button className="form-signin" type="submit">
+                    Sign In
+                  </button>
+                </form>
+              )}
+              <GoogleLogin
+                onSuccess={handleGoogleLoginSuccess}
+                onError={() => console.log("Login failed")}
+              />
+              {/* <button className="google-signup">
               <Image
                 src="/GoogleIcon.svg"
                 alt="Google Icon"
@@ -235,49 +269,50 @@ export default function Auth() {
                 height={20}
               />
               <span>Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
-            </button>
-            {/* Mobile/Tablet View Toggle */}
-            <div className="mobile-toggle">
-              {isSignup ? (
-                <>
-                  <p>Got an Account?</p>
-                  <button onClick={toggleForm} className="mobile-toggle-btn">
-                    Sign In
-                  </button>
-                </>
-              ) : (
-                <>
-                  <p>No Account Yet? </p>
-                  <button onClick={toggleForm} className="mobile-toggle-btn">
-                    Sign Up
-                  </button>
-                </>
-              )}
+            </button> */}
+              {/* Mobile/Tablet View Toggle */}
+              <div className="mobile-toggle">
+                {isSignup ? (
+                  <>
+                    <p>Got an Account?</p>
+                    <button onClick={toggleForm} className="mobile-toggle-btn">
+                      Sign In
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p>No Account Yet? </p>
+                    <button onClick={toggleForm} className="mobile-toggle-btn">
+                      Sign Up
+                    </button>
+                  </>
+                )}
+              </div>
             </div>
           </div>
+          <div className="main-section-right">
+            {isSignup ? (
+              <>
+                <h1>Got an Account?</h1>
+                <p>
+                  Reconnect and enhance your presentations with real-time
+                  engagement tools. Ready to dive back in?
+                </p>
+                <button onClick={toggleForm}>Sign In</button>
+              </>
+            ) : (
+              <>
+                <h1>Need an Account?</h1>
+                <p>
+                  Create one and explore real-time engagement tools for your
+                  presentations.
+                </p>
+                <button onClick={toggleForm}>Sign Up</button>
+              </>
+            )}
+          </div>
         </div>
-        <div className="main-section-right">
-          {isSignup ? (
-            <>
-              <h1>Got an Account?</h1>
-              <p>
-                Reconnect and enhance your presentations with real-time
-                engagement tools. Ready to dive back in?
-              </p>
-              <button onClick={toggleForm}>Sign In</button>
-            </>
-          ) : (
-            <>
-              <h1>Need an Account?</h1>
-              <p>
-                Create one and explore real-time engagement tools for your
-                presentations.
-              </p>
-              <button onClick={toggleForm}>Sign Up</button>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+      </>
+    </AuthWrapper>
   );
 }
