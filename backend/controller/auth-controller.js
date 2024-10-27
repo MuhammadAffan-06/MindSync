@@ -72,8 +72,46 @@ const login = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+const googleLogin = async (req, res) => {
+  const { token } = req.body;
+  console.log("Token received from frontend:", token); // Add this line to check the token
+
+  if (!token) {
+    return res.status(400).json({ message: "Token not provided" });
+  }
+
+  try {
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, name } = payload;
+
+    let user = await User.findOne({ email });
+    if (!user) {
+      user = new User({ name, email, password: "", role: "user" });
+      await user.save();
+    }
+
+    const jwtToken = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    res.status(200).json({
+      token: jwtToken,
+      user: { id: user._id, email: user.email, role: user.role },
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Google authentication failed" });
+  }
+};
 
 module.exports = {
   signup,
   login,
+  googleLogin,
 };
