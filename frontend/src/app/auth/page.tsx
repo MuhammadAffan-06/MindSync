@@ -4,8 +4,6 @@ import Image from "next/image";
 import "@/app/auth/auth.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useCallback } from "react";
-import { GoogleLogin, CredentialResponse } from "@react-oauth/google";
 import AuthWrapper from "@/app/auth/auth-wrapper";
 
 // Define form data structure for both login and signup
@@ -89,7 +87,7 @@ export default function Auth() {
     }
     try {
       const response = await fetch(
-        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/signup",
+        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/signup",
         {
           method: "POST",
           headers: {
@@ -117,7 +115,7 @@ export default function Auth() {
 
     try {
       const response = await fetch(
-        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net//auth/login",
+        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/login",
         {
           method: "POST",
           headers: {
@@ -144,32 +142,13 @@ export default function Auth() {
   const toggleForm = () => {
     setIsSignup((prev) => !prev);
   };
-  const handleGoogleLoginSuccess = useCallback(
-    (response: CredentialResponse) => {
-      const { credential } = response;
-
-      if (credential) {
-        console.log("Google Token:", credential);
-
-        // Post token to the backend endpoint
-        fetch("/auth/google", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ token: credential }),
-        }).then((res) => {
-          if (res.ok) {
-            console.log("Logged in successfully");
-            // Handle success, such as redirecting or storing token
-          }
-        });
-      } else {
-        console.error("No credential received.");
-      }
-    },
-    []
-  );
+  
+  const handleGoogleAuth = () => {
+    const baseAuthUrl = "http://localhost:5000/auth/google";
+    const intentParam = isSignup ? "signup" : "login";
+    const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
+    window.location.href = redirectUrl;
+  };
 
   return (
     <AuthWrapper>
@@ -257,19 +236,15 @@ export default function Auth() {
                   </button>
                 </form>
               )}
-              <GoogleLogin
-                onSuccess={handleGoogleLoginSuccess}
-                onError={() => console.log("Login failed")}
-              />
-              {/* <button className="google-signup">
-              <Image
-                src="/GoogleIcon.svg"
-                alt="Google Icon"
-                width={20}
-                height={20}
-              />
-              <span>Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
-            </button> */}
+              <button className="google-signup" onClick={handleGoogleAuth}>
+                <Image
+                  src="/GoogleIcon.svg"
+                  alt="Google Icon"
+                  width={20}
+                  height={20}
+                />
+                <span>Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
+              </button>
               {/* Mobile/Tablet View Toggle */}
               <div className="mobile-toggle">
                 {isSignup ? (

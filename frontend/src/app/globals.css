@@ -3,10 +3,31 @@
 @tailwind utilities;
 
 @font-face {
-    font-family: 'poppins';
-    src: url('/static/Poppins-Regular.otf') format('opentype');
+  font-family: "poppins";
+  src: url("/static/Poppins-Regular.otf") format("opentype");
 }
 
-html{
-    font-family: "poppins";
+html {
+  font-family: "poppins";
+}
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.colorButton {
+  background-image: linear-gradient(180deg, #591cba, #4830e2);
+  border: none;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 15px;
+  color: white;
+  height: 60px;
+  margin-top: 6px;
+}
+.descriptions {
+  color: #4f4f4f;
+  margin: 10px 0px;
 }

@@ -1,0 +1,79 @@
+.footerParent {
+  background-color: #d4d2e3;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-template-rows: auto;
+  gap: 1rem;
+  justify-items: center;
+  margin-top: 4rem;
+  padding: 2rem 0;
+}
+
+.footerChild1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-left: 40px;
+  align-self: start;
+}
+
+.footerChild1 p {
+  color: #9795b5;
+  font-weight: 100;
+  text-align: center;
+}
+
+.footerParent section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: start;
+}
+
+.footerParent h3 {
+  margin-bottom: 0.5rem;
+  color: #141f39;
+  font-weight: 700;
+}
+
+.footerParent p {
+  color: #9795b5;
+  font-weight: 100;
+  margin: 0.2rem 0;
+  text-align: center;
+}
+
+/* Divider line */
+.footerDivider {
+  width: 100%;
+  border: 0;
+  height: 1px;
+  background-color: #b5b3c3; /* Slightly darker than #d4d2e3 for contrast */
+}
+
+/* Footer Bottom Section */
+.footerBottom {
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #d4d2e3;
+  color: #9795b5;
+  font-weight: 100;
+  font-size: 0.9rem;
+}
+
+.footerBottom a {
+  color: #141f39;
+  text-decoration: none;
+  margin: 0 0.5rem;
+}
+
+.footerBottom a:hover {
+  text-decoration: underline;
+}
+@media screen and (max-width: 480px) {
+  .footerParent,
+  .footerBottom,
+  .footerDivider {
+    display: none;
+  }
+}
