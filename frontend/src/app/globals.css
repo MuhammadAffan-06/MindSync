@@ -34,3 +34,52 @@ body {
   color: #4f4f4f;
   margin: 10px 0px;
 }
+.features {
+  /* border: 2px solid #591cba; */
+  /* border-radius: 20px; */
+  padding: 60px;
+  /* padding-bottom: 72px; */
+  color: #4830e2;
+  /* overflow: hidden; */
+  position: relative;
+  transition: transform 0.5s ease-in-out;
+}
+.features:hover .featuresContent {
+  transform: translate(-40px, -30px);
+  transition: transform 0.5s ease-in-out;
+}
+
+.featuresContent {
+  display: flex;
+  flex-direction: column;
+  place-items: center;
+  gap: 10px;
+  transition: transform 0.5s ease-in-out; /* Smooth transition for hover */
+}
+
+.featuresContent:hover {
+  transition: transform 0.5s ease-in-out;
+  transform: translate(-40px, -30px);
+  place-items: flex-start;
+}
+
+.featureDescription {
+  opacity: 0; /* Initially hidden */
+  /* color: #4830e2; */
+  color: #4f4f4f;
+  position: absolute; /* Absolute positioning */
+  top: 70%;
+  left: 0;
+  width: 100%;
+  /* transition: opacity 0.5s ease-in-out;s */
+  font-size: 14px;
+  /* margin-top: 10px; */
+  padding-bottom: 50px;
+  pointer-events: none;
+}
+
+.features:hover .featureDescription {
+  opacity: 1; /* Make it visible when the parent container is hovered */
+  margin-left: 14px;
+  pointer-events: auto; /* Allow interactions when the parent is hovered */
+}

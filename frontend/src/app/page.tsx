@@ -1,9 +1,13 @@
+'use client'
 import Navbar from "@/app/components/navbar/navbar";
 import Footer from "@/app/components/footer/footer";
 import Image from "next/image";
 import styles from "@/app/styles/Home.module.css";
-import Mobilehome from "@/app/components/mobileHome/mobileHome"
+import Mobilehome from "@/app/components/mobileHome/mobileHome";
 export default function Home() {
+  const getStartedRoutes = () => {
+    window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
+  };
   return (
     <>
       <Navbar />
@@ -20,7 +24,7 @@ export default function Home() {
             create interactive, real-time presentations with quizzes, polls, and
             analytics.
           </p>
-          <button className="colorButton">Get Started</button>
+          <button className="colorButton" onClick={()=> getStartedRoutes()}>Get Started</button>
         </section>
         <section>
           <Image
@@ -34,21 +38,118 @@ export default function Home() {
       <h2 className={styles.popularHeading}>Popular Features</h2>
       <section className={styles.featureSection}>
         <section className={styles.featureSectionTop}>
-          <p>Smart Assessments</p>
-          <p>Interactive Presentations</p>
-          <p>Real Time Analytics</p>
+          <div className="features">
+            <div className="featuresContent">
+              <Image
+                src={"/smart-assessments.svg"}
+                alt="Image not Loaded Yet"
+                width={80}
+                height={80}
+              />
+              <p>Smart Assessments</p>
+            </div>
+            <div className="featureDescription">
+              Get automated scoring, detailed performance analysis, and instant
+              feedback on quizzes, helping presenters measure understanding at a
+              glance.
+            </div>
+          </div>
+          <div className="features">
+            <div className="featuresContent">
+              <Image
+                src={"/interactive-presentations.svg"}
+                alt="Image not Loaded Yet"
+                width={80}
+                height={80}
+              />
+              <p>Interactive Presentations</p>
+            </div>
+            <div className="featureDescription">
+              <p>
+                Design captivating presentations with interactive elements like
+                quizzes, polls, and live Q&As to boost audience engagement.
+              </p>
+            </div>
+          </div>
+          <div className="features">
+            <div className="featuresContent">
+              <Image
+                src={"/real-time-analytics.svg"}
+                alt="Image not Loaded Yet"
+                width={80}
+                height={80}
+              />
+              <p>Real Time Analytics</p>
+            </div>
+            <div>
+              <p className="featureDescription">
+                Monitor audience engagement, responses, and participation in
+                real-time to adapt and optimize sessions on the spot.
+              </p>
+            </div>
+          </div>
         </section>
         <section className={styles.featureSectionBottom}>
-          <p>Polling</p>
-          <p>Interactive Presentations</p>
-          <p>Real Time Analytics</p>
+          <div className="features">
+            <div className="featuresContent">
+              <Image
+                src={"/leaderboard.svg"}
+                alt="Image not Loaded Yet"
+                width={80}
+                height={80}
+              />
+              <p>Audience Leaderboard</p>
+            </div>
+            <div>
+              <p className="featureDescription">
+                Add a competitive edge to sessions with real-time leaderboards,
+                motivating participants and enhancing engagement during quizzes.
+              </p>
+            </div>
+          </div>
+          <div className="features">
+            <div className="featuresContent">
+              <Image
+                src={"/browser.svg"}
+                alt="Image not Loaded Yet"
+                width={80}
+                height={80}
+              />
+              <p>Template Library</p>
+            </div>
+            <div>
+              <p className="featureDescription">
+                Access a collection of pre-designed, customizable templates to
+                make presentation creation fast and visually appealing.
+              </p>
+            </div>
+          </div>
+          <div className="features">
+            <div className="featuresContent">
+              <Image
+                src={"/report.svg"}
+                alt="Image not Loaded Yet"
+                width={80}
+                height={80}
+              />
+              <p>Comprehensive Reports</p>
+            </div>
+            <div className="featureDescription">
+              <p>
+                Download in-depth performance reports after each session to gain
+                insights, identify trends, and make data-driven decisions.
+              </p>
+            </div>
+          </div>
         </section>
       </section>
       <section className={styles.getStarted}>
         <h2 className={styles.popularHeading}>
           Find Out More Awesome Features
         </h2>
-        <button className="colorButton">Get started, it's free</button>
+        <button className="colorButton" onClick={() => getStartedRoutes()}>
+          Get started, it's free
+        </button>
       </section>
 
       <Footer />
