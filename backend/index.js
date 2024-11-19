@@ -5,17 +5,18 @@ const routes = require("./routes/index");
 const connectDB = require("./dbconfig/dbconfig");
 const port = process.env.PORT || 8080;
 const passport = require("./utils/passportConfig");
-const session = require('express-session');
+const session = require("express-session");
 
-
-app.use(session({
-  secret: "CreativeAuthority", // Replace with your secret
-  resave: false,
-  saveUninitialized: true,
-}));
+app.use(
+  session({
+    secret: "CreativeAuthority",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Use `secure: true` if your app is served over HTTPS
+  })
+);
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 app.use(
   cors({
