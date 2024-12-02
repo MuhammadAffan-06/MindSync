@@ -1,0 +1,123 @@
+/* Main Content */
+*{
+    font-family: 'Poppins';
+}
+.main-content {
+    margin-top: 40px;
+    margin-left: 210px; /* Adjust to sidebar width */
+    padding: 20px;
+    background-color: white;
+    min-height: 100vh;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+  }
+  
+  .contact-wrapper {
+    background-color: white;
+    padding: 40px;
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .contact-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+  }
+  
+  .contact-subtitle {
+    font-size: 1.2rem;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .contact-form {
+    display: flex;
+    width: 60vw;
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  /* Form Row */
+  .form-row {
+    display: flex;
+    gap: 16px;
+  }
+  
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 4px;
+  }
+  
+  .form-group input,
+  .form-group textarea {
+    padding: 12px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    background-color: #F9F9F9;
+    transition: border-color 0.2s;
+  }
+  
+  .form-group input:focus,
+  .form-group textarea:focus {
+    border-color: #6c63ff;
+  }
+  
+  .form-group textarea {
+    resize: none;
+    height: 120px;
+  }
+  
+  /* Checkbox */
+  .form-checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .form-checkbox input {
+    margin-right: 8px;
+  }
+  
+  .form-checkbox a {
+    color: #6c63ff;
+    text-decoration: none;
+  }
+  
+  .form-checkbox a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Submit Button */
+  .submit-button {
+    background-image: linear-gradient(#591CBA, #4830E2);
+    color: #fff;
+    width: 29em;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .submit-button:hover {
+    background-color: #574dbd;
+  }
+  #email{
+    width: 29em;
+  }
+  

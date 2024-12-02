@@ -1,0 +1,122 @@
+/* about-us.css */
+:root {
+    --primary-color: #5a3ec8;
+    --hover-color: #482ea9;
+    --text-color: #333;
+    --secondary-text-color: #666;
+  }
+  
+  body {
+    margin: 0;
+    font-family: 'Poppins', sans-serif;
+  }
+  
+  .main-content {
+    margin-left: 240px; /* Default for desktop, overridden for mobile */
+    padding: 20px;
+    margin-top: 60px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: calc(100vh - 60px);
+    background-color: white;
+    /* position: relative; */
+  }
+  
+  .content-container {
+    text-align: left;
+    max-width: 80vw;
+    width: 100%;
+    padding: 0px;
+    /* position: absolute;
+    top: 20px; */
+  }
+  
+  .about-title {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-bottom: 20px;
+  }
+  
+  .about-paragraph {
+    font-size: 1.2rem;
+    color: var(--secondary-text-color);
+    line-height: 1.8;
+    margin-bottom: 30px;
+  }
+  
+  .back-button {
+    background-image: linear-gradient(#591CBA, #4830E2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: block;
+    margin: auto;
+  }
+  
+  .back-button:hover {
+    background-color: var(--hover-color);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .main-content {
+      margin-left: 0; /* Remove sidebar offset for smaller screens */
+      padding: 20px;
+    }
+  
+    .about-title {
+      font-size: 2rem;
+    }
+  
+    .about-paragraph {
+      font-size: 1rem;
+      line-height: 1.6;
+    }
+  
+    .back-button {
+      padding: 8px 16px;
+      font-size: 0.9rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .about-title {
+      font-size: 1.8rem;
+    }
+  
+    .about-paragraph {
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+  
+    .back-button {
+      font-size: 0.8rem;
+      padding: 6px 12px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .content-container {
+      padding: 10px;
+    }
+  
+    .about-title {
+      font-size: 1.5rem;
+    }
+  
+    .about-paragraph {
+      font-size: 0.8rem;
+    }
+  
+    .back-button {
+      font-size: 0.7rem;
+      padding: 5px 10px;
+    }
+  }
+  
