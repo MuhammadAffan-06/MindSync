@@ -3,7 +3,8 @@ import Image from "next/image";
 import "@/app/components/navbar/navbar.css";
 export default function Navbar() {
   const navRoutes = () => {
-    window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
+    // window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
+    window.location.href = "/auth"
   };
   return (
     <>

@@ -87,7 +87,8 @@ export default function Auth() {
     }
     try {
       const response = await fetch(
-        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/signup",
+        // "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/signup",
+        "http://localhost:5000/auth/signup",
         {
           method: "POST",
           headers: {
@@ -115,7 +116,8 @@ export default function Auth() {
 
     try {
       const response = await fetch(
-        "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/login",
+        // "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/login",
+        "http://localhost:5000/auth/login",
         {
           method: "POST",
           headers: {
@@ -129,6 +131,7 @@ export default function Auth() {
 
       if (response.ok) {
         toast.success("Logged in successfully!");
+        window.location.href ="http://localhost:3000"
         setLoginData({ email: "", password: "" });
       } else {
         toast.error(data.message || "Invalid email or password.");

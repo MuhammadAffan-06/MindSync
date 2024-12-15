@@ -25,8 +25,12 @@ export default function Footer() {
         </section>
         <section>
           <h3>Company</h3>
-          <p>About</p>
-          <p>Contact Us</p>
+          <a href="http://localhost:3000/about-us" target="_blank">
+            <p>About</p>
+          </a>
+          <a href="http://localhost:3000/contact-us" target="_blank">
+            <p>Contact Us</p>
+          </a>
         </section>
         <section>
           <h3>Support</h3>
@@ -49,7 +53,11 @@ export default function Footer() {
       {/* Footer Bottom Section */}
       <hr className="footerDivider" />
       <section className="footerBottom">
-        <p>Copyright © 2024 MindSync | All Rights Reserved | <a href="#terms">Terms and Conditions</a> | <a href="#privacy">Privacy Policy</a></p>
+        <p>
+          Copyright © 2024 MindSync | All Rights Reserved |{" "}
+          <a href="#terms">Terms and Conditions</a> |{" "}
+          <a href="#privacy">Privacy Policy</a>
+        </p>
       </section>
     </>
   );
