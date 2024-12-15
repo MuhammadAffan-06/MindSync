@@ -142,7 +142,7 @@ export default function Auth() {
   const toggleForm = () => {
     setIsSignup((prev) => !prev);
   };
-  
+
   const handleGoogleAuth = () => {
     const baseAuthUrl = "http://localhost:5000/auth/google";
     const intentParam = isSignup ? "signup" : "login";
@@ -204,6 +204,13 @@ export default function Auth() {
                     onChange={handleSignupChange}
                     required
                   />
+                  <div className="passwd-checks">
+                    <li>Password must be at least 8 characters long</li>
+                    <li>Include at least one uppercase letter</li>
+                    <li>One lowercase letter</li>
+                    <li>One number</li>
+                    <li>One special character</li>
+                  </div>
                   <br />
                   <button className="form-signup" type="submit">
                     Sign Up
