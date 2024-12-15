@@ -25,10 +25,10 @@ export default function Footer() {
         </section>
         <section>
           <h3>Company</h3>
-          <a href="http://localhost:3000/about-us" target="_blank">
+          <a href="https://mind-sync-u9h4.vercel.app/about-us" target="_blank">
             <p>About</p>
           </a>
-          <a href="http://localhost:3000/contact-us" target="_blank">
+          <a href="https://mind-sync-u9h4.vercel.app/contact-us" target="_blank">
             <p>Contact Us</p>
           </a>
         </section>
