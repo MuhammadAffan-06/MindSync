@@ -152,7 +152,7 @@ export default function Auth() {
     const baseAuthUrl = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google";
     const intentParam = isSignup ? "signup" : "login";
     const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
-    window.location.href = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/";
+    window.location.href = "https://mind-sync-u9h4.vercel.app/";
   };
 
   return (
