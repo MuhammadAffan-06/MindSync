@@ -15,7 +15,7 @@
     padding: 20px;
     margin-top: 60px;
     min-height: calc(100vh - 60px);
-    background-color:rgb(246, 250, 250);
+    background-color:rgb(255, 255, 255);
     /* position: relative; */
   }
 
@@ -57,26 +57,7 @@
     margin-bottom: 20px;
     
   }
-/* .tem-scroll{
-display: flex;
-flex-direction: row;
-overflow-x: scroll;
-flex:0;
-flex-basis: auto;
-justify-content: space-evenly;
-scroll-snap-type: x mandatory;
-
-}
-.temp{
-    border: 2px solid black;
-    width: 360px;
-    height: 160px;
-    background-image: url("/temp.png");
-    margin-left: 20px;
-    margin-right: 20px;
-
-} */
-
+  
 .tem-scroll {
     display: flex;
     flex-direction: row;
