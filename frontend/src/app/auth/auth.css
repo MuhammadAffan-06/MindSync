@@ -17,7 +17,11 @@
 /* Right Section Styles */
 .main-section-right {
   flex: 1;
-  background-image: linear-gradient(#591cba, #4830e2);
+  background-image: linear-gradient(rgba(107, 5, 202, 0.76), rgba(25, 5, 202, 0.76)) ,
+                     url("/login.png");
+  background-position: 50% 35%;
+  background-size: cover;
+  background-repeat: no-repeat;
   text-align: center;
   color: white;
   padding: 5rem;
@@ -89,7 +93,10 @@ main-section-right h1,
   max-width: 350px;
   box-sizing: border-box;
 }
-
+.passwd-checks{
+  font-size: 10px;
+  color: rgb(94, 93, 93);
+}
 .google-signup span {
   margin-left: 14px;
 }
