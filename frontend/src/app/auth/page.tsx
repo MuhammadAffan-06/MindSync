@@ -88,8 +88,8 @@ export default function Auth() {
     try {
       const response = await fetch(
         // "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/signup",
-        // "http://localhost:5000/auth/signup",
-        "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/signup",
+        "http://localhost:5000/auth/signup",
+        // "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/signup",
         {
           method: "POST",
           headers: {
@@ -118,8 +118,8 @@ export default function Auth() {
     try {
       const response = await fetch(
         // "https://mindsync-backend-bfa6e7bvddg6bxc7.westindia-01.azurewebsites.net/auth/login",
-        // "http://localhost:5000/auth/login",
-        "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/login",
+        "http://localhost:5000/auth/login",
+        // "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/login",
         {
           method: "POST",
           headers: {
@@ -133,7 +133,8 @@ export default function Auth() {
 
       if (response.ok) {
         toast.success("Logged in successfully!");
-        window.location.href ="https://mind-sync-u9h4.vercel.app/"
+        // window.location.href ="https://mind-sync-u9h4.vercel.app/"
+        window.location.href = "http://localhost:3000/";
         setLoginData({ email: "", password: "" });
       } else {
         toast.error(data.message || "Invalid email or password.");
@@ -148,11 +149,19 @@ export default function Auth() {
     setIsSignup((prev) => !prev);
   };
 
+  // const handleGoogleAuth = () => {
+  //   // const baseAuthUrl = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google";
+  //   const baseAuthUrl = "http://localhost:5000/auth/google";
+  //   const intentParam = isSignup ? "signup" : "login";
+  //   const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
+  //   // window.location.href = "http://localhost:3000/";
+    
+  // };
   const handleGoogleAuth = () => {
-    const baseAuthUrl = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google";
+    const baseAuthUrl = "http://localhost:5000/auth/google";
     const intentParam = isSignup ? "signup" : "login";
     const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
-    window.location.href = "https://mind-sync-u9h4.vercel.app/";
+    window.location.href = redirectUrl;
   };
 
   return (

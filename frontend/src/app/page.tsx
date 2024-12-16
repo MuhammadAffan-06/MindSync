@@ -6,7 +6,8 @@ import styles from "@/app/styles/Home.module.css";
 import Mobilehome from "@/app/components/mobileHome/mobileHome";
 export default function Home() {
   const getStartedRoutes = () => {
-    window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
+    // window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
+    window.location.href = "http://localhost:3000/auth"
   };
   return (
     <>

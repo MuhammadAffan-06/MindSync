@@ -25,10 +25,10 @@ export default function Footer() {
         </section>
         <section>
           <h3>Company</h3>
-          <a href="http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/about-us" target="_blank">
+          <a href="http://localhost:3000/about-us" target="_blank">
             <p>About</p>
           </a>
-          <a href="http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/contact-us" target="_blank">
+          <a href="http://localhost:3000/contact-us" target="_blank">
             <p>Contact Us</p>
           </a>
         </section>
