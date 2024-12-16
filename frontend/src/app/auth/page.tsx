@@ -133,7 +133,7 @@ export default function Auth() {
 
       if (response.ok) {
         toast.success("Logged in successfully!");
-        window.location.href ="http://localhost:3000"
+        window.location.href ="https://mind-sync-u9h4.vercel.app/"
         setLoginData({ email: "", password: "" });
       } else {
         toast.error(data.message || "Invalid email or password.");
@@ -152,7 +152,7 @@ export default function Auth() {
     const baseAuthUrl = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google";
     const intentParam = isSignup ? "signup" : "login";
     const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
-    window.location.href = redirectUrl;
+    window.location.href = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/";
   };
 
   return (
