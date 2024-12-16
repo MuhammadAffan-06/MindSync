@@ -1,9 +1,10 @@
-'use client';
+"use client";
 
 import Nav from "@/app/components/nav/nav";
 import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/dashboard/dashboard.css";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Dashboard() {
   return (
@@ -16,15 +17,16 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="main-content">
         <h1 className="main-title">Dashboard</h1>
-       
+
         <div className="create-present">
+          <Link href="/slide-builder">
             <button className="btn-present">Create New Presentation</button>
+          </Link>
         </div>
-        
-       
+
         <div className="template">
-            <h1 className="text">Start from Templates:</h1>
-            <div className="tem-scroll">
+          <h1 className="text">Start from Templates:</h1>
+          <div className="tem-scroll">
             <div className="temp"></div>
             <div className="temp"></div>
             <div className="temp"></div>
@@ -33,21 +35,37 @@ export default function Dashboard() {
             <div className="temp"></div>
             <div className="temp"></div>
             <div className="temp"></div>
-            </div>  
+          </div>
         </div>
 
         <div className="save">
-            <h1 className="text">Saved Presentations:</h1>
-            <div className="tem-scroll">
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            <div className="temps"><img src="/presentations.svg" alt="heart icon" /></div>
-            </div>  
+          <h1 className="text">Saved Presentations:</h1>
+          <div className="tem-scroll">
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+            <div className="temps">
+              <img src="/presentations.svg" alt="heart icon" />
+            </div>
+          </div>
         </div>
       </div>
     </>
