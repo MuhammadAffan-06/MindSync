@@ -35,18 +35,22 @@ body {
   margin: 10px 0px;
 }
 .features {
-  /* border: 2px solid #591cba; */
-  /* border-radius: 20px; */
+  background-color: #FAF7FF;
+  border: 2px solid #591cba;
+  box-shadow: 0px 2px 4px 1px #591cba;
+  border-radius: 20px;
   padding: 60px;
-  /* padding-bottom: 72px; */
   color: #4830e2;
-  /* overflow: hidden; */
   position: relative;
-  transition: transform 0.5s ease-in-out;
+  transition: transform 0.25s ease-in-out;
+  height: 300px; /* Set a fixed height for equal size */
+  width: 350px; /* Set a fixed width for equal size */
 }
+
 .features:hover .featuresContent {
-  transform: translate(-40px, -30px);
+  transform: translate(-50px, -40px);
   transition: transform 0.5s ease-in-out;
+  
 }
 
 .featuresContent {
@@ -54,32 +58,34 @@ body {
   flex-direction: column;
   place-items: center;
   gap: 10px;
-  transition: transform 0.5s ease-in-out; /* Smooth transition for hover */
+  transition: transform 0.5s ease-in-out;
 }
 
-.featuresContent:hover {
+.featureImageContainer {
   transition: transform 0.5s ease-in-out;
-  transform: translate(-40px, -30px);
-  place-items: flex-start;
+}
+
+.features:hover .featureImageContainer {
+  transform: scale(0.7);
+  translate: -50px;
 }
 
 .featureDescription {
-  opacity: 0; /* Initially hidden */
-  /* color: #4830e2; */
+  opacity: 0;
   color: #4f4f4f;
-  position: absolute; /* Absolute positioning */
-  top: 70%;
+  position: absolute;
+  top: 55%;
   left: 0;
-  width: 100%;
-  /* transition: opacity 0.5s ease-in-out;s */
+  width: 90%;
   font-size: 14px;
-  /* margin-top: 10px; */
   padding-bottom: 50px;
   pointer-events: none;
+  transition: opacity 0.5s ease-in-out;
+  
 }
 
 .features:hover .featureDescription {
-  opacity: 1; /* Make it visible when the parent container is hovered */
+  opacity: 1;
   margin-left: 14px;
-  pointer-events: auto; /* Allow interactions when the parent is hovered */
+  pointer-events: auto;
 }

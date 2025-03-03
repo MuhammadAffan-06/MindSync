@@ -4,11 +4,13 @@ import Footer from "@/app/components/footer/footer";
 import Image from "next/image";
 import styles from "@/app/styles/Home.module.css";
 import Mobilehome from "@/app/components/mobileHome/mobileHome";
+
 export default function Home() {
   const getStartedRoutes = () => {
     // window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
     window.location.href = "http://localhost:3000/auth"
   };
+
   return (
     <>
       <Navbar />
@@ -25,7 +27,9 @@ export default function Home() {
             create interactive, real-time presentations with quizzes, polls, and
             analytics.
           </p>
-          <button className="colorButton" onClick={()=> getStartedRoutes()}>Get Started</button>
+          <button className="colorButton" onClick={() => getStartedRoutes()}>
+            Get Started
+          </button>
         </section>
         <section>
           <Image
@@ -41,12 +45,14 @@ export default function Home() {
         <section className={styles.featureSectionTop}>
           <div className="features">
             <div className="featuresContent">
-              <Image
-                src={"/smart-assessments.svg"}
-                alt="Image not Loaded Yet"
-                width={80}
-                height={80}
-              />
+              <div className="featureImageContainer">
+                <Image
+                  src={"/smart-assessments.svg"}
+                  alt="Image not Loaded Yet"
+                  width={80}
+                  height={80}
+                />
+              </div>
               <p>Smart Assessments</p>
             </div>
             <div className="featureDescription">
@@ -57,12 +63,14 @@ export default function Home() {
           </div>
           <div className="features">
             <div className="featuresContent">
-              <Image
-                src={"/interactive-presentations.svg"}
-                alt="Image not Loaded Yet"
-                width={80}
-                height={80}
-              />
+              <div className="featureImageContainer">
+                <Image
+                  src={"/interactive-presentations.svg"}
+                  alt="Image not Loaded Yet"
+                  width={80}
+                  height={80}
+                />
+              </div>
               <p>Interactive Presentations</p>
             </div>
             <div className="featureDescription">
@@ -74,12 +82,14 @@ export default function Home() {
           </div>
           <div className="features">
             <div className="featuresContent">
-              <Image
-                src={"/real-time-analytics.svg"}
-                alt="Image not Loaded Yet"
-                width={80}
-                height={80}
-              />
+              <div className="featureImageContainer">
+                <Image
+                  src={"/real-time-analytics.svg"}
+                  alt="Image not Loaded Yet"
+                  width={80}
+                  height={80}
+                />
+              </div>
               <p>Real Time Analytics</p>
             </div>
             <div>
@@ -93,12 +103,14 @@ export default function Home() {
         <section className={styles.featureSectionBottom}>
           <div className="features">
             <div className="featuresContent">
-              <Image
-                src={"/leaderboard.svg"}
-                alt="Image not Loaded Yet"
-                width={80}
-                height={80}
-              />
+              <div className="featureImageContainer">
+                <Image
+                  src={"/leaderboard.svg"}
+                  alt="Image not Loaded Yet"
+                  width={80}
+                  height={80}
+                />
+              </div>
               <p>Audience Leaderboard</p>
             </div>
             <div>
@@ -110,12 +122,14 @@ export default function Home() {
           </div>
           <div className="features">
             <div className="featuresContent">
-              <Image
-                src={"/browser.svg"}
-                alt="Image not Loaded Yet"
-                width={80}
-                height={80}
-              />
+              <div className="featureImageContainer">
+                <Image
+                  src={"/browser.svg"}
+                  alt="Image not Loaded Yet"
+                  width={80}
+                  height={80}
+                />
+              </div>
               <p>Template Library</p>
             </div>
             <div>
@@ -127,12 +141,14 @@ export default function Home() {
           </div>
           <div className="features">
             <div className="featuresContent">
-              <Image
-                src={"/report.svg"}
-                alt="Image not Loaded Yet"
-                width={80}
-                height={80}
-              />
+              <div className="featureImageContainer">
+                <Image
+                  src={"/report.svg"}
+                  alt="Image not Loaded Yet"
+                  width={80}
+                  height={80}
+                />
+              </div>
               <p>Comprehensive Reports</p>
             </div>
             <div className="featureDescription">
@@ -152,7 +168,6 @@ export default function Home() {
           Get started, it's free
         </button>
       </section>
-
       <Footer />
     </>
   );
