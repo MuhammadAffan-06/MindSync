@@ -99,7 +99,7 @@ export default function Profile() {
                 />
               </div>
               <div className="text">
-                <p className="email-address">salmanshah123@gmail.com</p>
+                <p className="email-address">{userEmail}</p>
                 <small className="email-date">1 month ago</small>
               </div>
             </div>

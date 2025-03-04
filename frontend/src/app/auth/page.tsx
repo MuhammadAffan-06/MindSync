@@ -138,7 +138,7 @@ export default function Auth() {
         localStorage.setItem("userEmail", data.user.email);
         console.log(localStorage);
         // window.location.href ="https://mind-sync-u9h4.vercel.app/"
-        window.location.href = "http://localhost:3000/profile";
+        window.location.href = "http://localhost:3000/dashboard";
         setLoginData({ email: "", password: "" });
       } else {
         toast.error(data.message || "Invalid email or password.");

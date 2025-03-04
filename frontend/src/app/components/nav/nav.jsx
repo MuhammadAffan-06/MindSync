@@ -1,6 +1,7 @@
 import "@/app/components/nav/nav.css";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 export default function Nav() {
   const [userName, setuserName] = useState("");
 
@@ -51,16 +52,18 @@ export default function Nav() {
             />
           </div>
           <div>
-            <Image
+            {/* <Image
               className="avatar"
               src="/user-profile-avatar.svg"
               width={40}
               height={40}
-            />
+            /> */}
           </div>
           <div className="Profile">
-            <h6>{userName}</h6>
-            <p>student</p>
+            <Link href="http://localhost:3000/profile">
+              <h6>{userName}</h6>
+              <p>student</p>
+            </Link>
           </div>
           <div className="dropdown-icon">
             <Image src="dropdown.svg" width={18} height={18} />
