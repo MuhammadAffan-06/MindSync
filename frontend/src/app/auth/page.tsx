@@ -103,6 +103,7 @@ export default function Auth() {
 
       if (response.ok) {
         toast.success("Your Account has been created!");
+        localStorage.setItem("userName", signupData.name || "");
         setSignupData({ email: "", password: "", name: "", role: "presenter" });
       } else {
         toast.error(data.message || "Email already exists");
@@ -133,8 +134,11 @@ export default function Auth() {
 
       if (response.ok) {
         toast.success("Logged in successfully!");
+        localStorage.setItem("userName", data.user.name);
+        localStorage.setItem("userEmail", data.user.email);
+        console.log(localStorage);
         // window.location.href ="https://mind-sync-u9h4.vercel.app/"
-        window.location.href = "http://localhost:3000/";
+        window.location.href = "http://localhost:3000/profile";
         setLoginData({ email: "", password: "" });
       } else {
         toast.error(data.message || "Invalid email or password.");
@@ -155,7 +159,7 @@ export default function Auth() {
   //   const intentParam = isSignup ? "signup" : "login";
   //   const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
   //   // window.location.href = "http://localhost:3000/";
-    
+
   // };
   const handleGoogleAuth = () => {
     const baseAuthUrl = "http://localhost:5000/auth/google";

@@ -3,8 +3,24 @@
 import Nav from "@/app/components/nav/nav";
 import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/profile/profile.css";
+import { useEffect, useState } from "react";
 
 export default function Profile() {
+  const [userName, setUserName] = useState("");
+  const [userEmail, setuserEmail] = useState("");
+
+  // Retrieve the user's name from local storage on component mount
+  useEffect(() => {
+    const name = localStorage.getItem("userName");
+    const email = localStorage.getItem("userEmail");
+    if (name) {
+      setUserName(name);
+    }
+    if (email) {
+      setuserEmail(email);
+    }
+  }, []);
+
   return (
     <>
       <Nav />
@@ -20,8 +36,9 @@ export default function Profile() {
             height={91}
           />
           <div className="text">
-            <h1 className="profile-name">Salman Shah</h1>
-            <p>salmanshah123@gmail.com</p>
+            <h1 className="profile-name">{userName || "Salman Shah"}</h1>{" "}
+            {/* Display the user's name */}
+            <p>{userEmail}</p>
           </div>
           <div className="btn">
             <button className="edit-btn">edit </button>
@@ -86,7 +103,6 @@ export default function Profile() {
                 <small className="email-date">1 month ago</small>
               </div>
             </div>
-            
           </div>
         </div>
         <button className="email-btn">+ Add Email Address</button>
