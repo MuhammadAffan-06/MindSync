@@ -4,7 +4,7 @@ const presentationRouter = express.Router();
 const verifyToken = require("../../middleware/verifyToken");
 
 presentationRouter
-  .post("/presentation", verifyToken, presentationController.createPresentation)
+  .post("/presentation", presentationController.createPresentation)
   .put("/presentation/live", presentationController.goLive)
   .put("/presentation/add", presentationController.addParticipant);
 

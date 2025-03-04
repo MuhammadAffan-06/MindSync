@@ -54,7 +54,7 @@ const login = async (req, res) => {
 
     // Create a JWT token
     const token = jwt.sign(
-      { id: user._id, email: user.email },
+      { id: user._id, email: user.email, name: user.name },
       process.env.JWT_SECRET,
       {
         expiresIn: "24h",
@@ -64,7 +64,7 @@ const login = async (req, res) => {
     // Respond with the token and user info
     res.status(200).json({
       token,
-      user: { id: user._id, email: user.email, role: user.role },
+      user: { id: user._id, email: user.email, role: user.role, name: user.name },
     });
   } catch (error) {
     console.error(error);
@@ -74,6 +74,5 @@ const login = async (req, res) => {
 
 module.exports = {
   signup,
-  login
+  login,
 };
- 
