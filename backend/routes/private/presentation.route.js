@@ -1,11 +1,10 @@
 const express = require("express");
 const presentationController = require("../../controller/presentation-controller");
 const presentationRouter = express.Router();
-const verifyToken = require("../../middleware/verifyToken");
 
 presentationRouter
   .post("/presentation", presentationController.createPresentation)
-  .put("/presentation/live", presentationController.goLive)
-  .put("/presentation/add", presentationController.addParticipant);
+  .post("/join", presentationController.joinPresentation)
+  .put("/presentation/live", presentationController.goLive);
 
 module.exports = presentationRouter;

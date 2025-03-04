@@ -58,10 +58,9 @@ exports.goLive = async (req, res) => {
       return res.status(404).json({ error: "Presentation not found" });
     }
 
-    // Toggle the `isLive` value
+    // Toggle the isLive status
     const newLiveStatus = !presentation.isLive;
 
-    // Update the presentation's `isLive` field
     const updatedPresentation = await Presentation.findByIdAndUpdate(
       presentationId,
       { isLive: newLiveStatus },
@@ -99,29 +98,88 @@ exports.goLive = async (req, res) => {
     });
   }
 };
-
-// Add participant using join code
-exports.addParticipant = async (req, res) => {
+exports.joinPresentation = async (req, res) => {
   try {
     const { joinCode, userId } = req.body;
 
-    const presentation = await Presentation.findOne({ joinCode, isLive: true });
+    // Find the presentation by joinCode and populate the slideIds
+    const presentation = await Presentation.findOne({ joinCode }).populate(
+      "slideIds"
+    );
 
     if (!presentation) {
-      return res
-        .status(404)
-        .json({ error: "No live presentation found with this join code" });
+      return res.status(404).json({ error: "Presentation not found" });
     }
 
-    presentation.participants.push({ userId });
-    await presentation.save();
+    if (!presentation.isLive) {
+      return res.status(400).json({ error: "Presentation is not live" });
+    }
 
-    res
-      .status(200)
-      .json({ message: "Participant added successfully", presentation });
+    // Check if the user is already a participant
+    const isParticipant = presentation.participants.some(
+      (participant) => participant.userId === userId
+    );
+
+    if (isParticipant) {
+      return res
+        .status(400)
+        .json({ error: "User has already joined the presentation" });
+    }
+
+    // Add the user to the participants array
+    const updatedPresentation = await Presentation.findByIdAndUpdate(
+      presentation._id,
+      { $push: { participants: { userId } } }, // Add the user to the participants array
+      { new: true }
+    ).populate("slideIds");
+
+    // Retrieve the Socket.IO instance from the app
+    const io = req.app.get("socketio");
+
+    if (!io) {
+      throw new Error("Socket.IO instance not found in app");
+    }
+
+    // Emit an event to the room associated with the joinCode
+    io.to(joinCode).emit("user-joined", {
+      message: "A new user has joined the presentation",
+      participantCount: updatedPresentation.participants.length, // Emit the number of participants
+    });
+
+    res.status(200).json({
+      message: "Joined presentation successfully",
+      presentation: updatedPresentation,
+      slides: updatedPresentation.slideIds, // Include the slides in the response
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Failed to add participant", details: error.message });
+    res.status(500).json({
+      error: "Failed to join presentation",
+      details: error.message,
+    });
   }
 };
+// Add participant using join code
+// exports.addParticipant = async (req, res) => {
+//   try {
+//     const { joinCode, userId } = req.body;
+
+//     const presentation = await Presentation.findOne({ joinCode, isLive: true });
+
+//     if (!presentation) {
+//       return res
+//         .status(404)
+//         .json({ error: "No live presentation found with this join code" });
+//     }
+
+//     presentation.participants.push({ userId });
+//     await presentation.save();
+
+//     res
+//       .status(200)
+//       .json({ message: "Participant added successfully", presentation });
+//   } catch (error) {
+//     res
+//       .status(500)
+//       .json({ error: "Failed to add participant", details: error.message });
+//   }
+// };
