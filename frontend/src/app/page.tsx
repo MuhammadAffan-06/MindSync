@@ -8,7 +8,7 @@ import Mobilehome from "@/app/components/mobileHome/mobileHome";
 export default function Home() {
   const getStartedRoutes = () => {
     // window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
-    window.location.href = "http://localhost:3000/auth"
+    window.location.href = "http://localhost:3000/join"
   };
 
   return (
@@ -28,7 +28,7 @@ export default function Home() {
             analytics.
           </p>
           <button className="colorButton" onClick={() => getStartedRoutes()}>
-            Get Started
+            Join a presentation
           </button>
         </section>
         <section>

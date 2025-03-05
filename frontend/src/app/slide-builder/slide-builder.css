@@ -1,162 +1,85 @@
-:root {
-    --primary-color: #5a3ec8;
-    --hover-color: #482ea9;
-    --text-color: #333;
-    --secondary-text-color: #666;
-    --light-bg: #f9f9f9;
-    --border-color: #ddd;
-  }
-  
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-  }
-  
-  .main-content {
-    display: flex;
-    flex-direction: row;
-    margin-top: 100px;
-    margin-left: 25px;
-    margin-right:10px;
-    min-height: calc(100vh - 60px);
-    background-color: #f2f2f2;
-    overflow: hidden;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  /* Left Slides Panel */
-  .slides-panel {
-    width: 280px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    box-sizing: border-box;
-    border-right: 1px solid var(--border-color);
-  }
-  
-  .slides-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: var(--text-color);
-  }
-  
-  .slide-item {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 10px;
-    margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border-color);
-  }
-  
-  .slide-label {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: var(--secondary-text-color);
-  }
-  
-  .add-slide-item {
-    background-color: #fff;
-    border: 2px dashed var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .add-slide-item:hover {
-    background-color: #eee;
-  }
-  
-  .add-slide-plus {
-    font-size: 2rem;
-    color: var(--primary-color);
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .add-slide-text {
-    font-size: 1rem;
-    color: var(--text-color);
-  }
-  
-  /* Editor Container */
-  .editor-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    padding: 20px;
-  }
-  
-  .feature-card {
-    background-color: #f4f0ff;
-    border-radius: 16px;
-    width: 300px;
-    height: 200px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .feature-plus {
-    width: 50px;
-    height: 50px;
-    background-color: var(--primary-color);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  
-  .feature-text {
-    font-size: 1rem;
-    color: var(--text-color);
-    text-align: center;
-    padding: 0 10px;
-  }
-  
-  /* Feature Options Layout */
-  .feature-options {
-    background-color: #f4f0ff;
-    border-radius: 16px;
-    padding: 20px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-  
-  .feature-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .feature-icon {
-    background-color: var(--primary-color);
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  
-  .feature-label {
-    font-size: 1rem;
-    color: var(--text-color);
-  }
-  
+.slide-builder-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  background: #f9f9fb;
+}
+
+/* Main Layout */
+.main-container {
+  display: flex;
+  flex: 1;
+  padding: 20px;
+}
+
+/* Sidebar */
+.sidebar {
+  width: 220px;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.sidebar h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.slide-thumbnail {
+  width: 100%;
+  height: 100px;
+  background: #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 15px;
+}
+
+.add-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 10px;
+  background: #6c63ff;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  gap: 8px;
+}
+
+/* Slide Editor */
+.editor {
+  flex: 1;
+  padding: 20px;
+}
+
+.presentation-title {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Selection Box */
+.selection-box {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  background: #f0ecff;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.option {
+  background: #6c63ff;
+  color: white;
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}

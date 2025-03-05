@@ -1,0 +1,100 @@
+.back-home {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* Adjust spacing between the icon and text */
+  margin-top: 110px;
+  margin-left: 60px;
+}
+/* Outer wrapper for adding margin */
+.page-wrapper {
+  width: 90vw; /* Creates margin effect */
+  max-width: 1300px; /* Prevents stretching */
+  height: 90vh; /* Leaves space at top and bottom */
+  margin: auto; /* Centers the section */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: url("/join-bg.png") no-repeat center center/cover;
+  border-radius: 20px; /* Optional: Soft edges */
+  overflow: hidden; /* Ensures clean rounded corners */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+}
+
+/* Overlay to make the background lighter */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.2); /* Lighter overlay */
+  backdrop-filter: blur(8px); /* Softens background */
+}
+
+/* Centering the box */
+.join-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f8f8; /* Keeps white space outside the image */
+}
+
+/* White box on top */
+.join-box {
+  position: relative;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 400px;
+  z-index: 2; /* Ensures it stays above overlay */
+}
+
+.join-box h2 {
+  margin-bottom: 15px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #333;
+}
+
+.join-box input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 16px;
+}
+
+.join-box button {
+  width: 100%;
+  padding: 10px;
+  background: #512bd4;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.join-box button:hover {
+  background: #3d1faa;
+}
+.mobileJoinWrapper
+{
+  display: none;
+}
+
+@media screen and (max-width: 480px) {
+  .mobileJoinWrapper
+  {
+    display: block;
+  }
+  .desktopNav
+  {
+    display: none;
+  }
+}
