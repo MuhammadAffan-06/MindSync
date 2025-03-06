@@ -3,9 +3,11 @@ import "@/app/components/mobileHome/mobileHome.css";
 import { FaCheck } from "react-icons/fa6";
 
 export default function Mobilehome() {
+  const handleJoin = () => {
+    window.location.href = "http://localhost:3000/join";
+  };
   return (
     <>
-     
       <section className="hero-images">
         <Image
           src="/Data-Analysis-Home.svg"
@@ -37,7 +39,9 @@ export default function Mobilehome() {
         </p>
       </section>
       <section className="getStarted">
-        <button className="colorButton">Get Started</button>
+        <button className="colorButton" onClick={() => handleJoin()}>
+          Join Presentation
+        </button>
       </section>
       <section>
         <ul className="tick-list">

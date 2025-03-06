@@ -15,7 +15,7 @@ export default function JoinMobile() {
 
       <button className="mobile-back-home" onClick={handleBack}>
         <IoChevronBack />
-        <span>Back to Dashboard</span>
+        <span>Back to Home</span>
       </button>
 
       <div className="mobile-join-box">
