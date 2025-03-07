@@ -1,162 +1,212 @@
+/* src/app/slide-builder/slide-builder.css */
+
 :root {
-    --primary-color: #5a3ec8;
-    --hover-color: #482ea9;
-    --text-color: #333;
-    --secondary-text-color: #666;
-    --light-bg: #f9f9f9;
-    --border-color: #ddd;
-  }
+  --primary-color: #2c3e50;
+  --secondary-color: #3498db;
+  --accent-color: #27ae60;
+  --background: #ecf0f1;
+  --text-color: #2c3e50;
+  --border: 1px solid #bdc3c7;
+}
+
+/* Main container */
+.main-content {
+  display: flex;
+  height: 100vh;
+  margin-top: 60px;
   
-  body {
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-  }
-  
+  padding: 20px;
+  background: var(--background);
+}
+
+/* Slides panel */
+.slides-panel {
+  width: 300px;
+  padding: 10px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.slides-title {
+  margin: 0 0 15px;
+  padding: 0;
+  color: var(--primary-color);
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+/* Slide items */
+.slide-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px;
+  margin-bottom: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.slide-item.selected {
+  background: var(--accent-color);
+  color: white;
+}
+
+.slide-item:hover {
+  background: var(--secondary-color);
+  color: white;
+}
+
+.thumbnail {
+  width: 150px;
+  height: 84px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slide-label {
+  margin: 0;
+  font-size: 12px;
+  text-align: center;
+}
+
+/* Add slide button */
+.add-slide-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  margin-top: 20px;
+  border: 2px dashed var(--secondary-color);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-slide-item:hover {
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.add-slide-plus {
+  font-size: 24px;
+  color: var(--secondary-color);
+  margin-right: 8px;
+}
+
+.add-slide-text {
+  color: var(--secondary-color);
+  font-weight: 500;
+  font-size: 14px;
+}
+
+/* Editor container */
+.editor-container {
+  flex: 1;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  padding: 20px;
+}
+
+.canvas-container {
+  flex: 1;
+  border: var(--border);
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.canvas-container canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.preview-container {
+  border: var(--border);
+  height: 225px;
+}
+
+.preview-container canvas {
+  width: 100%;
+  height: 100%;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
   .main-content {
-    display: flex;
-    flex-direction: row;
-    margin-top: 100px;
-    margin-left: 25px;
-    margin-right:10px;
-    min-height: calc(100vh - 60px);
-    background-color: #f2f2f2;
-    overflow: hidden;
-    padding: 20px;
-    border-radius: 10px;
-  }
-  
-  /* Left Slides Panel */
-  .slides-panel {
-    width: 280px;
-    background-color: #f2f2f2;
-    padding: 20px;
-    box-sizing: border-box;
-    border-right: 1px solid var(--border-color);
-  }
-  
-  .slides-title {
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 20px;
-    color: var(--text-color);
-  }
-  
-  .slide-item {
-    background-color: #fff;
-    border-radius: 8px;
+    flex-direction: column;
     padding: 10px;
+  }
+  
+  .slides-panel {
+    width: 100%;
     margin-bottom: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid var(--border-color);
   }
-  
-  .slide-label {
-    margin-top: 10px;
-    font-size: 0.9rem;
-    color: var(--secondary-text-color);
-  }
-  
-  .add-slide-item {
-    background-color: #fff;
-    border: 2px dashed var(--border-color);
-    border-radius: 8px;
-    padding: 20px;
-    text-align: center;
-    cursor: pointer;
-  }
-  
-  .add-slide-item:hover {
-    background-color: #eee;
-  }
-  
-  .add-slide-plus {
-    font-size: 2rem;
-    color: var(--primary-color);
-    font-weight: bold;
-    margin-bottom: 10px;
-  }
-  
-  .add-slide-text {
-    font-size: 1rem;
-    color: var(--text-color);
-  }
-  
-  /* Editor Container */
-  .editor-container {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #fff;
-    padding: 20px;
-  }
-  
-  .feature-card {
-    background-color: #f4f0ff;
-    border-radius: 16px;
-    width: 300px;
-    height: 200px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .feature-plus {
-    width: 50px;
-    height: 50px;
-    background-color: var(--primary-color);
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  
-  .feature-text {
-    font-size: 1rem;
-    color: var(--text-color);
-    text-align: center;
-    padding: 0 10px;
-  }
-  
-  /* Feature Options Layout */
-  .feature-options {
-    background-color: #f4f0ff;
-    border-radius: 16px;
-    padding: 20px 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 40px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  }
-  
-  .feature-option {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .feature-icon {
-    background-color: var(--primary-color);
-    width: 60px;
-    height: 60px;
-    border-radius: 10px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-  }
-  
-  .feature-label {
-    font-size: 1rem;
-    color: var(--text-color);
-  }
-  
+}
+
+/* Global resets */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Existing CSS from your previous file */
+.editor-toolbar {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+  border-bottom: var(--border);
+  align-items: center;
+}
+
+.add-text-button {
+  padding: 8px 16px;
+  background: var(--secondary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.add-text-button:hover {
+  background: #2980b9;
+}
+
+.font-select,
+.font-size-input,
+.color-picker {
+  padding: 6px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.font-select {
+  width: 120px;
+}
+
+.font-size-input {
+  width: 60px;
+}
+
+.color-picker {
+  width: 36px;
+  height: 36px;
+}
