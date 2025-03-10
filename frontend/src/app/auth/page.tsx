@@ -5,6 +5,7 @@ import "@/app/auth/auth.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AuthWrapper from "@/app/auth/auth-wrapper";
+import { error } from "console";
 
 // Define form data structure for both login and signup
 interface FormData {
@@ -87,7 +88,7 @@ export default function Auth() {
     }
     try {
       const response = await fetch(
-        "mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/signup",
+        "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/signup",
         // "http://localhost:5000/auth/signup",
         // "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/signup",
         {
@@ -118,7 +119,7 @@ export default function Auth() {
 
     try {
       const response = await fetch(
-        "mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/login",
+        "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/login",
         // "http://localhost:5000/auth/login",
         // "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/login",
         {
