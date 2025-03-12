@@ -7,7 +7,7 @@ import SlidePlainText from "./slideTypes/slidePlainText"
 import SlideWordCloud from "./slideTypes/slideWordCloud"
 import SlideNotSelected from './slideTypes/slideNotSelected';
 import SlideMCQ from './slideTypes/slideMCQ';
-import { useSlide } from '../../slideContext';
+import { useSlide } from '../../slide-builder/slideContext';
 import SlideTypeSelector from './slideTypes/slideTypeSelector';
 import { CanvasProvider } from './slideCanvas/canvasContext';
 import SlideDeletePopup from './slideTypes/slideDeletePopup';
