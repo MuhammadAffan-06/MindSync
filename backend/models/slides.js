@@ -20,7 +20,7 @@ const SlideSchema = new mongoose.Schema({
         // isCorrect: { type: Boolean, default: false }
       },
     ], // Options for quiz/poll
-    maxMarks: { type: Number, default: 0 }, // Marks only for quizzes
+    maxMarks: { type: Number, default: 0 },
   },
 });
 

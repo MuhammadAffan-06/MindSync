@@ -27,9 +27,13 @@ exports.createSlide = async (req, res) => {
     presentation.slideIds.push(savedSlide._id);
     await presentation.save();
 
-    res.status(201).json({ message: "Slide created successfully", slide: savedSlide });
+    res
+      .status(201)
+      .json({ message: "Slide created successfully", slide: savedSlide });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create slide", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to create slide", details: error.message });
   }
 };
 exports.getSlidesByPresentation = async (req, res) => {
@@ -38,12 +42,16 @@ exports.getSlidesByPresentation = async (req, res) => {
 
     const slides = await Slide.find({ presentationId });
     if (!slides.length) {
-      return res.status(404).json({ error: "No slides found for this presentation" });
+      return res
+        .status(404)
+        .json({ error: "No slides found for this presentation" });
     }
 
     res.status(200).json({ message: "Slides retrieved successfully", slides });
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve slides", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to retrieve slides", details: error.message });
   }
 };
 exports.updateSlide = async (req, res) => {
@@ -62,9 +70,13 @@ exports.updateSlide = async (req, res) => {
       return res.status(404).json({ error: "Slide not found" });
     }
 
-    res.status(200).json({ message: "Slide updated successfully", slide: updatedSlide });
+    res
+      .status(200)
+      .json({ message: "Slide updated successfully", slide: updatedSlide });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update slide", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to update slide", details: error.message });
   }
 };
 exports.deleteSlide = async (req, res) => {
@@ -85,6 +97,8 @@ exports.deleteSlide = async (req, res) => {
 
     res.status(200).json({ message: "Slide deleted successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to delete slide", details: error.message });
+    res
+      .status(500)
+      .json({ error: "Failed to delete slide", details: error.message });
   }
 };

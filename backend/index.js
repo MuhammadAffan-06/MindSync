@@ -72,6 +72,11 @@ app.options("*", cors());
 // Parse JSON request bodies
 app.use(express.json());
 
+// app.get("/create-meeting", (req, res) => {
+//   const roomName = `MindSync-${Date.now()}`;
+//   const meetingURL = `https://meet.jit.si/${roomName}`;
+//   res.json({ meetingURL });
+// });
 // Health check endpoint
 app.get("/health-check", (req, res) => {
   res.json({ message: "server up. all ok." });
