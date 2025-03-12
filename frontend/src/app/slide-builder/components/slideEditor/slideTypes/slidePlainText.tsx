@@ -6,9 +6,6 @@ import SlideCanvas from "../slideCanvas/slideCanvas";
 import SlideToolbar from "../slideToolbar/slideToolbar";
 import { ToolbarProvider } from "../slideToolbar/toolbarContext";
 import { CanvasProvider } from "../slideCanvas/canvasContext";
-import html2canvas from "html2canvas";
-import { useEffect, useRef } from "react";
-import { Canvas } from "fabric";
 
 export default function SlidePlainText({ id }: SlideBaseProps) {
   console.log("Slide Plain Text Rendering..");

@@ -42,8 +42,6 @@ export function ToolbarProvider({ children }: ToolbarProviderProps) {
   const { canvas } = useCanvas();
   const { activeSlideId, updateActiveSlideInfo } = useSlide();
   useEffect(() => {
-
-    console.log("Slide Canvas listener ")
     if (!canvas) return;
 
     const handleSelection = () => {

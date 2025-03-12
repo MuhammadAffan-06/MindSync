@@ -12,10 +12,8 @@ export default function SlideCanvas({ slide }: SlideCanvasProps) {
   console.log("Slide Canvas Rendering...");
   const { canvas, setCanvas } = useCanvas();
   const canvasElementRef = useRef<HTMLCanvasElement | null>(null);
-  const { updateActiveSlideInfo } = useSlide();
 
   useEffect(() => {
-    console.log("Initializing Fabric.js canvas");
 
     if (!canvasElementRef.current) {
       throw new Error("Canvas element was not found!");
@@ -32,19 +30,12 @@ export default function SlideCanvas({ slide }: SlideCanvasProps) {
     fabricCanvas.renderAll();
     setCanvas(fabricCanvas);
 
-    // Function to resize both the wrapper & canvas
     const resizeCanvas = () => {
-      console.log("Resize event triggered");
       const outerCanvasContainer = canvasElementRef.current?.parentElement?.parentElement?.parentElement?.parentElement;
-      console.log("OUTER CONTAINER IS ")
-      console.log(outerCanvasContainer);
       if(!outerCanvasContainer) return;
      
       const ratio = fabricCanvas.getWidth() / fabricCanvas.getHeight();
       const containerWidth   = outerCanvasContainer.clientWidth;
-      const containerHeight  = outerCanvasContainer.clientHeight;
-      console.log("Container W: "+ containerWidth)
-      console.log("Window W: "+window.innerWidth)
   
       const scale = containerWidth / fabricCanvas.getWidth();
       const zoom  = fabricCanvas.getZoom() * scale;
@@ -79,15 +70,14 @@ export default function SlideCanvas({ slide }: SlideCanvasProps) {
       fabricCanvas.dispose();
       setCanvas(null);
     };
-  }, []); // Empty dependency array to ensure effect runs only once
+  }, []); 
 
-  // Load content when canvas is available
+
   useEffect(() => {
     if (canvas) {
-      console.log("Loading canvas from JSON...");
       canvas.loadFromJSON(slide.content, () => canvas.requestRenderAll());
     }
-  }, [canvas, slide.content]); // Re-run if `canvas` or `slide.content` changes
+  }, [canvas]);
 
   return (
     <div className="relative w-full h-full flex justify-center items-center overflow-hidden">
