@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 .slide-builder-container {
   display: flex;
   flex-direction: column;
@@ -82,4 +83,16 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+=======
+/* src/app/slide-builder/slide-builder.css */
+
+
+* {
+  box-sizing: border-box;
+  /* border: 2px solid red; */
+}
+body {
+  margin: 0;
+  /* font-family: 'Arial', sans-serif; */
+>>>>>>> d22c58672184aa852a6340223062552c3f8b2e18
 }
