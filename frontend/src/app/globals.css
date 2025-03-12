@@ -1,7 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+:root {
+  --primary-color: #2c3e50;
+  --secondary-color: #591CBA;
+  --accent-color: #27ae60;
+  --background: rgba(74, 39, 201, 0.1);
+  --text-color: #2c3e50;
+  --border: 1px solid #bdc3c7;
+}
+/* *{
+  border: 1px solid red !important;
+} */
 @font-face {
   font-family: "poppins";
   src: url("/static/Poppins-Regular.otf") format("opentype");
