@@ -2,14 +2,42 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "./types"; // Import the custom interface
 
 export default function Nav() {
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
-    const name = localStorage.getItem("userName");
-    if (name) {
-      setUserName(name);
+    const googleToken = Cookies.get("authToken");
+    console.log("Google Auth Token from Cookies:", googleToken); // Debugging
+  
+    if (googleToken) {
+      try {
+        // Decode the Google Auth token
+        const decodedToken = jwtDecode<CustomJwtPayload>(googleToken);
+        console.log("Decoded Google Token:", decodedToken); // Debugging
+  
+        // Check if the decoded token contains the `name` field
+        if (decodedToken.name) {
+          setUserName(decodedToken.name);
+          localStorage.setItem("userName", decodedToken.name);
+        } else {
+          console.error("Name not found in the decoded token");
+        }
+      } catch (error) {
+        console.error("Error decoding Google token:", error);
+      }
+    } else {
+      // Fallback to localStorage if no Google token is found
+      const name = localStorage.getItem("userName");
+      console.log("Name from localStorage:", name); // Debugging
+      if (name) {
+        setUserName(name);
+      } else {
+        setUserName("Guest"); // Fallback to "Guest" if no name is found
+      }
     }
   }, []);
 
@@ -57,22 +85,10 @@ export default function Nav() {
           />
         </div>
 
-        {/* Avatar could go here if needed
-        <div>
-          <Image
-            className="avatar max-[660px]:h-[25px] max-[660px]:w-[25px]"
-            src="/user-profile-avatar.svg"
-            alt="Avatar"
-            width={40}
-            height={40}
-          />
-        </div> 
-        */}
-
         <div className="ml-2 max-[660px]:ml-1">
           <Link href="http://localhost:3000/profile">
             <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]">
-              {userName}
+              {userName || "Guest"}
             </h6>
             <p className="text-[11px] font-light text-gray-500 max-[660px]:text-[9px]">
               student

@@ -4,10 +4,15 @@ import Nav from "@/app/components/nav/nav";
 import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/profile/profile.css";
 import { useEffect, useState } from "react";
+import Image from "next/image";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
+import { CustomJwtPayload } from "../components/nav/types";
 
 export default function Profile() {
   const [userName, setUserName] = useState("");
   const [userEmail, setuserEmail] = useState("");
+  const [userPicture, setuserPicture] = useState("");
 
   // Retrieve the user's name from local storage on component mount
   useEffect(() => {
@@ -20,6 +25,40 @@ export default function Profile() {
       setuserEmail(email);
     }
   }, []);
+  useEffect(() => {
+    const googleToken = Cookies.get("authToken");
+    console.log("Google Auth Token from Cookies:", googleToken); // Debugging
+
+    if (googleToken) {
+      try {
+        // Decode the Google Auth token
+        const decodedToken = jwtDecode<CustomJwtPayload>(googleToken);
+        console.log("Decoded Google Token:", decodedToken); // Debugging
+        console.log("User Picture URL:", decodedToken.picture);
+        if (decodedToken.name && decodedToken.email && decodedToken.picture) {
+          setUserName(decodedToken.name);
+          setuserEmail(decodedToken.email);
+          setuserPicture(decodedToken.picture);
+          localStorage.setItem("userName", decodedToken.name);
+          localStorage.setItem("userEmail", decodedToken.email);
+          localStorage.setItem("userPicture", decodedToken.picture);
+        } else {
+          console.error("Name not found in the decoded token");
+        }
+      } catch (error) {
+        console.error("Error decoding Google token:", error);
+      }
+    } else {
+      // Fallback to localStorage if no Google token is found
+      const name = localStorage.getItem("userName");
+      console.log("Name from localStorage:", name); // Debugging
+      if (name) {
+        setUserName(name);
+      } else {
+        setUserName("Guest");
+      }
+    }
+  }, []);
 
   return (
     <>
@@ -29,14 +68,28 @@ export default function Profile() {
         <h1 className="about-title">Profile Management</h1>
 
         <div className="avatar-details">
-          <img
-            src="/profile-avatar.svg"
-            alt="Profile Avatar"
-            width={91}
-            height={91}
-          />
+          {userPicture ? (
+            <Image
+              src={userPicture}
+              alt="Profile Picture"
+              width={92}
+              height={92}
+              style={{
+                borderRadius: "50%", // Makes the image circular
+                objectFit: "cover", // Ensures the image covers the area without stretching
+              }}
+            />
+          ) : (
+            <Image
+              src="/profile-avatar.svg"
+              alt="Default Profile Picture"
+              width={91}
+              height={91}
+            />
+          )}
+
           <div className="text">
-            <h1 className="profile-name">{userName || "Salman Shah"}</h1>{" "}
+            <h2 className="profile-name">{userName || "Guest"}</h2>{" "}
             {/* Display the user's name */}
             <p>{userEmail}</p>
           </div>
