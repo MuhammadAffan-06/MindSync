@@ -50,12 +50,10 @@ export default function Sidebar() {
   };
 
   const handleLogout = () => {
-    // Clear the user's session or authentication token
-    localStorage.removeItem("userToken"); // Example: Remove token from localStorage
-    sessionStorage.removeItem("userToken"); // Example: Remove token from sessionStorage
+    localStorage.removeItem("userToken");
+    sessionStorage.removeItem("userToken");
 
-    // Redirect to the login page
-    router.push("/auth");
+    router.push("/");
   };
 
   return (

@@ -75,8 +75,8 @@ export default function Profile() {
               width={92}
               height={92}
               style={{
-                borderRadius: "50%", // Makes the image circular
-                objectFit: "cover", // Ensures the image covers the area without stretching
+                borderRadius: "50%",
+                objectFit: "cover",
               }}
             />
           ) : (
