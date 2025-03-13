@@ -8,6 +8,7 @@ const passport = require("./utils/passportConfig");
 const session = require("express-session");
 const socketIo = require("socket.io");
 const http = require("http");
+const cookieParser = require("cookie-parser");
 
 // Session configuration
 app.use(
@@ -31,6 +32,7 @@ app.use(
     credentials: true,
   })
 );
+app.use(cookieParser());
 
 // Create HTTP server and Socket.IO instance
 const server = http.createServer(app);
