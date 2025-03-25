@@ -9,10 +9,10 @@ const jwt = require("jsonwebtoken");
 presenterRouter.post("/signup", signup).post("/login", login);
 
 // Google authentication routes
-// presenterRouter.get(
-//   "/google",
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
+presenterRouter.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] })
+);
 
 presenterRouter.get(
   "/google/callback",
@@ -57,7 +57,6 @@ presenterRouter.get(
 
         console.log("Existing user found, redirecting...");
         return res.redirect("http://localhost:3000/dashboard");
-        // return res.redirect("https://mind-sync-u9h4.vercel.app/dashboard")
       }
 
       // If user does not exist, create a new user
@@ -90,9 +89,9 @@ presenterRouter.get(
         secure: false, // Set to `false` for local development (HTTP)
         sameSite: "Lax",
       });
+
       console.log("New user created successfully, redirecting...");
       return res.redirect("http://localhost:3000/dashboard");
-      // return res.redirect("https://mind-sync-u9h4.vercel.app/dashboard")
     } catch (error) {
       console.error("Error handling user authentication:", error);
       res.redirect("/login?error=Something%20went%20wrong.");

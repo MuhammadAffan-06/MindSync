@@ -9,17 +9,16 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
       callbackURL: "http://localhost:5000/auth/google/callback",
       // callbackURL: "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/google/callback",
-
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
         // Check if the user already exists
         let user = await User.findOne({ googleId: profile.id });
-        
+
         if (user) {
           // Existing user - proceed to the next step without creating a new user
           return done(null, user);
-        } 
+        }
 
         // If user does not exist, create a new user
         user = await User.create({
