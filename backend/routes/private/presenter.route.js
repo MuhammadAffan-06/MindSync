@@ -6,8 +6,6 @@ const { signup, login, verify } = require("../../controller/auth-controller");
 const verifyToken = require("../../middleware/verifyToken");
 
 const presenterRouter = express.Router();
-const jwt = require("jsonwebtoken");
-
 presenterRouter.post("/signup", signup);
 presenterRouter.post("/login", login);
 presenterRouter.get("/verify", verifyToken, verify);

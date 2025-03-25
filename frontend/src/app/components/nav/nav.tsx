@@ -2,10 +2,12 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import Cookies from "js-cookie";
+import { jwtDecode } from "jwt-decode";
 
 export default function Nav() {
   const handleJoin = () => {
-    window.location.href = "http://localhost:3000/join"
+    window.location.href = "http://localhost:3000/join";
   };
   const [userName, setUserName] = useState("");
   const router = useRouter();
@@ -85,12 +87,15 @@ export default function Nav() {
 
         {/* User Profile */}
         <div className="ml-2 max-[660px]:ml-1">
-            <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]" onClick={()=>router.replace("/profile")}>
-              {userName}
-            </h6>
-            <p className="text-[11px] font-light text-gray-500 max-[660px]:text-[9px]">
-              student
-            </p>
+          <h6
+            className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]"
+            onClick={() => router.replace("/profile")}
+          >
+            {userName}
+          </h6>
+          <p className="text-[11px] font-light text-gray-500 max-[660px]:text-[9px]">
+            student
+          </p>
         </div>
 
         {/* Dropdown Icon */}

@@ -1,8 +1,9 @@
 "use client";
 import Nav from "@/app/components/nav/nav";
 import "./slide-builder.css";
-import SlidePanel from "../components/slidePanel/slidePanel";
-import SlideEditor from "../components/slideEditor/slideEditor";
+// import SlidePanel from "../components/slidePanel/slidePanel";
+import SlidePanel from "@/app/components/slidePanel/slidePanel"
+import SlideEditor from "@/app/components/slideEditor/slideEditor";
 import { SlideProvider } from "./slideContext";
 import { toast } from "react-toastify";
 import SlideHeader from "../components/slideHeader/slideHeader";

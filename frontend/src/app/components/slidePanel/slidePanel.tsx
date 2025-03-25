@@ -15,7 +15,8 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
-import { useSlide } from "../../[presentationId]/slideContext";
+// import { useSlide } from "../../[presentationId]/slideContext";
+import {useSlide} from "@/app/slide-builder/[presentationId]/slideContext";
 
 export default function SlidePanel() {
   console.log("Slide Panel Rendering..");
