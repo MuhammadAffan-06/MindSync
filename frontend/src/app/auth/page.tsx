@@ -163,12 +163,17 @@ export default function Auth() {
   //   // window.location.href = "http://localhost:3000/";
 
   // };
+  // const handleGoogleAuth = () => {
+  //   const baseAuthUrl = "http://localhost:5000/auth/google";
+  //   // const baseAuthUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/google";
+  //   const intentParam = isSignup ? "signup" : "login";
+  //   const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
+  //   window.location.href = redirectUrl;
+  // };
   const handleGoogleAuth = () => {
     const baseAuthUrl = "http://localhost:5000/auth/google";
     // const baseAuthUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/google";
-    const intentParam = isSignup ? "signup" : "login";
-    const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
-    window.location.href = redirectUrl;
+    window.location.href = baseAuthUrl; // Redirect to the Google OAuth URL
   };
 
   return (

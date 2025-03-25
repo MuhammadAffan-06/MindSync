@@ -7,19 +7,20 @@ import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "./types"; // Import the custom interface
 
 export default function Nav() {
+  const handleJoin = () => {
+    window.location.href = "http://localhost:3000/join"
+  };
   const [userName, setUserName] = useState("");
 
   useEffect(() => {
     const googleToken = Cookies.get("authToken");
     console.log("Google Auth Token from Cookies:", googleToken); // Debugging
-  
+
     if (googleToken) {
       try {
         // Decode the Google Auth token
         const decodedToken = jwtDecode<CustomJwtPayload>(googleToken);
-        console.log("Decoded Google Token:", decodedToken); // Debugging
-  
-        // Check if the decoded token contains the `name` field
+        console.log("Decoded Google Token:", decodedToken);
         if (decodedToken.name) {
           setUserName(decodedToken.name);
           localStorage.setItem("userName", decodedToken.name);
@@ -75,16 +76,17 @@ export default function Nav() {
 
       {/* Right side */}
       <div className="ml-auto flex w-[54vw] items-center justify-end max-[660px]:w-auto">
-        <div className="mr-9 max-[660px]:mr-4">
-          <Image
-            className="max-[660px]:h-[20px] max-[660px]:w-[20px]"
-            src="/notification.svg"
-            alt="Image not Loaded Yet"
-            width={30}
-            height={30}
-          />
-        </div>
+        {/* Join Button */}
+        <button
+          className="mr-9 flex items-center justify-center rounded-md bg-[#5a3ec8] px-4 py-2 text-sm font-medium text-white hover:bg-[#4a2fb8] focus:outline-none focus:ring-2 focus:ring-[#5a3ec8] focus:ring-offset-2 max-[660px]:mr-4 max-[660px]:px-3 max-[660px]:py-1 max-[660px]:text-xs"
+          onClick={() => {
+            handleJoin();
+          }}
+        >
+          Join
+        </button>
 
+        {/* User Profile */}
         <div className="ml-2 max-[660px]:ml-1">
           <Link href="http://localhost:3000/profile">
             <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]">
@@ -96,6 +98,7 @@ export default function Nav() {
           </Link>
         </div>
 
+        {/* Dropdown Icon */}
         <div className="ml-[7px] max-[660px]:ml-1">
           <Image
             src="/dropdown.svg"

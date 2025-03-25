@@ -11,7 +11,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 const drawerWidth = 240;
 
@@ -38,7 +38,16 @@ const customIcons = {
 
 export default function Sidebar() {
   const router = useRouter();
+  const pathname = usePathname(); // Get the current route
   const [selectedItem, setSelectedItem] = React.useState("Dashboard");
+
+  // Update the selected item based on the current route
+  React.useEffect(() => {
+    const currentItem = menuItems.find((item) => item.route === pathname);
+    if (currentItem) {
+      setSelectedItem(currentItem.label);
+    }
+  }, [pathname]);
 
   const handleNavigation = (item) => {
     setSelectedItem(item.label);
