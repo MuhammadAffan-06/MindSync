@@ -1,13 +1,14 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const User = require("../models/users"); // Adjust this path to your user model
+const jwt = require("jsonwebtoken");
+const User = require("../models/users");
 
 passport.use(
   new GoogleStrategy(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "http://localhost:5000/auth/google/callback",
+      callbackURL: "http://172.20.7.193:5000/auth/google/callback",
       // callbackURL: "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
@@ -16,8 +17,13 @@ passport.use(
         let user = await User.findOne({ googleId: profile.id });
         
         if (user) {
-          // Existing user - proceed to the next step without creating a new user
-          return done(null, user);
+          // Generate JWT token for the existing user
+          const token = jwt.sign(
+            { id: user._id, email: user.email, name: user.name },
+            process.env.JWT_SECRET,
+            { expiresIn: "7d" }
+          );
+          return done(null, user, { token });
         } 
 
         // If user does not exist, create a new user
@@ -28,7 +34,14 @@ passport.use(
           picture: profile.photos[0].value,
         });
 
-        return done(null, user);
+        // Generate JWT token for the new user
+        const token = jwt.sign(
+          { id: user._id, email: user.email, name: user.name },
+          process.env.JWT_SECRET,
+          { expiresIn: "7d" }
+        );
+
+        return done(null, user, { token });
       } catch (err) {
         console.error(err);
         return done(err, null);
@@ -37,17 +50,5 @@ passport.use(
   )
 );
 
-passport.serializeUser((user, done) => {
-  done(null, user.id);
-});
-
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    done(null, user);
-  } catch (err) {
-    done(err, null);
-  }
-});
 
 module.exports = passport;

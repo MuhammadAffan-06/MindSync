@@ -1,4 +1,4 @@
-import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleOAuthProvider } from "@react-oauth/google/dist";
 import React, { ReactNode } from 'react';
 
 interface AuthWrapperProps {

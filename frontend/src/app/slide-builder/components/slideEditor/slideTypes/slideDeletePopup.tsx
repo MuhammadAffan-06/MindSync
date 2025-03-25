@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSlide } from "../../../slideContext";
-import { Slide } from "../../../types";
+import { useSlide } from "../../../[presentationId]/slideContext";
+import { Slide } from "../../../[presentationId]/types";
 
 
 
@@ -14,7 +14,7 @@ export default function SlideDeletePopup() {
     const handleKeyDown = (event: KeyboardEvent) => {
       const activeSlide: Slide | undefined = getActiveSlide();
       if (event.key === 'Delete' && event.ctrlKey && activeSlide !== undefined) {
-        if (activeSlide.type == "Undefined") removeSlide(activeSlide.id);
+        if (activeSlide.type == "Undefined") removeSlide(activeSlide.clientId);
         else setVisibility(true);
       }
     };

@@ -13,13 +13,8 @@ const PresentationSchema = new mongoose.Schema({
       ref: "Slide", // Reference to Slide documents
     },
   ],
-  isLive: { type: Boolean, default: false }, // Live status of the presentation
   joinCode: { type: String, unique: true }, // Unique join code for users
-  participants: [
-    {
-      userId: { type: String }, // IDs of joined participants
-    },
-  ],
+ 
 });
 
 const Presentation = mongoose.model("Presentation", PresentationSchema);

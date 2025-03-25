@@ -1,9 +1,6 @@
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
-
 dotenv.config();
-
-// Middleware to verify token
 const verifyToken = (req, res, next) => {
   const bearerHeader = req.headers["authorization"];
 
@@ -13,7 +10,6 @@ const verifyToken = (req, res, next) => {
 
     jwt.verify(token, process.env.JWT_SECRET, (error, decoded) => {
       if (error) {
-        console.error(error);
         return res.status(403).json({ message: "Invalid or expired token" });
       }
 

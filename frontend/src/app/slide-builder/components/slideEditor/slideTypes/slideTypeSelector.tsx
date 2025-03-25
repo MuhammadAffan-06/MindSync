@@ -1,6 +1,6 @@
 'use client';
-import { useSlide } from "@/app/slide-builder/slideContext";
-import { SlideBaseProps, SlideType } from "@/app/slide-builder/types";
+import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
+import { SlideBaseProps, SlideType } from "@/app/slide-builder/[presentationId]/types";
 import Image from "next/image";
 
 interface ButtonInfo {
@@ -9,6 +9,8 @@ interface ButtonInfo {
   type: SlideType
 }
 export default function SlideTypeSelector({ id }: SlideBaseProps) {
+    console.log("Slide Type Selector Rendering")
+  
   const buttonArray: ButtonInfo[] = [
     { icon: "/icons/poll-icon.svg", label: "Poll", type: "Poll" },
     { icon: "/icons/wordcloud-icon.svg", label: "Word Cloud", type: "WordCloud" },

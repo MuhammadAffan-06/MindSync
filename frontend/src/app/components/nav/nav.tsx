@@ -1,11 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Nav() {
   const [userName, setUserName] = useState("");
-
+  const router = useRouter();
   useEffect(() => {
     const name = localStorage.getItem("userName");
     if (name) {
@@ -70,14 +70,12 @@ export default function Nav() {
         */}
 
         <div className="ml-2 max-[660px]:ml-1">
-          <Link href="http://localhost:3000/profile">
-            <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]">
+            <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]" onClick={()=>router.replace("/profile")}>
               {userName}
             </h6>
             <p className="text-[11px] font-light text-gray-500 max-[660px]:text-[9px]">
               student
             </p>
-          </Link>
         </div>
 
         <div className="ml-[7px] max-[660px]:ml-1">

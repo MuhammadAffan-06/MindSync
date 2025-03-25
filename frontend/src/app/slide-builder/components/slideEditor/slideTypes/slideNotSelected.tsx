@@ -1,13 +1,12 @@
 'use client';
 
-import { useSlide } from "@/app/slide-builder/slideContext";
+import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
 
 export default function SlideNotSelected() {
   const { addSlide } = useSlide();
 
   return (
     <div className="flex flex-grow flex-shrink basis-full bg-white lg:ml-4 rounded-lg">
-      {/* Container for the “Add” prompt */}
       <div
         className="
           cursor-pointer 
@@ -28,7 +27,6 @@ export default function SlideNotSelected() {
         "
         onClick={() => addSlide()}
       >
-        {/* Circular gradient containing a plus sign */}
         <div
           className="
             flex
@@ -44,8 +42,6 @@ export default function SlideNotSelected() {
         >
           <span className="text-white text-[60px] leading-none">+</span>
         </div>
-
-        {/* Description text */}
         <div className="text-center text-xl">
           Add feature like Poll, Text and Q/A
         </div>

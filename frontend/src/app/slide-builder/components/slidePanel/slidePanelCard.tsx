@@ -2,8 +2,8 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useSlide } from "@/app/slide-builder/slideContext";
-import { Slide } from "@/app/slide-builder/types";
+import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
+import { Slide } from "@/app/slide-builder/[presentationId]/types";
 
 interface SlidePanelCardProps {
   index: number;
@@ -11,7 +11,7 @@ interface SlidePanelCardProps {
 }
 
 export default function SlidePanelCard({ slide, index }: SlidePanelCardProps) {
-  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: slide.id });
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: slide.clientId });
   const { activeSlideId } = useSlide();
   const style = {
     transition,
@@ -27,7 +27,7 @@ export default function SlidePanelCard({ slide, index }: SlidePanelCardProps) {
       {...listeners}
       style={style}
       className={`p-1 mb-[10px] h-27 rounded-lg bg-white cursor-pointer ${
-        slide.id === activeSlideId ? activeClasses : ""
+        slide.clientId === activeSlideId ? activeClasses : ""
       }`}
     >
       <div className="w-full h-full">

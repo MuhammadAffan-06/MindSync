@@ -4,8 +4,9 @@ import Nav from "@/app/components/nav/nav";
 import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/profile/profile.css";
 import { useEffect, useState } from "react";
+import { RequireAuth } from "../components/utils/requireAuth";
 
-export default function Profile() {
+function Profile() {
   const [userName, setUserName] = useState("");
   const [userEmail, setuserEmail] = useState("");
 
@@ -110,3 +111,5 @@ export default function Profile() {
     </>
   );
 }
+
+export default RequireAuth(Profile)
