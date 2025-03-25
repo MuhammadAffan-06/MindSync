@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 async function fetchDataJSON(path:string, method:"GET"|"POST", body:any = null) {
     const token = localStorage.getItem("token"); 
-    const baseUrl = "http://172.20.7.193:5000/";//"http://localhost:5000/"
+    const baseUrl = "http://localhost:5000/";//"http://localhost:5000/"
     const headers:any = {
         "Content-Type": "application/json",
     };
@@ -33,7 +33,7 @@ async function fetchDataJSON(path:string, method:"GET"|"POST", body:any = null) 
 
 async function fetchData(path:string, method:"GET"|"POST", body:any = null) {
     const token = localStorage.getItem("token"); 
-    const baseUrl = "http://172.20.7.193:5000/";//"http://localhost:5000/"
+    const baseUrl = "http://localhost:5000/";//"http://localhost:5000/"
     const headers:any = {
         "Content-Type": "application/json",
     };

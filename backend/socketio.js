@@ -9,7 +9,6 @@ function setupSocket(server, app) {
     cors: {
       origin: [
         "http://localhost:3000",
-        "http://172.20.7.193:3000",
         "https://mind-sync-u9h4.vercel.app",
       ],
       methods: ["GET", "POST"],

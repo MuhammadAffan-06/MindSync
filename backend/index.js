@@ -10,7 +10,7 @@ const { setupSocket } = require("./socketio");
 
 app.use(
   cors({
-    origin: ["http://localhost:3000", "http://172.20.7.193:3000", "https://mind-sync-u9h4.vercel.app"],
+    origin: ["http://localhost:3000", "https://mind-sync-u9h4.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -43,5 +43,5 @@ connectDb();
 
 // Start the server
 server.listen(port, () => {
-  console.log(`Server is running on http://172.20.7.193:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });

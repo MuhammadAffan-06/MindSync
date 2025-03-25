@@ -8,7 +8,7 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "http://172.20.7.193:5000/auth/google/callback",
+      callbackURL: "http://localhost:5000/auth/google/callback",
       // callbackURL: "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {

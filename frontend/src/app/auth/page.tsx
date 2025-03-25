@@ -86,7 +86,7 @@ export default function Auth() {
     e.preventDefault();
     if (!validateSignupData()) return;
     try {
-      const response = await fetch("http://172.20.7.193:5000/auth/signup", {
+      const response = await fetch("http://localhost:5000/auth/signup", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(signupData),
@@ -107,7 +107,7 @@ export default function Auth() {
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch("http://172.20.7.193:5000/auth/login", {
+      const response = await fetch("http://localhost:5000/auth/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
@@ -133,7 +133,7 @@ export default function Auth() {
   };
 
   const handleGoogleAuth = () => {
-    const baseAuthUrl = "http://172.20.7.193:5000/auth/google";
+    const baseAuthUrl = "http://localhost:5000/auth/google";
     const intentParam = isSignup ? "signup" : "login";
     window.location.href = `${baseAuthUrl}?intent=${intentParam}`;
   };
