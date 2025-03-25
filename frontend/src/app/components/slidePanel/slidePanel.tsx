@@ -15,7 +15,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import { restrictToParentElement } from "@dnd-kit/modifiers";
-import { useSlide } from "../../slide-builder/slideContext";
+import { useSlide } from "../../[presentationId]/slideContext";
 
 export default function SlidePanel() {
   console.log("Slide Panel Rendering..");
@@ -55,16 +55,13 @@ export default function SlidePanel() {
         autoScroll={true}
         collisionDetection={closestCorners}
       >
-        <SortableContext items={slides.map((slide) => slide.id)} strategy={verticalListSortingStrategy}>
+        <SortableContext items={slides.map((slide) => slide.clientId)} strategy={verticalListSortingStrategy}>
           {slides.map((slide, index) => (
-            <SlidePanelCard slide={slide} index={index} key={slide.id} />
+            <SlidePanelCard slide={slide} index={index} key={slide.clientId} />
           ))}
         </SortableContext>
       </DndContext>
-      <div
-        className="flex flex-col items-center p-[10px] mb-[10px] bg-white rounded-lg h-27 cursor-pointer"
-        onClick={() => addSlide()}
-      >
+      <div className="flex flex-col items-center p-[10px] mb-[10px] bg-white rounded-lg h-27 cursor-pointer" onClick={() => addSlide()}>
         <div className="mr-2 text-6xl text-[var(--primary-color)]">+</div>
         <p className="text-sm font-medium text-[var(--primary-color)]">Add Slide</p>
       </div>

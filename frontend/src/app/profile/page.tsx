@@ -4,12 +4,9 @@ import Nav from "@/app/components/nav/nav";
 import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/profile/profile.css";
 import { useEffect, useState } from "react";
-import Image from "next/image";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "../components/nav/types";
+import { RequireAuth } from "../components/utils/requireAuth";
 
-export default function Profile() {
+function Profile() {
   const [userName, setUserName] = useState("");
   const [userEmail, setuserEmail] = useState("");
   const [userPicture, setuserPicture] = useState("");
@@ -163,3 +160,5 @@ export default function Profile() {
     </>
   );
 }
+
+export default RequireAuth(Profile)

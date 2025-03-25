@@ -3,19 +3,17 @@ import Navbar from "@/app/components/navbar/navbar";
 import Footer from "@/app/components/footer/footer";
 import Image from "next/image";
 import styles from "@/app/styles/Home.module.css";
-import Mobilehome from "@/app/components/mobileHome/mobileHome";
+import { useRouter } from "next/navigation";
+// import Mobilehome from "@/app/components/mobileHome/mobileHome";
 
 export default function Home() {
-  const getStartedRoutes = () => {
-    // window.location.href = "https://mind-sync-u9h4.vercel.app/auth";
-    window.location.href = "http://localhost:3000/join"
-  };
+ const router = useRouter();
 
   return (
     <>
       <Navbar />
       <div className={styles.mobileHomeWrapper}>
-        <Mobilehome />
+        {/* <Mobilehome /> */}
       </div>
       <div className={styles.parentSection}>
         <section className={styles.sectionLeft}>
@@ -27,8 +25,8 @@ export default function Home() {
             create interactive, real-time presentations with quizzes, polls, and
             analytics.
           </p>
-          <button className="colorButton" onClick={() => getStartedRoutes()}>
-            Join a presentation
+          <button className="colorButton" onClick={() => router.replace("/auth")}>
+            Get Started
           </button>
         </section>
         <section>
@@ -164,7 +162,7 @@ export default function Home() {
         <h2 className={styles.popularHeading}>
           Find Out More Awesome Features
         </h2>
-        <button className="colorButton" onClick={() => getStartedRoutes()}>
+        <button className="colorButton" onClick={() => router.replace("/auth")}>
           Get started, it's free
         </button>
       </section>

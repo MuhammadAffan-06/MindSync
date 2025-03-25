@@ -59,10 +59,9 @@ export default function Sidebar() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("userToken");
-    sessionStorage.removeItem("userToken");
+    localStorage.removeItem("token"); 
 
-    router.push("/");
+    router.push("/auth");
   };
 
   return (

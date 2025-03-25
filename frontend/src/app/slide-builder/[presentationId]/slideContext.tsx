@@ -1,12 +1,13 @@
 "use client";
 
-import React, { createContext, useContext, useMemo, useRef, useState } from "react";
-import { Slide, SlideType } from "./types";
+import React, { createContext, MutableRefObject, useContext, useRef, useState } from "react";
+import { PresentationResponse, Slide, SlideType } from "./types";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import { arrayMove } from "@dnd-kit/sortable";
-
+import { fetchDataJSON } from "@/app/components/utils/api";
+import { v4 as uuidv4 } from 'uuid';
+ 
 interface ISlideContext {
   slides: Slide[];
   addSlide: () => void;
@@ -17,53 +18,60 @@ interface ISlideContext {
   setActiveSlideId: (id: UniqueIdentifier) => void;
   setSlideType: (id: UniqueIdentifier, type: SlideType) => void;
   getSlideById: (id: UniqueIdentifier) => Slide | undefined;
-  updateActiveSlideInfo: ( content: string, thumbnailUrl: string) => void;
+  updateSlideInfoById: (id: UniqueIdentifier, content: string, thumbnailUrl: string , correctAnswer?:string) => void;
   presentationNameRef: React.MutableRefObject<string>;
-  presentationId: string
+  presentationId: string;
+  saveTheSlides: () => Promise<boolean>;
+  joinCode:string;
 }
 
 const SlideContext = createContext<ISlideContext | undefined>(undefined);
 
 interface SlideProviderProps {
   children: React.ReactNode;
+  presentationDataRef: React.MutableRefObject<PresentationResponse | null>;
 }
 
-export function SlideProvider({ children }: SlideProviderProps) {
-  const [slides, setSlides] = useState<Slide[]>([]);
+export function SlideProvider({ children, presentationDataRef }: SlideProviderProps) {
+  if (!presentationDataRef.current) return;
+  const [slides, setSlides] = useState<Slide[]>(presentationDataRef.current.slideIds);
   /* if  activeSlideId === 0 then => no slide is active. Show slideNotSelected instead*/
   /* else if its string then it must be id of particular slide, so show that slide*/
-  const [activeSlideId, setActiveSlideId] = useState<UniqueIdentifier>(0);
-  const presentationId = useMemo(() => crypto.randomUUID(), []); 
-  const presentationNameRef:React.MutableRefObject<string> = useRef("Untitled Presentation");
+  const [activeSlideId, setActiveSlideId] = useState<UniqueIdentifier>(slides.length === 0 ? 0: slides[0].clientId);
+  const presentationId = presentationDataRef.current._id;
+  const presentationNameRef: React.MutableRefObject<string> = useRef(presentationDataRef.current.title);
+  const joinCode:string = presentationDataRef.current.joinCode;
   const addSlide = () => {
     if (getActiveSlide()?.type === "Undefined") return;
+    
     const newSlide: Slide = {
-      id: crypto.randomUUID(),
-      content: JSON.stringify(''),
+      clientId: uuidv4(),
+      content: null,
       type: "Undefined",
+      correctAnswer: null
     };
-    setActiveSlideId(newSlide.id);
     setSlides((prev) => [...prev, newSlide]);
+
+    setActiveSlideId(newSlide.clientId);
   };
 
   const removeSlide = (id: UniqueIdentifier) => {
     toast.success("Slide Deleted!", { autoClose: 1000 });
     setSlides((prev) => {
-      const newSlides = prev.filter((slide) => slide.id !== id);
+      const newSlides = prev.filter((slide) => slide.clientId !== id);
       if (activeSlideId === id) {
-        setActiveSlideId(newSlides.length > 0 ? newSlides[0].id : 0);
+        setActiveSlideId(newSlides.length > 0 ? newSlides[0].clientId : 0);
       }
       return newSlides;
     });
   };
 
-  const getSlideById = (id: UniqueIdentifier) =>
-    slides.find((slide) => slide.id === id);
+  const getSlideById = (id: UniqueIdentifier) => slides.find((slide) => slide.clientId === id);
 
   const updateSlideIndex = (originalSlideId: UniqueIdentifier, newSlideId: UniqueIdentifier) => {
     setSlides((prev) => {
-      const originalSlideIndex = prev.findIndex((slide) => slide.id === originalSlideId);
-      const newSlideIndex = prev.findIndex((slide) => slide.id === newSlideId);
+      const originalSlideIndex = prev.findIndex((slide) => slide.clientId === originalSlideId);
+      const newSlideIndex = prev.findIndex((slide) => slide.clientId === newSlideId);
       if (originalSlideIndex === -1 || newSlideIndex === -1) return prev;
       return arrayMove(prev, originalSlideIndex, newSlideIndex);
     });
@@ -71,7 +79,7 @@ export function SlideProvider({ children }: SlideProviderProps) {
 
   const setSlideType = (id: UniqueIdentifier, type: SlideType) => {
     setSlides((prev) => {
-      const index = prev.findIndex((slide) => slide.id === id);
+      const index = prev.findIndex((slide) => slide.clientId === id);
       if (index === -1) {
         console.error("Invalid Slide Id for setSlideType. Got " + id);
         return prev;
@@ -85,18 +93,27 @@ export function SlideProvider({ children }: SlideProviderProps) {
 
   const getActiveSlide = (): Slide | undefined => {
     if (activeSlideId === 0) return undefined;
-    return slides.find((slide) => slide.id === activeSlideId);
+    return slides.find((slide) => slide.clientId === activeSlideId);
   };
 
-  const updateActiveSlideInfo = (content: string, thumbnailUrl: string) => {
+  const updateSlideInfoById = (id: UniqueIdentifier, content: string, thumbnailUrl: string = "", correctAnswer?:string|null) => {
     setSlides((prev) => {
-      const index = prev.findIndex((slide) => slide.id === activeSlideId);
+      const index = prev.findIndex((slide) => slide.clientId === id);
       if (index === -1) return prev;
-      const updatedSlide = { ...prev[index], content, thumbnailUrl };
+      const updatedSlide = { ...prev[index], content};
+      if(correctAnswer) updatedSlide.correctAnswer = correctAnswer;
+      if (thumbnailUrl != "") updatedSlide.thumbnailUrl = thumbnailUrl;
       const newSlides = [...prev];
       newSlides[index] = updatedSlide;
       return newSlides;
     });
+  };
+
+  const saveTheSlides = async () => {
+    const payload = { presentationTitle: presentationNameRef.current, slides: slides.filter((slide) => slide.content) };
+    const response = await fetchDataJSON("presentation/" + presentationId + "/save", "POST", payload);
+    
+    return false;
   };
 
   return (
@@ -111,9 +128,11 @@ export function SlideProvider({ children }: SlideProviderProps) {
         setActiveSlideId,
         setSlideType,
         getSlideById,
-        updateActiveSlideInfo,
+        updateSlideInfoById,
         presentationNameRef,
-        presentationId
+        presentationId,
+        saveTheSlides,
+        joinCode
       }}
     >
       {children}

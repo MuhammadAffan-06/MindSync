@@ -1,17 +1,14 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
-import { CustomJwtPayload } from "./types"; // Import the custom interface
+import { useRouter } from "next/navigation";
 
 export default function Nav() {
   const handleJoin = () => {
     window.location.href = "http://localhost:3000/join"
   };
   const [userName, setUserName] = useState("");
-
+  const router = useRouter();
   useEffect(() => {
     const googleToken = Cookies.get("authToken");
     console.log("Google Auth Token from Cookies:", googleToken); // Debugging
@@ -88,14 +85,12 @@ export default function Nav() {
 
         {/* User Profile */}
         <div className="ml-2 max-[660px]:ml-1">
-          <Link href="http://localhost:3000/profile">
-            <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]">
-              {userName || "Guest"}
+            <h6 className="text-[12px] font-normal leading-4 max-[660px]:text-[10px]" onClick={()=>router.replace("/profile")}>
+              {userName}
             </h6>
             <p className="text-[11px] font-light text-gray-500 max-[660px]:text-[9px]">
               student
             </p>
-          </Link>
         </div>
 
         {/* Dropdown Icon */}

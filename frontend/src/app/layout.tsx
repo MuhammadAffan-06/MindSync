@@ -1,4 +1,6 @@
+import { ToastContainer } from "react-toastify";
 import "./globals.css";
+import "react-toastify/dist/ReactToastify.css";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -13,11 +15,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <head>
-        <link rel="icon" href="/favicon.ico" sizes="any" />
-        <link rel="icon" type="image/png" href="/favicon.png" />
-      </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <ToastContainer />
+      </body>
     </html>
   );
 }

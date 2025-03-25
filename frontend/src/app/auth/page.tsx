@@ -1,13 +1,13 @@
 "use client";
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import "@/app/auth/auth.css";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import AuthWrapper from "@/app/auth/auth-wrapper";
-import { error } from "console";
 
-// Define form data structure for both login and signup
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import Loading from "../components/loading/loading";
+import {toast} from "react-toastify"
+import AuthWrapper from "./auth-wrapper";
+import Image from "next/image";
+import "./auth.css";
+
 interface FormData {
   email: string;
   password: string;
@@ -17,50 +17,52 @@ interface FormData {
 
 export default function Auth() {
 
+  const router = useRouter();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+  const [isSignup, setIsSignup] = useState(true);
   const [signupData, setSignupData] = useState<FormData>({
     email: "",
     password: "",
     name: "",
-    role: "presenter", // Default role
+    role: "presenter",
   });
-
   const [loginData, setLoginData] = useState<FormData>({
     email: "",
     password: "",
   });
 
-  // State to toggle between signup and login forms
-  const [isSignup, setIsSignup] = useState(true); // true = signup, false = login
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const token = localStorage.getItem("token");
+    if (token) {
+      router.replace("/dashboard");
+    } else {
+      setCheckingAuth(false);
+    }
+  }, [router]);
+  if (checkingAuth) {
+    return <Loading message={"Checking Authorization.."}/>;
+  }
 
+  // --- 2) Form State & Handlers ---
   const handleSignupChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignupData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
+    setSignupData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleLoginChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLoginData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
+    setLoginData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const validateSignupData = () => {
-    console.log("Validating signup data:", signupData);
     const { name, password } = signupData;
-
     if (!name) {
       toast.error("Name cannot be empty.");
       return false;
     }
-
-    const nameHasInvalidChars = /[^a-zA-Z\s]/.test(name);
-    if (nameHasInvalidChars) {
+    if (/[^a-zA-Z\s]/.test(name)) {
       toast.error("Name should only contain letters and spaces.");
       return false;
     }
-
     const passwordRequirements =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRequirements.test(password)) {
@@ -77,114 +79,69 @@ export default function Auth() {
       );
       return false;
     }
-
     return true;
   };
 
   const handleSignupSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!validateSignupData()) {
-      return;
-    }
+    if (!validateSignupData()) return;
     try {
-      const response = await fetch(
-        "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/signup",
-        // "http://localhost:5000/auth/signup",
-        // "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/signup",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(signupData),
-        }
-      );
-
+      const response = await fetch("http://localhost:5000/auth/signup", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(signupData),
+      });
       const data = await response.json();
-
       if (response.ok) {
         toast.success("Your Account has been created!");
-        localStorage.setItem("userName", signupData.name || "");
         setSignupData({ email: "", password: "", name: "", role: "presenter" });
+        setIsSignup(false);
       } else {
         toast.error(data.message || "Email already exists");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.");
     }
   };
 
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     try {
-      const response = await fetch(
-        "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/login",
-        // "http://localhost:5000/auth/login",
-        // "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/login",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(loginData),
-        }
-      );
-
+      const response = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(loginData),
+      });
       const data = await response.json();
-
       if (response.ok) {
-        toast.success("Logged in successfully!");
+        toast.success(data.message);
         localStorage.setItem("userName", data.user.name);
         localStorage.setItem("userEmail", data.user.email);
-        console.log(localStorage);
-        // window.location.href ="https://mind-sync-u9h4.vercel.app/"
-        window.location.href = "http://localhost:3000/dashboard";
+        localStorage.setItem("token", data.token);
         setLoginData({ email: "", password: "" });
+        router.push("/dashboard");
       } else {
         toast.error(data.message || "Invalid email or password.");
       }
-    } catch (error) {
+    } catch {
       toast.error("Something went wrong. Please try again.");
     }
   };
 
-  // Function to toggle between signup and login
   const toggleForm = () => {
     setIsSignup((prev) => !prev);
   };
 
-  // const handleGoogleAuth = () => {
-  //   // const baseAuthUrl = "http://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google";
-  //   const baseAuthUrl = "http://localhost:5000/auth/google";
-  //   const intentParam = isSignup ? "signup" : "login";
-  //   const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
-  //   // window.location.href = "http://localhost:3000/";
-
-  // };
-  // const handleGoogleAuth = () => {
-  //   const baseAuthUrl = "http://localhost:5000/auth/google";
-  //   // const baseAuthUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/google";
-  //   const intentParam = isSignup ? "signup" : "login";
-  //   const redirectUrl = `${baseAuthUrl}?intent=${intentParam}`;
-  //   window.location.href = redirectUrl;
-  // };
   const handleGoogleAuth = () => {
     const baseAuthUrl = "http://localhost:5000/auth/google";
-    // const baseAuthUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/google";
-    window.location.href = baseAuthUrl; // Redirect to the Google OAuth URL
+    const intentParam = isSignup ? "signup" : "login";
+    window.location.href = `${baseAuthUrl}?intent=${intentParam}`;
   };
 
   return (
     <AuthWrapper>
       <>
-        <ToastContainer />
-        <div
-          className={`main-section ${
-            isSignup ? "signup-active" : "login-active"
-          }`}
-        >
+        <div className={`main-section ${isSignup ? "signup-active" : "login-active"}`}>
           <div className="main-section-left">
             <div>
               <Image
@@ -198,7 +155,6 @@ export default function Auth() {
                 {isSignup ? "Create an Account" : "Nice to see you again"}
               </h2>
             </div>
-
             <div className="registration">
               {isSignup ? (
                 <form onSubmit={handleSignupSubmit}>
@@ -278,7 +234,6 @@ export default function Auth() {
                 />
                 <span>Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
               </button>
-              {/* Mobile/Tablet View Toggle */}
               <div className="mobile-toggle">
                 {isSignup ? (
                   <>
@@ -289,7 +244,7 @@ export default function Auth() {
                   </>
                 ) : (
                   <>
-                    <p>No Account Yet? </p>
+                    <p>No Account Yet?</p>
                     <button onClick={toggleForm} className="mobile-toggle-btn">
                       Sign Up
                     </button>
@@ -304,7 +259,7 @@ export default function Auth() {
                 <h1>Got an Account?</h1>
                 <p>
                   Reconnect and enhance your presentations with real-time
-                  engagement tools. Ready to dive back in?
+                  engagement tools.
                 </p>
                 <button onClick={toggleForm}>Sign In</button>
               </>

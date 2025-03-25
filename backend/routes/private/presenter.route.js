@@ -1,100 +1,67 @@
-const { signup, login } = require("../../controller/auth-controller");
-const passport = require("../../utils/passportConfig");
 const express = require("express");
+const passport = require("passport");
+const jwt = require("jsonwebtoken");
 const User = require("../../models/users");
+const { signup, login, verify } = require("../../controller/auth-controller");
+const verifyToken = require("../../middleware/verifyToken");
+
 const presenterRouter = express.Router();
 const jwt = require("jsonwebtoken");
 
-// Signup and login routes
-presenterRouter.post("/signup", signup).post("/login", login);
+presenterRouter.post("/signup", signup);
+presenterRouter.post("/login", login);
+presenterRouter.get("/verify", verifyToken, verify);
 
-// Google authentication routes
 presenterRouter.get(
   "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] })
+  passport.authenticate("google", { scope: ["profile", "email"], session: false })
 );
 
 presenterRouter.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: "/auth/login" }),
+  passport.authenticate("google", { failureRedirect: "/auth", session: false }),
   async (req, res) => {
-    console.log("User authenticated:", req.user);
-
+    // If no user is found, immediately redirect with an error
     if (!req.user) {
-      console.log("Authentication failed or user not found");
-      return res.redirect("/login?error=Authentication%20failed.");
+      console.error("Authentication failed or user not found");
+      return res.redirect("http://localhost:3000/auth?error=Authentication%20failed.");
     }
 
     try {
-      // Check if user already exists in the database based on googleId or email
+      // Check if the user already exists by googleId or email
       let existingUser = await User.findOne({ googleId: req.user.googleId });
-
-      if (!existingUser) {
-        // If no user with the provided googleId, check by email
+      if (!existingUser && req.user.email) {
         existingUser = await User.findOne({ email: req.user.email });
       }
 
-      if (existingUser) {
-        // If user exists, generate a token and include the profile picture URL
-        const token = jwt.sign(
-          {
-            name: existingUser.name,
-            id: existingUser._id,
-            email: existingUser.email,
-            role: existingUser.role,
-            picture: req.user.picture, // Include the profile picture URL
-          },
-          process.env.JWT_SECRET,
-          { expiresIn: "1h" }
-        );
-
-        // Set the token in a cookie
-        res.cookie("authToken", token, {
-          httpOnly: false, // Allow JavaScript access
-          secure: false, // Set to `false` for local development (HTTP)
-          sameSite: "Lax",
+      let user = existingUser;
+      if (user) {
+        console.log("Existing user found");
+      } else {
+        // Create a new user if none exists
+        user = new User({
+          name: req.user.name,
+          email: req.user.email,
+          googleId: req.user.googleId,
+          picture: req.user.picture,
+          role: "presenter"
         });
-
-        console.log("Existing user found, redirecting...");
-        return res.redirect("http://localhost:3000/dashboard");
+        await user.save();
+        console.log("New user created successfully");
       }
 
-      // If user does not exist, create a new user
-      const newUser = new User({
-        name: req.user.name,
-        email: req.user.email,
-        googleId: req.user.googleId,
-        picture: req.user.picture, // Save the profile picture URL
-        role: "presenter", // Assign a role as per your requirement
-      });
-
-      await newUser.save();
-
-      // Generate a token and include the profile picture URL
       const token = jwt.sign(
-        {
-          name: newUser.name,
-          id: newUser._id,
-          email: newUser.email,
-          role: newUser.role,
-          picture: newUser.picture, // Include the profile picture URL
-        },
+        { id: user._id, email: user.email, name: user.name },
         process.env.JWT_SECRET,
-        { expiresIn: "1h" }
+        { expiresIn: "7d" }
       );
 
-      // Set the token in a cookie
-      res.cookie("authToken", token, {
-        httpOnly: false, // Allow JavaScript access
-        secure: false, // Set to `false` for local development (HTTP)
-        sameSite: "Lax",
-      });
-
-      console.log("New user created successfully, redirecting...");
-      return res.redirect("http://localhost:3000/dashboard");
+      res.redirect(
+        `http://localhost:3000/auth/success?token=${encodeURIComponent(token)}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`
+      );
     } catch (error) {
       console.error("Error handling user authentication:", error);
-      res.redirect("/login?error=Something%20went%20wrong.");
+      res.redirect("http://localhost:3000/auth?error=Something%20went%20wrong.");
     }
   }
 );
