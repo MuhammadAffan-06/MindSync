@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import Image from "next/image";
 import PresentSlidePlainText from "./presentSlidePlainText";
 import PresentSlideMCQ from "./presentSlideMCQ";
+import PresentSlideWordCloud from "./presentSlideWordCloud";
 import { SlideType } from "@/app/slide-builder/[presentationId]/types";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
@@ -40,7 +41,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const newSocket = io("http://172.20.7.193:5000", {
+    const newSocket = io("http://localhost:5000", {
       auth: { token },
       withCredentials: true,
       transports: ["websocket", "polling"],
@@ -126,6 +127,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
         <div className="bg-[var(--background)] m-8 flex flex-grow flex-shrink basis-full rounded-lg">
           {activeSlideType === "PlainText" && <PresentSlidePlainText content={activeSlideContent} isPresenter={isPresenter} />}
           {activeSlideType === "MCQ" && <PresentSlideMCQ content={activeSlideContent} isPresenter={isPresenter} onSubmit={onSubmitAnswer} />}
+          {activeSlideType === "WordCloud" && <PresentSlideWordCloud content={activeSlideContent} isPresenter={isPresenter} onSubmit={onSubmitAnswer}/>}
         </div>
         {isPresenter && (
           <>

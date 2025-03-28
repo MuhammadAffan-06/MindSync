@@ -9,9 +9,13 @@ interface PresentSlideProps {
   onSubmit: (answer: string) => Promise<string>;
 }
 
-export default function PresentSlideMCQ({ content, isPresenter, onSubmit }: PresentSlideProps) {
-  console.log("Present Slide MCQ Rendering")
-    
+export default function PresentSlideMCQ({
+  content,
+  isPresenter,
+  onSubmit,
+}: PresentSlideProps) {
+  console.log("Present Slide MCQ Rendering");
+
   const parsed: ContentProps = JSON.parse(content);
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
 
