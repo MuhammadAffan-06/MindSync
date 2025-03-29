@@ -10,6 +10,7 @@ import SlideMCQ from './slideTypes/slideMCQ';
 import SlideDeletePopup from './slideTypes/slideDeletePopup';
 import SlideTypeSelector from './slideTypes/slideTypeSelector';
 import { useSlide } from '@/app/context/slideContext';
+import SlidePoll from './slideTypes/slidePoll';
 
 
 export default function SlideEditor() {
@@ -32,6 +33,7 @@ export default function SlideEditor() {
 {slide.type === "PlainText" && <SlidePlainText id={slide.clientId}/>}
 {slide.type === "MCQ" && <SlideMCQ id={slide.clientId}/>}
 {slide.type === "WordCloud" && <SlideWordCloud id={slide.clientId}/>}
+{slide.type === "Poll" && <SlidePoll id={slide.clientId}/>}
 {slide.type === "Undefined" && <SlideTypeSelector id={slide.clientId}/>}
       
       <SlideDeletePopup/>

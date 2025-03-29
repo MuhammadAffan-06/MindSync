@@ -163,7 +163,25 @@ exports.goLive = async (req, res) => {
 
     presentation.slideIds = presentation.slideIds
       .sort((a, b) => a.index - b.index)
-      .map(({ __v, _id, index, presentationId, thumbnailUrl, clientId, ...slide }) => slide);
+      .map((slide) =>{
+        const newSlide = {
+          correctAnswer: slide.correctAnswer,
+          type: slide.type,
+          content: slide.content,
+        }
+        if(slide.type != "PlainText"){
+          try{
+            const parsedContent = JSON.parse(slide.content);
+            newSlide.parsedContent = parsedContent;
+          
+          }catch{
+            console.log("Error in slide data, Unable to parse JSON content")
+            console.log(slide);
+            console.log("unable to parse JSON content of ",slide.content);
+          }
+        }
+        return newSlide;
+      });
     const activePresentation = {
       slides: presentation.slideIds,
       participants: {},

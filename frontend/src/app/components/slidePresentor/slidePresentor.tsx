@@ -10,6 +10,7 @@ import { toast } from "react-toastify";
 import  { LeaderboardType } from "../leaderboard/leaderboard";
 import { SlideType } from "@/app/types/slideTypes";
 import {serverBaseUrl} from "../utils/api"
+import PresentSlidePoll from "./presentSlidePoll";
 
 interface SlidePresentorProps {
   joinCode: string;
@@ -31,6 +32,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
   const [socket, setSocket] = useState<Socket | null>(null);
   const [activeSlideType, setActiveSlideType] = useState<SlideType | null>(null);
   const [activeSlideContent, setActiveSlideContent] = useState<string | null>(null);
+  const [additionalData,setAdditionalData] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
 
   const [nextBtnText,setNextBtnText] = useState<string>("Next Slide");
@@ -51,12 +53,13 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     newSocket.on("connect", () => {
       console.log("Connected to socket server:", newSocket.id);
       console.log("Joining presentation...");
-      newSocket.emit("join-presentation", joinCode, (success: boolean, text: string, slide: SlideResponse) => {
+      newSocket.emit("join-presentation", joinCode, (success: boolean, text: string, slide: SlideResponse,additionalData:any) => {
         if (success) {
           console.log("Successfully joined presentation", slide);
           setTitle(text);
           setActiveSlideType(slide.type);
           setActiveSlideContent(slide.content);
+          setAdditionalData(additionalData);
         } else {
           console.log("Failed to join Presentation");
           setShowPresenter(false);
@@ -65,9 +68,10 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
       });
     });
 
-    newSocket.on("presentation-data", ({ type, content }) => {
+    newSocket.on("presentation-data", ({ type, content },additionalData) => {
       setActiveSlideType(type);
       setActiveSlideContent(content);
+      setAdditionalData(additionalData);
     });
 
     newSocket.on("presentation-ended", (data) => {
@@ -129,6 +133,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
         <div className="bg-[var(--background)] m-8 flex flex-grow flex-shrink basis-full rounded-lg">
           {activeSlideType === "PlainText" && <PresentSlidePlainText content={activeSlideContent} isPresenter={isPresenter} />}
           {activeSlideType === "MCQ" && <PresentSlideMCQ content={activeSlideContent} isPresenter={isPresenter} onSubmit={onSubmitAnswer} />}
+          {activeSlideType === "Poll" && <PresentSlidePoll content={activeSlideContent} isPresenter={isPresenter} polls={additionalData} onSubmit={onSubmitAnswer} />}
         </div>
         {isPresenter && (
           <>
