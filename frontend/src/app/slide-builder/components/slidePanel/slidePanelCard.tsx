@@ -2,8 +2,8 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import { Slide } from "@/app/slide-builder/[presentationId]/types";
+import { Slide } from "@/app/types/slideTypes";
+import { useSlide } from "@/app/context/slideContext";
 
 interface SlidePanelCardProps {
   index: number;

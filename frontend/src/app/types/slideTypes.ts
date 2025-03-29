@@ -11,14 +11,7 @@ export interface Slide {
   correctAnswer: string|null;
   type: SlideType;   
 }
-export interface PresentationResponse{
-  isLive:boolean;
-  joinCode:string;
-  presenterId:string;
-  title:string;
-  slideIds:Slide[],
-  _id:string
-}
+
 export interface SlideBaseProps {
   id: UniqueIdentifier
 }

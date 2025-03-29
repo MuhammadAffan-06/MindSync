@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useSlide } from "../../../[presentationId]/slideContext";
-import { Slide } from "../../../[presentationId]/types";
+import { Slide } from "../../../../types/slideTypes";
+import { useSlide } from "@/app/context/slideContext";
 
 
 

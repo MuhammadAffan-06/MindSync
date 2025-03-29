@@ -1,7 +1,7 @@
 'use client';
 
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import { Slide, SlideBaseProps } from "@/app/slide-builder/[presentationId]/types"
+import { useSlide } from "@/app/context/slideContext";
+import { Slide, SlideBaseProps } from "@/app/types/slideTypes"
 
 export default function SlideWordCloud({id}:SlideBaseProps){
 

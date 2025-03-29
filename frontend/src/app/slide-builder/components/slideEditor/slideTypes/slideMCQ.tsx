@@ -1,7 +1,7 @@
 "use client";
 
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import { Slide, SlideBaseProps } from "@/app/slide-builder/[presentationId]/types";
+import { useSlide } from "@/app/context/slideContext";
+import { Slide, SlideBaseProps } from "@/app/types/slideTypes";
 import html2canvas from "html2canvas";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 

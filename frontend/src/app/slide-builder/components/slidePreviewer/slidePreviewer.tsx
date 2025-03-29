@@ -1,6 +1,6 @@
 "use client";
-import { useSlide } from "../../[presentationId]/slideContext";
-import { Slide, SlideBaseProps, SlideType } from "../../[presentationId]/types";
+import { useSlide } from "@/app/context/slideContext";
+import { Slide, SlideBaseProps, SlideType } from "../../../types/slideTypes";
 import SlideTypeSelector from "../slideEditor/slideTypes/slideTypeSelector";
 import PreviewSlideMCQ from "./previewSlideTypes/previewSlideMCQ";
 import PreviewSlidePlainText from "./previewSlideTypes/previewSlidePlainText";

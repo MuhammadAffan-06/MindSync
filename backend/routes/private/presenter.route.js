@@ -23,7 +23,7 @@ presenterRouter.get(
     // If no user is found, immediately redirect with an error
     if (!req.user) {
       console.error("Authentication failed or user not found");
-      return res.redirect("http://localhost:3000/auth?error=Authentication%20failed.");
+      return res.redirect(`${process.env.CLIENT_BASE_URL}/auth?error=Authentication%20failed.`);
     }
 
     try {
@@ -56,11 +56,11 @@ presenterRouter.get(
       );
 
       res.redirect(
-        `http://localhost:3000/auth/success?token=${encodeURIComponent(token)}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`
+        `${process.env.CLIENT_BASE_URL}/auth/success?token=${encodeURIComponent(token)}&name=${encodeURIComponent(user.name)}&email=${encodeURIComponent(user.email)}`
       );
     } catch (error) {
       console.error("Error handling user authentication:", error);
-      res.redirect("http://localhost:3000/auth?error=Something%20went%20wrong.");
+      res.redirect(`${process.env.CLIENT_BASE_URL}/auth?error=Something%20went%20wrong.`);
     }
   }
 );

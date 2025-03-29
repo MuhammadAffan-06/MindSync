@@ -3,16 +3,17 @@ import Nav from "@/app/components/nav/nav";
 import "./slide-builder.css";
 import SlidePanel from "../components/slidePanel/slidePanel";
 import SlideEditor from "../components/slideEditor/slideEditor";
-import { SlideProvider } from "./slideContext";
 import { toast } from "react-toastify";
 import SlideHeader from "../components/slideHeader/slideHeader";
 import { useEffect, useRef, useState } from "react";
 import SlidePreviewer from "../components/slidePreviewer/slidePreviewer";
-import { PresentationResponse, Slide, UserMode } from "./types";
+import { UserMode } from "../../types/slideTypes";
 import { useParams, useRouter } from "next/navigation";
-import { fetchDataJSON } from "@/app/components/utils/api";
 import { RequireAuth } from "@/app/components/utils/requireAuth";
 import Loading from "@/app/components/loading/loading";
+import { SlideProvider } from "@/app/context/slideContext";
+import { apiRequest } from "@/app/components/utils/api";
+import { PresentationGetResponse } from "@/app/types/presentationTypes";
 
 function SlideBuilder() {
   console.log("Silde Builder Rendering..");
@@ -20,32 +21,15 @@ function SlideBuilder() {
 
   const { presentationId } = useParams();
   const [loading, setLoading] = useState(true);
-  const presentationDataRef = useRef<PresentationResponse|null>(null);
-  const router = useRouter();
+  const presentationDataRef = useRef<PresentationGetResponse|null>(null);
   
   useEffect(() => {
     if (!presentationId) return;
     (async () => {
-     try{
-       const responseJson:PresentationResponse = await fetchDataJSON("presentation/" + presentationId, "GET");
-   
-      if(responseJson){
-        if(responseJson.isLive){
-          toast.error("Presentation is currently Live.");
-          router.replace("/dashboard");
-          return;
-        }
-        presentationDataRef.current = responseJson;
+    
+      const response = await apiRequest("/presentation/get",{ presentationId:presentationId as string });
+        presentationDataRef.current = response;
         setLoading(false);
-
-      }else{
-        router.replace("/dashboard");
-        
-      }
-     }catch(e){
-      router.replace("/dashboard");
-      
-     }
     })();
   }, []);
 

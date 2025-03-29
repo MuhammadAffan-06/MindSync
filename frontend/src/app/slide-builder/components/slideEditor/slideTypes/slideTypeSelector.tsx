@@ -1,6 +1,6 @@
 'use client';
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import { SlideBaseProps, SlideType } from "@/app/slide-builder/[presentationId]/types";
+import { useSlide } from "@/app/context/slideContext";
+import { SlideBaseProps, SlideType } from "@/app/types/slideTypes";
 import Image from "next/image";
 
 interface ButtonInfo {

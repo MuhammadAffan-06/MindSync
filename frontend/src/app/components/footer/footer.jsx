@@ -1,5 +1,6 @@
 import "@/app/components/footer/footer.css";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Footer() {
   return (
@@ -25,12 +26,12 @@ export default function Footer() {
         </section>
         <section>
           <h3>Company</h3>
-          <a href="http://localhost:3000/about-us" target="_blank">
+          <Link href="/about" target="_blank">
             <p>About</p>
-          </a>
-          <a href="http://localhost:3000/contact-us" target="_blank">
+          </Link>
+          <Link href="/contact-us" target="_blank">
             <p>Contact Us</p>
-          </a>
+          </Link>
         </section>
         <section>
           <h3>Support</h3>

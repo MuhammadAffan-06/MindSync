@@ -5,10 +5,11 @@ import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/profile/profile.css";
 import { useEffect, useState } from "react";
 import { RequireAuth } from "../components/utils/requireAuth";
+import Image from "next/image";
 
 function Profile() {
-  const [userName, setUserName] = useState("");
-  const [userEmail, setuserEmail] = useState("");
+  const [userName, setUserName] = useState("N/A");
+  const [userEmail, setuserEmail] = useState("N/A");
 
   // Retrieve the user's name from local storage on component mount
   useEffect(() => {
@@ -30,19 +31,18 @@ function Profile() {
         <h1 className="about-title">Profile Management</h1>
 
         <div className="avatar-details">
-          <img
+          <Image
             src="/profile-avatar.svg"
             alt="Profile Avatar"
             width={91}
             height={91}
           />
           <div className="text">
-            <h1 className="profile-name">{userName || "Salman Shah"}</h1>{" "}
-            {/* Display the user's name */}
+            <h1 className="profile-name">userName</h1>
             <p>{userEmail}</p>
           </div>
           <div className="btn">
-            <button className="edit-btn">edit </button>
+            <button className="edit-btn">edit</button>
           </div>
         </div>
 
@@ -92,7 +92,7 @@ function Profile() {
           <div className="email-details">
             <div className="email-info">
               <div className="email-icon">
-                <img
+                <Image
                   src="/emailp.svg"
                   alt="email icon"
                   width={24}

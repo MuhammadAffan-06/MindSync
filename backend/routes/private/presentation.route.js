@@ -4,10 +4,10 @@ const presentationRouter = express.Router();
 
 presentationRouter
   .post("/create", presentationController.createPresentation)
-  .get("/all", presentationController.getPresentations) 
-  .get("/:presentationId", presentationController.getPresentation) 
-  .get("/isLive/:joinCode", presentationController.isLive)
-  .post("/:presentationId/save",presentationController.savePresentation)
-  .post("/:presentationId/live", presentationController.goLive);
+  .get("/all", presentationController.getPresentations)
+  .post("/get", presentationController.getPresentation)
+  .post("/isLive", presentationController.isLive)
+  .post("/save", presentationController.savePresentation)
+  .post("/live", presentationController.goLive);
 
 module.exports = presentationRouter;

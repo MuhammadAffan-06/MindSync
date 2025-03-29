@@ -1,12 +1,13 @@
 "use client";
 
 import React, { createContext, MutableRefObject, useContext, useRef, useState } from "react";
-import { PresentationResponse, Slide, SlideType } from "./types";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { toast } from "react-toastify";
 import { arrayMove } from "@dnd-kit/sortable";
-import { fetchDataJSON } from "@/app/components/utils/api";
 import { v4 as uuidv4 } from 'uuid';
+import { Slide, SlideType } from "../types/slideTypes";
+import { PresentationGetResponse } from "../types/presentationTypes";
+import { apiRequest } from "../components/utils/api";
  
 interface ISlideContext {
   slides: Slide[];
@@ -21,7 +22,7 @@ interface ISlideContext {
   updateSlideInfoById: (id: UniqueIdentifier, content: string, thumbnailUrl: string , correctAnswer?:string) => void;
   presentationNameRef: React.MutableRefObject<string>;
   presentationId: string;
-  saveTheSlides: () => Promise<boolean>;
+  saveSlidesToDB: () => Promise<boolean>;
   joinCode:string;
 }
 
@@ -29,7 +30,7 @@ const SlideContext = createContext<ISlideContext | undefined>(undefined);
 
 interface SlideProviderProps {
   children: React.ReactNode;
-  presentationDataRef: React.MutableRefObject<PresentationResponse | null>;
+  presentationDataRef: React.MutableRefObject<PresentationGetResponse | null>;
 }
 
 export function SlideProvider({ children, presentationDataRef }: SlideProviderProps) {
@@ -109,11 +110,13 @@ export function SlideProvider({ children, presentationDataRef }: SlideProviderPr
     });
   };
 
-  const saveTheSlides = async () => {
-    const payload = { presentationTitle: presentationNameRef.current, slides: slides.filter((slide) => slide.content) };
-    const response = await fetchDataJSON("presentation/" + presentationId + "/save", "POST", payload);
-    
-    return false;
+  const saveSlidesToDB = async () => {
+   const { success } = await apiRequest("/presentation/save",{ presentationId , presentationTitle: presentationNameRef.current, slides: slides.filter((slide) => slide.content) });
+   if(success){
+    toast.success("Slides Saved!");
+   }
+
+   return success;
   };
 
   return (
@@ -131,7 +134,7 @@ export function SlideProvider({ children, presentationDataRef }: SlideProviderPr
         updateSlideInfoById,
         presentationNameRef,
         presentationId,
-        saveTheSlides,
+        saveSlidesToDB,
         joinCode
       }}
     >

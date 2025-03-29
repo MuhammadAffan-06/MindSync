@@ -1,17 +1,15 @@
 
 'use client';
 import React from 'react';
-import { Slide, SlideBaseProps, SlideType } from '@/app/slide-builder/[presentationId]/types';
+import { Slide, SlideBaseProps, SlideType } from '@/app/types/slideTypes';
 
 import SlidePlainText from "./slideTypes/slidePlainText"
 import SlideWordCloud from "./slideTypes/slideWordCloud"
 import SlideNotSelected from './slideTypes/slideNotSelected';
 import SlideMCQ from './slideTypes/slideMCQ';
-import { useSlide } from '../../[presentationId]/slideContext';
 import SlideDeletePopup from './slideTypes/slideDeletePopup';
 import SlideTypeSelector from './slideTypes/slideTypeSelector';
-
-const SlideTypeInvalid = (props: SlideBaseProps) => <div>Invalid Slide Type</div>
+import { useSlide } from '@/app/context/slideContext';
 
 
 export default function SlideEditor() {

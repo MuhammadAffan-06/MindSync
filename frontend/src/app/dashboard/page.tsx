@@ -1,53 +1,40 @@
 "use client";
 
 import Nav from "@/app/components/nav/nav";
-import Sidebar from "@/app/components/sideBar/sideBar";
 import { useRouter } from "next/navigation";
-import { fetchDataJSON } from "../components/utils/api";
 import { RequireAuth } from "../components/utils/requireAuth";
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { PresentationMetaData } from "../types/presentationTypes";
+import { apiRequest } from "../components/utils/api";
+import Sidebar from "../components/sideBar/sideBar";
 
-interface Presentation {
-  thumbnailURL: string;
-  title: string;
-  presentationId: string;
-}
 
 function Dashboard() {
   const router = useRouter();
   const [createPresentationBtnDisable, setCreatePresentationBtnDisable] = useState(false);
-  const [presentations, setPresentations] = useState<Presentation[]>([]);
+  const [presentations, setPresentations] = useState<PresentationMetaData[]>([]);
 
   const fetchPresentations = async () => {
-    try {
-      const data = await fetchDataJSON("presentation/all", "GET");
-      if (data && Array.isArray(data)) {
-        setPresentations(data);
-      }
-    } catch (error) {
-      console.error("Error fetching presentations:", error);
-    }
-  };
-
+        const {success, presentations:presentationsData }= await apiRequest("/presentation/all",null);
+        if(success){
+          setPresentations(presentationsData);
+        }
+  }
   useEffect(() => {
     fetchPresentations();
   }, []);
 
   const onCreatePresentation = async () => {
     setCreatePresentationBtnDisable(true);
-    try {
-      const response = await fetchDataJSON("presentation/create", "POST", {
-        title: "Untitled Presentation",
-      });
-      if (response) {
-        router.push(`/slide-builder/${response.newPresentation._id}`);
+    
+      const {success,newPresentation} = await apiRequest("/presentation/create", null);
+      if (success) {
+        router.push(`/slide-builder/${newPresentation._id}`);
       } else {
         setCreatePresentationBtnDisable(false);
       }
-    } catch (e) {
-      console.error(e);
-      setCreatePresentationBtnDisable(false);
-    }
+    
   };
 
   const handlePresentationClick = (presentationId: string) => {
@@ -75,12 +62,13 @@ function Dashboard() {
           >
             Create New Presentation
           </button>
+          <Link href="/join">
           <button
             className="bg-white text-indigo-700 font-bold text-xl px-4 py-2 rounded-xl disabled:bg-gray-300"
-            onClick={() => router.replace("/join")}
           >
             Join Presentation
           </button>
+          </Link>
         </div>
 
         <div className="mt-12">

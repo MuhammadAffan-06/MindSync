@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import Loading from "../loading/loading";
-import { fetchData } from "./api";
+import { apiRequest } from "./api";
 
 // `Component` was spelled incorrectly before. Fix that.
 export function RequireAuth(Component: React.FC) {
@@ -20,15 +20,15 @@ export function RequireAuth(Component: React.FC) {
         router.replace("/auth");
       } else {
         (async()=>{
-          try{
-            await fetchData("auth/verify","GET");
-            setIsAuthenticated(true);
-          }catch{
-            localStorage.clear();
+         
+            const {success} = await apiRequest("/auth/verify", null);
 
-            router.replace("/auth");
-
-          }
+            if(success)setIsAuthenticated(true);
+            else{
+              localStorage.clear();
+              router.replace("/auth");
+            }
+         
 
       
        })()
