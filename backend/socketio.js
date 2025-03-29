@@ -43,7 +43,7 @@ function handleSocketConnection(io, livePresentations) {
     socket.on("join-presentation", handleJoinPresentation(socket, livePresentations));
     socket.on("presentation-next-slide", handleSlideChange(socket, io, livePresentations, 1));
     socket.on("presentation-previous-slide", handleSlideChange(socket, io, livePresentations, -1));
-    socket.on("presentation-answer-submit", handleAnswerSubmit(socket, livePresentations));
+    socket.on("presentation-answer-submit", handleAnswerSubmit(socket,io, livePresentations));
     socket.on("presentation-end", handlePresentationEnd(socket, io, livePresentations));
     socket.on("disconnect", handleDisconnect(socket, io, livePresentations));
   };
@@ -52,6 +52,21 @@ function getPresentationJoinCode(socket) {
   return Array.from(socket.rooms).find((room) => room !== socket.id);
 }
 
+function getAdditionalData(livePresentation){
+  const activeSlide = livePresentation.getActiveSlide();
+  const activeIndex = livePresentation.activeSlide;
+
+  if(activeSlide.type === "Poll"){
+    const answerReverseIndexMap = Object.fromEntries(activeSlide.parsedContent.answers.map((answer,i)=>[answer,i]));
+    const polls = [0,0,0,0,0];
+    Object.entries(livePresentation.participants).forEach(([userId,{answers}])=>{
+      const answer = answers[activeIndex];
+      if(answer)polls[answerReverseIndexMap[answer]]++;
+    })
+    return polls;
+
+  }else return null;
+}
 // Event Handlers
 function handleJoinPresentation(socket, livePresentations) {
   return (joinCode, callback) => {
@@ -72,10 +87,11 @@ function handleJoinPresentation(socket, livePresentations) {
 
     livePresentation.participants[socket.user.id] = {
       answers: new Array(livePresentation.slides.length).fill(null),
-      name: socket.user.name
+      name: socket.user.name,
+      socket: socket
     };
     socket.join(joinCode);
-    callback(true, livePresentation.title, livePresentation.getActiveSlide());
+    callback(true, livePresentation.title, livePresentation.getActiveSlide(),getAdditionalData(livePresentation));
 
   };
 }
@@ -102,7 +118,6 @@ function handleSlideChange(socket, io, livePresentations, direction) {
     }
 
     const newSlideIndex = livePresentation.activeSlide + direction;
-    callback(newSlideIndex === livePresentation.slides.length - 1 ? 1 : newSlideIndex === 0 ? 0 : 0.5);
     if (newSlideIndex < 0) {
       console.log("Slide change out of bounds");
       return;
@@ -115,14 +130,13 @@ function handleSlideChange(socket, io, livePresentations, direction) {
 
     livePresentation.activeSlide = newSlideIndex;
     const newSlide = livePresentation.getActiveSlide();
-    io.to(joinCode).emit("presentation-data", newSlide);
-    console.log(
-      `Slide changed by presenter (${socket.user.id}) to slide #${livePresentation.activeSlide}`
-    );
+    io.to(joinCode).emit("presentation-data", {type:newSlide.type,content:newSlide.content},getAdditionalData(livePresentation));
+    console.log(`Slide changed by presenter (${socket.user.id}) to slide #${livePresentation.activeSlide}`);
+    callback(newSlideIndex === livePresentation.slides.length - 1 ? 1 : newSlideIndex === 0 ? 0 : 0.5);
   };
 }
 
-function handleAnswerSubmit(socket, livePresentations) {
+function handleAnswerSubmit(socket,io, livePresentations) {
   return (answer, callback) => {
     const joinCode = getPresentationJoinCode(socket);
     if (!joinCode) {
@@ -136,8 +150,8 @@ function handleAnswerSubmit(socket, livePresentations) {
       callback(false, "Presentation not found");
       return;
     }
-
-    const participant = livePresentation.participants[socket.user.id];
+    const participants =livePresentation.participants;
+    const participant = participants[socket.user.id];
     if (!participant) {
       callback(false, "Participant not found");
       return;
@@ -146,10 +160,16 @@ function handleAnswerSubmit(socket, livePresentations) {
     const activeSlideIndex = livePresentation.activeSlide;
     if (participant.answers[activeSlideIndex]) {
       callback(false, "Already submitted");
-    } else {
+      return;
+    } 
+    
+    if(answer){
       participant.answers[activeSlideIndex] = answer;
-      console.log(livePresentation)
-      console.log(participant.answers[activeSlideIndex]);
+      
+    const activeSlide = livePresentation.getActiveSlide();
+    const presenterId = livePresentation.presenterId;
+    const presenterSocket = participants[presenterId].socket;
+    presenterSocket.emit("presentation-data", {type:activeSlide.type,content:activeSlide.content},getAdditionalData(livePresentation));
 
       callback(true, "Submitted");
       console.log(

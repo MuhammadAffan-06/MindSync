@@ -11,8 +11,8 @@ export interface ContentProps {
   marks: number;
 }
 
-export default function SlideMCQ({ id }: SlideBaseProps) {
-    console.log("Slide MCQ Rendering")
+export default function SlidePoll({ id }: SlideBaseProps) {
+    console.log("Slide Poll Rendering")
   
   const { activeSlideId, getActiveSlide, updateSlideInfoById } = useSlide();
   const slide: Slide | undefined = getActiveSlide();
