@@ -1,27 +1,23 @@
 "use client";
-import {  useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Nav from "../components/nav/nav";
 import { IoChevronBack } from "react-icons/io5";
-import { useRouter } from "next/navigation";
 import { RequireAuth } from "../components/utils/requireAuth";
-import { fetchData } from "../components/utils/api";
 import Leaderboard, { LeaderboardType } from "../components/leaderboard/leaderboard";
 import SlidePresentor from "../components/slidePresentor/slidePresentor";
+import Link from "next/link";
+import { apiRequest } from "../components/utils/api";
 
 function Join() {
-  console.log("Join Page Rendering")
-  
-  const router = useRouter();
+  console.log("Join Page Rendering");
   const [joinCode, setJoinCode] = useState<string>("");
   const [buttonText, setButtonText] = useState<string>("Join Presentation");
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
   const [showPresenter, setShowPresenter] = useState<boolean>(false);
-  
-    const [leaderboard, setLeaderboard] = useState<LeaderboardType | null>(null);
-    
-      const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
-  
+  const [leaderboard, setLeaderboard] = useState<LeaderboardType | null>(null);
+
+  const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -38,12 +34,20 @@ function Join() {
 
   const joinPresentation = async () => {
     setButtonDisabled(true);
-    try {
-      await fetchData("presentation/isLive/" + joinCode, "GET");
-      setShowPresenter(true);
-      setButtonDisabled(false);
-    } catch (error) {
-      setButtonText("Invalid Join Code");
+    const { success, isLive } = await apiRequest("/presentation/isLive", { joinCode });
+    if (success) {
+      if (isLive) {
+        setShowPresenter(true);
+        setButtonDisabled(false);
+      } else {
+        setButtonText("Invalid Join Code");
+        setTimeout(() => {
+          setButtonText("Join Presentation");
+          setButtonDisabled(false);
+        }, 1000);
+      }
+    } else {
+      setButtonText("Error Joining Presentation");
       setTimeout(() => {
         setButtonText("Join Presentation");
         setButtonDisabled(false);
@@ -55,10 +59,12 @@ function Join() {
     <>
       <Nav />
       <div className="mt-[70px]">
-        <button onClick={() => router.replace("/dashboard")} className="flex ml-4 text-gray-600">
-          <IoChevronBack size={20} className="m-auto" />
-          <h1 className="text-lg font-semibold ml-2 my-auto">Back To Dashboard</h1>
-        </button>
+        <Link href="/dashboard">
+          <button className="flex ml-4 text-gray-600">
+            <IoChevronBack size={20} className="m-auto" />
+            <h1 className="text-lg font-semibold ml-2 my-auto">Back To Dashboard</h1>
+          </button>
+        </Link>
 
         <div className="h-[calc(100vh-70px)] flex">
           <div className="p-4 m-auto bg-[var(--background)] sm:w-[27.46rem] h-64 w-[90vw] rounded-xl shadow-gray-400 shadow-md flex flex-col justify-center text-center items-center gap-4">
@@ -80,7 +86,15 @@ function Join() {
           </div>
         </div>
       </div>
-      {showPresenter && <SlidePresentor joinCode={joinCode} isPresenter={false} setShowPresenter={setShowPresenter} setLeaderboard={setLeaderboard} setShowLeaderboard={setShowLeaderboard} />}
+      {showPresenter && (
+        <SlidePresentor
+          joinCode={joinCode}
+          isPresenter={false}
+          setShowPresenter={setShowPresenter}
+          setLeaderboard={setLeaderboard}
+          setShowLeaderboard={setShowLeaderboard}
+        />
+      )}
       {showLeaderboard && <Leaderboard leaderboard={leaderboard} setShowLeaderboard={setShowLeaderboard} />}
     </>
   );

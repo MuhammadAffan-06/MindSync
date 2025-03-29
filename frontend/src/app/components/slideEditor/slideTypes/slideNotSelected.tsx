@@ -1,6 +1,7 @@
 'use client';
 
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
+import { useSlide } from "@/app/context/slideContext";
+
 
 export default function SlideNotSelected() {
   const { addSlide } = useSlide();

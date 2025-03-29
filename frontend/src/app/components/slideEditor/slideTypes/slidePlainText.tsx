@@ -21,9 +21,9 @@ import {
   FaAlignRight,
   FaAlignJustify
 } from "react-icons/fa";
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import { SlideBaseProps } from "@/app/slide-builder/[presentationId]/types";
+import { SlideBaseProps } from "@/app/types/slideTypes";
 import { UniqueIdentifier } from "@dnd-kit/core/dist";
+import { useSlide } from "@/app/context/slideContext";
 
 declare module "@tiptap/core" {
   interface Commands<ReturnType> {

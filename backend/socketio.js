@@ -6,7 +6,9 @@ function setupSocket(server, app) {
 
   const io = new Server(server, {
     cors: {
-      origin: ["http://localhost:3000", "https://mind-sync-u9h4.vercel.app"],
+      origin: [process.env.CLIENT_BASE_URL,
+        "https://mind-sync-u9h4.vercel.app",
+      ],
       methods: ["GET", "POST"],
       credentials: true,
     },
@@ -38,26 +40,11 @@ function handleSocketConnection(io, livePresentations) {
   return (socket) => {
     console.log(`User connected: ${socket.id}, User ID: ${socket.user.id}`);
 
-    socket.on(
-      "join-presentation",
-      handleJoinPresentation(socket, livePresentations)
-    );
-    socket.on(
-      "presentation-next-slide",
-      handleSlideChange(socket, io, livePresentations, 1)
-    );
-    socket.on(
-      "presentation-previous-slide",
-      handleSlideChange(socket, io, livePresentations, -1)
-    );
-    socket.on(
-      "presentation-answer-submit",
-      handleAnswerSubmit(socket, livePresentations)
-    );
-    socket.on(
-      "presentation-end",
-      handlePresentationEnd(socket, io, livePresentations)
-    );
+    socket.on("join-presentation", handleJoinPresentation(socket, livePresentations));
+    socket.on("presentation-next-slide", handleSlideChange(socket, io, livePresentations, 1));
+    socket.on("presentation-previous-slide", handleSlideChange(socket, io, livePresentations, -1));
+    socket.on("presentation-answer-submit", handleAnswerSubmit(socket, livePresentations));
+    socket.on("presentation-end", handlePresentationEnd(socket, io, livePresentations));
     socket.on("disconnect", handleDisconnect(socket, io, livePresentations));
   };
 }
@@ -73,16 +60,23 @@ function handleJoinPresentation(socket, livePresentations) {
       `${socket.user.name}(${socket.user.id}) attempting to join ${joinCode}`
     );
 
-    if (livePresentation) {
-      livePresentation.participants[socket.user.id] = {
-        answers: new Array(livePresentation.slides.length).fill(null),
-        name: socket.user.name,
-      };
-      socket.join(joinCode);
-      callback(true, livePresentation.title, livePresentation.getActiveSlide());
-    } else {
-      callback(false, "Presentation not found");
+    if (!livePresentation) {
+      callback(false, "Invalid Join Code");
+      return;
     }
+
+    if (livePresentation.participants[socket.user.id]) {
+      callback(false, "Already Joined");
+      return;
+    }
+
+    livePresentation.participants[socket.user.id] = {
+      answers: new Array(livePresentation.slides.length).fill(null),
+      name: socket.user.name
+    };
+    socket.join(joinCode);
+    callback(true, livePresentation.title, livePresentation.getActiveSlide());
+
   };
 }
 
@@ -108,18 +102,13 @@ function handleSlideChange(socket, io, livePresentations, direction) {
     }
 
     const newSlideIndex = livePresentation.activeSlide + direction;
-    callback(
-      newSlideIndex === livePresentation.slides.length - 1
-        ? 1
-        : newSlideIndex === 0
-        ? 0
-        : 0.5
-    );
+    callback(newSlideIndex === livePresentation.slides.length - 1 ? 1 : newSlideIndex === 0 ? 0 : 0.5);
     if (newSlideIndex < 0) {
       console.log("Slide change out of bounds");
       return;
     }
     if (newSlideIndex === livePresentation.slides.length) {
+
       endPresentation(io, joinCode, livePresentations);
       return;
     }
@@ -159,6 +148,9 @@ function handleAnswerSubmit(socket, livePresentations) {
       callback(false, "Already submitted");
     } else {
       participant.answers[activeSlideIndex] = answer;
+      console.log(livePresentation)
+      console.log(participant.answers[activeSlideIndex]);
+
       callback(true, "Submitted");
       console.log(
         `Answer submitted by ${socket.user.name}(${socket.user.id}) for slide #${activeSlideIndex}`
@@ -216,13 +208,13 @@ function calculateResult(livePresentation) {
     if (correctAnswer) {
       const parsedContent = JSON.parse(content);
       marks = parsedContent.marks || 0;
+
     }
 
     return { correctAnswer, marks };
   });
-  const leaderboard = Object.entries(participants)
-    .filter(([userId]) => userId !== presenterId)
-    .map(([userId, { answers, name }]) => {
+  const leaderboard = Object.entries(participants).filter(([userId]) => userId !== presenterId).map(
+    ([userId, { answers, name }]) => {
       let totalMarks = 0;
 
       answers.forEach((answer, index) => {

@@ -5,11 +5,11 @@ import Sidebar from "@/app/components/sideBar/sideBar";
 import "@/app/profile/profile.css";
 import { useEffect, useState } from "react";
 import { RequireAuth } from "../components/utils/requireAuth";
+import Image from "next/image";
 
 function Profile() {
-  const [userName, setUserName] = useState("");
-  const [userEmail, setuserEmail] = useState("");
-  const [userPicture, setuserPicture] = useState("");
+  const [userName, setUserName] = useState("N/A");
+  const [userEmail, setuserEmail] = useState("N/A");
 
   // Retrieve the user's name from local storage on component mount
   useEffect(() => {
@@ -65,33 +65,18 @@ function Profile() {
         <h1 className="about-title">Profile Management</h1>
 
         <div className="avatar-details">
-          {userPicture ? (
-            <Image
-              src={userPicture}
-              alt="Profile Picture"
-              width={92}
-              height={92}
-              style={{
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
-            />
-          ) : (
-            <Image
-              src="/profile-avatar.svg"
-              alt="Default Profile Picture"
-              width={91}
-              height={91}
-            />
-          )}
-
+          <Image
+            src="/profile-avatar.svg"
+            alt="Profile Avatar"
+            width={91}
+            height={91}
+          />
           <div className="text">
-            <h2 className="profile-name">{userName || "Guest"}</h2>{" "}
-            {/* Display the user's name */}
+            <h1 className="profile-name">userName</h1>
             <p>{userEmail}</p>
           </div>
           <div className="btn">
-            <button className="edit-btn">edit </button>
+            <button className="edit-btn">edit</button>
           </div>
         </div>
 
@@ -141,7 +126,7 @@ function Profile() {
           <div className="email-details">
             <div className="email-info">
               <div className="email-icon">
-                <img
+                <Image
                   src="/emailp.svg"
                   alt="email icon"
                   width={24}

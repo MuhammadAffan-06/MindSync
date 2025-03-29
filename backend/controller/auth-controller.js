@@ -89,13 +89,8 @@ const login = async (req, res) => {
 
 // Verify API
 const verify = async (req, res) => {
-  try{
-    res.sendStatus(200);
-  }catch(e){
-    console.log("Server Error:");
-    console.log(e);
-    res.status(500).json({message:"Server Error"});    
-  }
+    res.status(200).json({message:"valid token"});
+ 
 
 };
 

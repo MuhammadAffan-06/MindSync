@@ -1,6 +1,6 @@
 "use client"
 
-import { Slide } from "@/app/slide-builder/[presentationId]/types";
+import { Slide } from "@/app/types/slideTypes";
 import { useEffect, useRef } from "react";
 
 

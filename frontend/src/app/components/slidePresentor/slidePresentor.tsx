@@ -5,12 +5,11 @@ import { io, Socket } from "socket.io-client";
 import Image from "next/image";
 import PresentSlidePlainText from "./presentSlidePlainText";
 import PresentSlideMCQ from "./presentSlideMCQ";
-import PresentSlideWordCloud from "./presentSlideWordCloud";
-import { SlideType } from "@/app/slide-builder/[presentationId]/types";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
-import Leaderboard, { LeaderboardType } from "../leaderboard/leaderboard";
-
+import  { LeaderboardType } from "../leaderboard/leaderboard";
+import { SlideType } from "@/app/types/slideTypes";
+import {serverBaseUrl} from "../utils/api"
 
 interface SlidePresentorProps {
   joinCode: string;
@@ -41,7 +40,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    const newSocket = io("http://localhost:5000", {
+    const newSocket = io(serverBaseUrl, {
       auth: { token },
       withCredentials: true,
       transports: ["websocket", "polling"],
@@ -52,14 +51,16 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     newSocket.on("connect", () => {
       console.log("Connected to socket server:", newSocket.id);
       console.log("Joining presentation...");
-      newSocket.emit("join-presentation", joinCode, (success: boolean, title: string, slide: SlideResponse) => {
+      newSocket.emit("join-presentation", joinCode, (success: boolean, text: string, slide: SlideResponse) => {
         if (success) {
           console.log("Successfully joined presentation", slide);
-          setTitle(title);
+          setTitle(text);
           setActiveSlideType(slide.type);
           setActiveSlideContent(slide.content);
         } else {
           console.log("Failed to join Presentation");
+          setShowPresenter(false);
+          toast.error(text);
         }
       });
     });
@@ -82,6 +83,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     });
 
     return () => {
+      setSocket(null);
       newSocket.disconnect();
     };
   }, [joinCode]);

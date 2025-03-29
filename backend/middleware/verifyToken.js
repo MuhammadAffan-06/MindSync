@@ -3,7 +3,6 @@ const dotenv = require("dotenv");
 dotenv.config();
 const verifyToken = (req, res, next) => {
   const bearerHeader = req.headers["authorization"];
-
   if (typeof bearerHeader !== "undefined") {
     const bearer = bearerHeader.split(" ");
     const token = bearer[1];

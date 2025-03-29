@@ -8,32 +8,27 @@ const generateJoinCode = () =>
 
 exports.createPresentation = async (req, res) => {
   try {
-    const { title } = req.body;
     const presenterId = req.user?.id;
 
-    if (!title || !presenterId) {
-      return res.status(400).json({ error: "Title and presenter ID are required." });
-    }
-
     const newPresentation = await Presentation.create({
-      title,
+      title:"Untitlied Presentation",
       presenterId,
       joinCode: generateJoinCode(),
     });
 
     res.status(201).json({ message: "Presentation created successfully", newPresentation });
   } catch (error) {
-    res.status(500).json({ error: "Failed to create presentation", details: error.message });
+    res.status(500).json({ message: "Failed to create presentation" });
   }
 };
 
 exports.getPresentation = async (req, res) => {
   try {
     const presenterId = req.user?.id;
-    const { presentationId } = req.params;
+    const { presentationId } = req.body;
 
     if (!mongoose.Types.ObjectId.isValid(presentationId)) {
-      return res.status(400).json({ error: "Invalid presentation ID." });
+      return res.status(400).json({ message: "Invalid presentation ID." });
     }
 
     const presentation = await Presentation.findOne({ presenterId, _id: presentationId })
@@ -41,7 +36,7 @@ exports.getPresentation = async (req, res) => {
       .lean();
 
     if (!presentation) {
-      return res.status(404).json({ error: "Presentation not found." });
+      return res.status(404).json({ message: "Presentation not found." });
     }
 
     presentation.slideIds = presentation.slideIds
@@ -52,7 +47,7 @@ exports.getPresentation = async (req, res) => {
 
     res.status(200).json(presentation);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve presentation", details: error.message });
+    res.status(500).json({ message: "Failed to retrieve presentation" });
   }
 };
 
@@ -71,36 +66,35 @@ exports.getPresentations = async (req, res) => {
     }
 
     const result = presentations.map((presentation) => {
-      const slides = presentation.slideIds.sort((a,b)=>a.index-b.index);
+      const slides = presentation.slideIds.sort((a, b) => a.index - b.index);
       const thumbnailURL = slides.length > 0 && slides[0].thumbnailUrl ? slides[0].thumbnailUrl : "";
 
       return {
         thumbnailURL,
-        title:presentation.title,
-        presentationId:presentation._id
+        title: presentation.title,
+        presentationId: presentation._id
       };
     });
 
     res.status(200).json(result);
   } catch (error) {
-    res.status(500).json({ error: "Failed to retrieve presentations", details: error.message });
+    res.status(500).json({ error: "Failed to retrieve presentations" });
   }
 };
 
 exports.savePresentation = async (req, res) => {
   try {
     const presenterId = req.user?.id;
-    const { presentationId } = req.params;
-    const { slides, presentationTitle } = req.body;
-    
+    const { slides, presentationTitle, presentationId } = req.body;
+
     if (!mongoose.Types.ObjectId.isValid(presentationId)) {
-      return res.status(400).json({ error: "Invalid presentation ID." });
+      return res.status(400).json({ message: "Invalid presentation ID." });
     }
 
     const presentation = await Presentation.findOne({ _id: presentationId, presenterId });
 
     if (!presentation) {
-      return res.status(404).json({ error: "Presentation not found." });
+      return res.status(404).json({ message: "Presentation not found." });
     }
 
     const bulkOps = slides.map((slide, index) => ({
@@ -137,7 +131,7 @@ exports.savePresentation = async (req, res) => {
 
     res.status(200).json({ message: "Presentation updated successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Failed to update presentation", details: error.message });
+    res.status(500).json({ message: "Failed to update presentation" });
   }
 };
 
@@ -145,7 +139,7 @@ exports.savePresentation = async (req, res) => {
 exports.goLive = async (req, res) => {
   try {
     const presenterId = req.user?.id;
-    const { presentationId } = req.params;
+    const { presentationId } = req.body;
     const io = req.app.get("socketio");
     const livePresentations = req.app.get("livePresentations");
 
@@ -157,19 +151,19 @@ exports.goLive = async (req, res) => {
       .populate("slideIds")
       .lean();
 
-      if (!presentation) {
-        return res.status(404).json({ message: "Presentation not found or unauthorized." });
-      }
-      if (presentation.slideIds.length === 0) {
-        return res.status(404).json({ message: "Cannot live empty Presentation." });
-      }
+    if (!presentation) {
+      return res.status(404).json({ message: "Presentation not found or unauthorized." });
+    }
+    if (presentation.slideIds.length === 0) {
+      return res.status(404).json({ message: "Cannot live empty Presentation." });
+    }
 
 
     const joinCode = presentation.joinCode;
 
     presentation.slideIds = presentation.slideIds
-    .sort((a, b) => a.index - b.index)
-    .map(({ __v, _id, index, presentationId,thumbnailUrl,clientId, ...slide }) => slide);
+      .sort((a, b) => a.index - b.index)
+      .map(({ __v, _id, index, presentationId, thumbnailUrl, clientId, ...slide }) => slide);
     const activePresentation = {
       slides: presentation.slideIds,
       participants: {},
@@ -179,13 +173,13 @@ exports.goLive = async (req, res) => {
       title: presentation.title,
       getActiveSlide() {
         return this.slides[this.activeSlide] || null;
-    }
+      }
 
     }
 
     if (!livePresentations[joinCode]) {
       livePresentations[joinCode] = activePresentation;
-      
+
       res.status(200).json({ message: "Presentation is now live" });
     } else {
       res.status(400).json({ message: "Presentation is already live" });
@@ -193,17 +187,15 @@ exports.goLive = async (req, res) => {
     }
 
   } catch (error) {
-    res.status(500).json({ message: "Failed to go live", details: error.message });
+    res.status(500).json({ message: "Failed to go live" });
   }
 };
 
 exports.isLive = async (req, res) => {
-  const { joinCode } = req.params;
-  const livePresentations = req.app.get("livePresentations"); 
-  if(livePresentations[joinCode]){
-    res.sendStatus(200);
-  }else{
-    res.sendStatus(400);
-  }
+  const { joinCode } = req.body;
+  const livePresentations = req.app.get("livePresentations");
+
+  
+  res.status(200).json({ isLive:Boolean(livePresentations[joinCode]) });
 
 };

@@ -1,68 +1,98 @@
+import { BaseResponse, Path } from "@/app/types/apiTypes";
+import { LoginRequest, LoginResponse, LogoutResponse, SignupRequest, SignupResponse, VerifyResponse } from "@/app/types/authTypes";
+import {
+    PresentationAllResponse,
+  PresentationCreateResponse,
+  PresentationGetRequest,
+  PresentationGetResponse,
+  PresentationIsLiveRequest,
+  PresentationIsLiveResponse,
+  PresentationLiveRequest,
+  PresentationLiveResponse,
+  PresentationSaveRequest,
+  PresentationSaveResponse,
+} from "@/app/types/presentationTypes";
 import { toast } from "react-toastify";
 
-async function fetchDataJSON(path:string, method:"GET"|"POST", body:any = null) {
-    const token = localStorage.getItem("token"); 
-    const baseUrl = "http://localhost:5000/";//"http://localhost:5000/"
-    const headers:any = {
-        "Content-Type": "application/json",
+export type PathBodyMap = {
+  "/auth/login": LoginRequest;
+  "/auth/signup": SignupRequest;
+  "/auth/verify": null;
+  "/auth/logout": null;
+  "/presentation/create": null;
+  "/presentation/save": PresentationSaveRequest;
+  "/presentation/live": PresentationLiveRequest;
+  "/presentation/get": PresentationGetRequest;
+  "/presentation/all": null;
+  "/presentation/isLive": PresentationIsLiveRequest;
+};
+
+export type PathResponseMap = {
+  "/auth/login": LoginResponse;
+  "/auth/signup": SignupResponse;
+  "/auth/verify": VerifyResponse;
+  "/auth/logout": LogoutResponse;
+  "/presentation/create": PresentationCreateResponse;
+  "/presentation/save": PresentationSaveResponse;
+  "/presentation/live": PresentationLiveResponse;
+  "/presentation/get": PresentationGetResponse;
+  "/presentation/all": PresentationAllResponse;
+  "/presentation/isLive": PresentationIsLiveResponse;
+};
+
+const serverBaseUrl = "http://localhost:5000";
+
+function getHeaders(): HeadersInit {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+  const token = localStorage.getItem("token");
+  if (token) {
+    headers["authorization"] = `Bearer ${token}`;
+    
+  }
+  return headers;
+}
+
+// Map of HTTP methods based on path
+const PATH_METHOD: Record<Path, "GET" | "POST"> = {
+  "/auth/login": "POST",
+  "/auth/signup": "POST",
+  "/auth/verify": "GET",
+  "/auth/logout": "GET",
+  "/presentation/create": "POST",
+  "/presentation/save": "POST",
+  "/presentation/live": "POST",
+  "/presentation/get": "POST",
+  "/presentation/all": "GET",
+  "/presentation/isLive": "POST",
+};
+export async function apiRequest<T extends Path>(
+    path: T,
+    body: PathBodyMap[T]
+  ): Promise<PathResponseMap[T]> {
+    const options: RequestInit = {
+      method: PATH_METHOD[path],
+      headers: getHeaders(),
+      ...(body ? { body: JSON.stringify(body) } : {}),
     };
-
-    if (token) {
-        headers["authorization"] = `Bearer ${token}`;
-    }
-
-    const options = {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : null,
-    };
-
+  
     try {
-        const response = await fetch(baseUrl+path, options);
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-        const responseJson = await response.json();
-       
-        return responseJson ; 
-    } catch (error) {
-        console.error("Fetch error:", error);
-        throw error; 
+      const response = await fetch(serverBaseUrl + path, options);
+      const json = await response.json();
+  
+      if (!response.ok) {
+        console.error("Error response:", json);
+        if(json.message)
+        toast.error(json.message);
+      }
+      json.success = response.ok;
+      return json as PathResponseMap[T];
+    } catch (error: any) {
+        console.error(error);
+      toast.error(error.message || 'An unexpected error occurred');
+      return {success: false} as PathResponseMap[T];
     }
-}
-
-async function fetchData(path:string, method:"GET"|"POST", body:any = null) {
-    const token = localStorage.getItem("token"); 
-    const baseUrl = "http://localhost:5000/";//"http://localhost:5000/"
-    const headers:any = {
-        "Content-Type": "application/json",
-    };
-
-    if (token) {
-        headers["authorization"] = `Bearer ${token}`;
-    }
-
-    const options = {
-        method,
-        headers,
-        body: body ? JSON.stringify(body) : null,
-    };
-
-    try {
-        const response = await fetch(baseUrl+path, options);
-        if (!response.ok) {
-            throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-        return response;
-    } catch (error) {
-        console.error("Fetch error:", error);
-        throw error; 
-    }
-}
-
-
-
-export {
-    fetchData,
-    fetchDataJSON
-}
+  }
+  
+export { serverBaseUrl };

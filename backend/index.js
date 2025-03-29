@@ -4,13 +4,31 @@ const cors = require("cors");
 const routes = require("./routes/index");
 const { connectDb, getDbReadyState } = require("./dbconfig/dbconfig");
 const port = process.env.PORT;
+const clientBaseUrl = process.env.CLIENT_BASE_URL;
+const serverDomain = process.env.SERVER_DOMAIN;
 const passport = require("./utils/passportConfig");
 const http = require("http");
 const { setupSocket } = require("./socketio");
 
+
+
+
+if(!port) {
+  console.error("PORT is not defined in .env file");
+  process.exit(1);
+}
+
+if(!clientBaseUrl) {
+  console.error("CLIENT_BASE_URL is not defined in .env file");
+  process.exit(1);
+}
+if(!serverDomain) {
+  console.error("SERVER_DOMAIN is not defined in .env file");
+  process.exit(1);
+}
 app.use(
   cors({
-    origin: ["http://localhost:3000", "https://mind-sync-u9h4.vercel.app"],
+    origin: [ clientBaseUrl, "https://mind-sync-u9h4.vercel.app"],
     methods: ["GET", "POST"],
     credentials: true,
   })
@@ -43,5 +61,5 @@ connectDb();
 
 // Start the server
 server.listen(port, () => {
-  console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on port ${serverDomain}:${port}`);
 });
