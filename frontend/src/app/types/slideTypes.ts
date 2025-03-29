@@ -1,19 +1,18 @@
-import { UniqueIdentifier } from "@dnd-kit/core"
-export type SlideType =  "PlainText" | "WordCloud" | "Image" | "Poll" | "MCQ" |"QA" |  "Undefined"; 
+import { UniqueIdentifier } from "@dnd-kit/core";
+export type SlideType = "PlainText" | "WordCloud" | "Image" | "Poll" | "MCQ" | "QA" | "Undefined";
 
-
-export type UserMode = "Building"|"Previewing";
+export type UserMode = "Building" | "Previewing";
 
 export interface Slide {
   clientId: UniqueIdentifier;
   content: string | null;
   thumbnailUrl?: string;
-  correctAnswer: string|null;
-  type: SlideType;   
+  correctAnswer: string | null;
+  type: SlideType;
 }
 
 export interface SlideBaseProps {
-  id: UniqueIdentifier
+  id: UniqueIdentifier;
 }
 
 export type TextAlignType = "left" | "center" | "justify" | "right";

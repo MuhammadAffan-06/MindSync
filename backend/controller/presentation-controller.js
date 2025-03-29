@@ -76,7 +76,7 @@ exports.getPresentations = async (req, res) => {
       };
     });
 
-    res.status(200).json(result);
+    res.status(200).json({presentations: result});
   } catch (error) {
     res.status(500).json({ error: "Failed to retrieve presentations" });
   }

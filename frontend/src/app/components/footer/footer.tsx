@@ -7,17 +7,8 @@ export default function Footer() {
     <>
       <section className="footerParent">
         <section className="footerChild1">
-          <Image
-            className="image"
-            src="/header.png"
-            alt="Image not Loaded Yet"
-            width={220}
-            height={220}
-          />
-          <p>
-            Empowering interactive learning and engagement for everyone,
-            everywhere.
-          </p>
+          <Image className="image" src="/header.png" alt="Image not Loaded Yet" width={220} height={220} />
+          <p>Empowering interactive learning and engagement for everyone, everywhere.</p>
         </section>
         <section>
           <h3>Product</h3>
@@ -51,13 +42,11 @@ export default function Footer() {
         </section>
       </section>
 
-      {/* Footer Bottom Section */}
       <hr className="footerDivider" />
       <section className="footerBottom">
         <p>
-          Copyright © 2024 MindSync | All Rights Reserved |{" "}
-          <a href="#terms">Terms and Conditions</a> |{" "}
-          <a href="#privacy">Privacy Policy</a>
+          Copyright © 2024 MindSync | All Rights Reserved |<a href="#terms"> Terms and Conditions</a> |
+          <a href="#privacy"> Privacy Policy</a>
         </p>
       </section>
     </>

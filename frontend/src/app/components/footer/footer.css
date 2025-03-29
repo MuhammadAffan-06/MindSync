@@ -70,10 +70,31 @@
 .footerBottom a:hover {
   text-decoration: underline;
 }
+
+/* --- Make the Footer Responsive --- */
+@media screen and (max-width: 768px) {
+  /* Switch to a single column */
+  .footerParent {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .footerChild1 {
+    padding-left: 0; /* Remove extra padding on mobile */
+  }
+}
+
+/* Optionally, refine for very small screens */
 @media screen and (max-width: 480px) {
-  .footerParent,
-  .footerBottom,
-  .footerDivider {
-    display: none;
+  .footerParent {
+    padding: 1rem 0;
+  }
+  
+  .footerParent section {
+    margin-bottom: 1rem;
+  }
+  
+  .footerBottom {
+    font-size: 0.8rem;
   }
 }
