@@ -4,7 +4,6 @@ import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
 import { Slide, SlideBaseProps } from "@/app/slide-builder/[presentationId]/types";
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import ReactWordcloud from "react-wordcloud";
-import io from "socket.io-client";
 import "tippy.js/dist/tippy.css";
 import "tippy.js/animations/scale.css";
 
@@ -13,11 +12,8 @@ export interface WordCloudContentProps {
   words: { text: string; value: number }[];
 }
 
-const socket = io("http://localhost:5000"); // Replace with actual backend URL
-
 export default function SlideWordCloud({ id }: SlideBaseProps) {
   console.log("Slide WordCloud Rendering");
-
   const { getActiveSlide, updateSlideInfoById } = useSlide();
   const slide: Slide | undefined = getActiveSlide();
   if (!slide) return <p>Invalid Slide Id, {id}</p>;
@@ -40,30 +36,6 @@ export default function SlideWordCloud({ id }: SlideBaseProps) {
     setContent(newContent);
     contentRef.current = newContent;
   }, [id, slide]);
-
-  useEffect(() => {
-    socket.on("newWord", (word: string) => {
-      setContent((prevContent) => {
-        const updatedWords = [...prevContent.words];
-        const existingWord = updatedWords.find((w) => w.text === word);
-
-        if (existingWord) {
-          existingWord.value += 1;
-        } else {
-          updatedWords.push({ text: word, value: 1 });
-        }
-
-        const newContent = { ...prevContent, words: updatedWords };
-        contentRef.current = newContent;
-        updateSlideInfo(); // Persist changes in slide context
-        return newContent;
-      });
-    });
-
-    return () => {
-      socket.off("newWord");
-    };
-  }, []);
 
   const updateSlideInfo = useCallback(() => {
     updateSlideInfoById(id, JSON.stringify(contentRef.current), "", "");

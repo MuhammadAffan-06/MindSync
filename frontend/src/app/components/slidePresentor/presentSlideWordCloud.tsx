@@ -1,81 +1,106 @@
 "use client";
 
-import { useState } from "react";
-import { WordCloudContentProps } from "@/app/components/slideEditor/slideTypes/slideWordCloud";
+import { useState, useEffect } from "react";
+import type { WordCloudContentProps } from "@/app/components/slideEditor/slideTypes/slideWordCloud";
 
 interface PresentSlideWordCloudProps {
   content: string;
   isPresenter: boolean;
   onSubmit: (word: string) => Promise<void>;
+  userSubmission?: string;
 }
 
 export default function PresentSlideWordCloud({
   content,
   isPresenter,
   onSubmit,
+  userSubmission,
 }: PresentSlideWordCloudProps) {
   console.log("Present Slide Word Cloud Rendering");
 
   const parsed: WordCloudContentProps = JSON.parse(content);
-  const [submittedWords, setSubmittedWords] = useState<string[]>([]);
   const [inputValue, setInputValue] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
+  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
+
+  // Initialize submission status
+  useEffect(() => {
+    if (userSubmission) {
+      setHasSubmitted(true);
+      setInputValue(userSubmission);
+    }
+  }, [userSubmission]);
 
   const handleSubmit = async () => {
-    if (!inputValue.trim() || isSubmitting) return;
+    if (!inputValue.trim() || isSubmitting || hasSubmitted) return;
+
     setIsSubmitting(true);
-
-    await onSubmit(inputValue); // Send word to presenter
-    setSubmittedWords((prevWords) => [...prevWords, inputValue]);
-    setInputValue("");
-
-    setTimeout(() => {
+    try {
+      await onSubmit(inputValue);
+      setHasSubmitted(true);
+    } catch (error) {
+      console.error("Submission failed:", error);
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
+    }
   };
 
   return (
-    <div className="relative w-full">
+    <div className="relative w-full h-full">
       <div className="px-8 py-12">
-        <div className="px-4">
-          <div className="text-3xl py-2">{parsed.question}</div>
+        {/* Question Display */}
+        <div className="px-4 mb-8 text-center">
+          <h2 className="text-3xl font-bold">{parsed.question}</h2>
+          <p className="text-lg text-gray-600 mt-2">
+            Submit a single word response below
+          </p>
         </div>
 
-        {/* User Input */}
+        {/* User Submission Area */}
         {!isPresenter && (
-          <div className="p-8 space-y-5">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              className="w-full p-2 border rounded"
-              placeholder="Enter your word..."
-              disabled={isSubmitting}
-            />
-            <button
-              className="mt-4 px-6 py-2 bg-[var(--secondary-color)] text-white rounded disabled:bg-gray-400"
-              onClick={handleSubmit}
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? "Submitting..." : "Submit"}
-            </button>
-          </div>
-        )}
-
-        {/* Display User's Submitted Words */}
-        {submittedWords.length > 0 && (
-          <div className="mt-6 p-4 bg-gray-100 rounded-lg">
-            <div className="text-lg font-semibold">Your Submitted Words:</div>
-            <div className="flex flex-wrap gap-2 mt-2">
-              {submittedWords.map((word: string, index: number) => (
-                <span
-                  key={index}
-                  className="px-3 py-1 bg-blue-200 rounded-full"
+          <div className="max-w-md mx-auto p-6 bg-gray-50 rounded-lg">
+            {hasSubmitted ? (
+              <div className="text-center">
+                <p className="text-lg font-medium text-green-600 mb-2">
+                  You submitted: "{inputValue}"
+                </p>
+                <p className="text-gray-500">
+                  Thank you for your contribution!
+                </p>
+              </div>
+            ) : (
+              <>
+                <label
+                  htmlFor="word-input"
+                  className="block text-sm font-medium text-gray-700 mb-2"
                 >
-                  {word}
-                </span>
-              ))}
-            </div>
+                  Enter your word:
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    id="word-input"
+                    type="text"
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
+                    className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Type your response..."
+                    disabled={isSubmitting}
+                    maxLength={20}
+                  />
+                  <button
+                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
+                    onClick={handleSubmit}
+                    disabled={!inputValue.trim() || isSubmitting}
+                  >
+                    {isSubmitting ? "..." : "Submit"}
+                  </button>
+                </div>
+                <p className="mt-2 text-xs text-gray-500">
+                  Note: You can only submit once
+                </p>
+              </>
+            )}
           </div>
         )}
       </div>
