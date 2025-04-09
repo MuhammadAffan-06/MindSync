@@ -3,14 +3,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { io, Socket } from "socket.io-client";
 import Image from "next/image";
-import PresentSlidePlainText from "./presentSlidePlainText";
-import PresentSlideMCQ from "./presentSlideMCQ";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 import  { LeaderboardType } from "../leaderboard/leaderboard";
 import { SlideType } from "@/app/types/slideTypes";
 import {serverBaseUrl} from "../utils/api"
-import PresentSlidePoll from "./presentSlidePoll";
+import PresentSlidePoll from "./presentSlidePoll"
+import PresentSlidePlainText from "./presentSlidePlainText";
+import PresentSlideMCQ from "./presentSlideMCQ";
+import PresentSlideWordCloud from "./presentSlideWordCloud";
 
 interface SlidePresentorProps {
   joinCode: string;
@@ -53,13 +54,14 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     newSocket.on("connect", () => {
       console.log("Connected to socket server:", newSocket.id);
       console.log("Joining presentation...");
-      newSocket.emit("join-presentation", joinCode, (success: boolean, text: string, slide: SlideResponse,additionalData:any) => {
+      newSocket.emit("join-presentation", joinCode, (success: boolean, text: string, slide: SlideResponse,additionalData:any, completed:number) => {
         if (success) {
           console.log("Successfully joined presentation", slide);
           setTitle(text);
           setActiveSlideType(slide.type);
           setActiveSlideContent(slide.content);
           setAdditionalData(additionalData);
+          setNextBtnText(completed===1?"End Presentation":"Next Slide");
         } else {
           console.log("Failed to join Presentation");
           setShowPresenter(false);
@@ -77,13 +79,14 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     newSocket.on("presentation-ended", (data) => {
       setShowPresenter(false);
       toast.warn(data.message);
-      console.log("Leaderboard Data:", data.leaderboard);
       setLeaderboard(data.leaderboard); 
       setShowLeaderboard(true);
     });
 
     newSocket.on("disconnect", () => {
       console.log("Disconnected from socket server");
+      
+      setShowPresenter(false);
     });
 
     return () => {
@@ -134,6 +137,7 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
           {activeSlideType === "PlainText" && <PresentSlidePlainText content={activeSlideContent} isPresenter={isPresenter} />}
           {activeSlideType === "MCQ" && <PresentSlideMCQ content={activeSlideContent} isPresenter={isPresenter} onSubmit={onSubmitAnswer} />}
           {activeSlideType === "Poll" && <PresentSlidePoll content={activeSlideContent} isPresenter={isPresenter} polls={additionalData} onSubmit={onSubmitAnswer} />}
+          {activeSlideType === "WordCloud" && <PresentSlideWordCloud content={activeSlideContent} isPresenter={isPresenter} words={additionalData} onSubmit={onSubmitAnswer} />}
         </div>
         {isPresenter && (
           <>

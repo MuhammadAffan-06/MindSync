@@ -5,6 +5,7 @@ import SlideTypeSelector from "../slideEditor/slideTypes/slideTypeSelector";
 import PreviewSlideMCQ from "./previewSlideTypes/previewSlideMCQ";
 import PreviewSlidePlainText from "./previewSlideTypes/previewSlidePlainText";
 import PreviewSlidePoll from "./previewSlideTypes/previewSlidePoll";
+import PreviewSlideWordCloud from "./previewSlideTypes/previewSlideWordCloud";
 
 interface PreviewSlideProps {
   content: string;
@@ -33,6 +34,7 @@ export default function SlidePreviewer() {
       {slide.type == "PlainText" && <PreviewSlidePlainText content={slide.content} />}
       {slide.type == "MCQ" && <PreviewSlideMCQ content={slide.content} />}
       {slide.type == "Poll" && <PreviewSlidePoll content={slide.content} />}
+      {slide.type == "WordCloud" && <PreviewSlideWordCloud content={slide.content} />}
     </div>
   );
 }

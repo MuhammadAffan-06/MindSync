@@ -1,6 +1,6 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
-
+const  containsProfanity  = require("./utils/profanityfilter.js");
 
 function setupSocket(server, app) {
   console.log("Initializing WebSocket (Socket.IO) Server");
@@ -52,12 +52,14 @@ function handleSocketConnection(io, livePresentations) {
 function getPresentationJoinCode(socket) {
   return Array.from(socket.rooms).find((room) => room !== socket.id);
 }
-
 function getAdditionalData(livePresentation){
   const activeSlide = livePresentation.getActiveSlide();
   const activeIndex = livePresentation.activeSlide;
 
   if(activeSlide.type === "Poll"){
+    //Recaculates and sends latest poll data to the all participants in the order of the answers in the poll
+    //Recalculating is preffered over storing the data in the livePresentation object to avoid potential
+    //stale data and inconsistency issues
     const answerReverseIndexMap = Object.fromEntries(activeSlide.parsedContent.answers.map((answer,i)=>[answer,i]));
     const polls = [0,0,0,0,0];
     Object.entries(livePresentation.participants).forEach(([userId,{answers}])=>{
@@ -65,8 +67,18 @@ function getAdditionalData(livePresentation){
       if(answer)polls[answerReverseIndexMap[answer]]++;
     })
     return polls;
-
-  }else return null;
+  }
+  if(activeSlide.type === "WordCloud"){
+    const wordsCount = {};
+    Object.entries(livePresentation.participants).forEach(([userId,{answers}])=>{
+      const answer = answers[activeIndex];
+      if(answer && answer !== "")      wordsCount[answer] = (wordsCount[answer] || 1) + 1;
+    })
+    return Object.entries(wordsCount).map(([text,value])=>({text,value}));
+    
+  }
+  
+  return null;
 }
 // Event Handlers
 function handleJoinPresentation(socket, livePresentations) {
@@ -90,7 +102,7 @@ function handleJoinPresentation(socket, livePresentations) {
       socket: socket
     };
     socket.join(joinCode);
-    callback(true, livePresentation.title, livePresentation.getActiveSlide(),getAdditionalData(livePresentation));
+    callback(true, livePresentation.title, livePresentation.getActiveSlide(),getAdditionalData(livePresentation),livePresentation.slides.length === 1 ? 1 : 0);
 
   };
 }
@@ -161,6 +173,12 @@ function handleAnswerSubmit(socket,io, livePresentations) {
     } 
     
     if(answer){
+      if(containsProfanity(answer)){
+        callback(false, "Profanity detected in answer");
+        socket.disconnect(true);
+        
+        return;
+      }
       participant.answers[activeSlideIndex] = answer;
       
     const activeSlide = livePresentation.getActiveSlide();
