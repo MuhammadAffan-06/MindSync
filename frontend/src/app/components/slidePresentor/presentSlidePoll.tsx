@@ -16,8 +16,6 @@ export default function PresentSlidePoll({ content, polls, isPresenter, onSubmit
   const parsed: ContentProps = JSON.parse(content);
   const maxValue = Math.max(...polls);
   const perc = polls.map((v) => ((v == 0 || maxValue ==0) ? 0: v/maxValue*100));
-  console.log(maxValue)
-  console.log(perc)
   const [selectedAnswer, setSelectedAnswer] = useState<string>("");
 
   const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false);
@@ -81,7 +79,7 @@ export default function PresentSlidePoll({ content, polls, isPresenter, onSubmit
         {!isPresenter && selectedAnswer !== "" && (
           <div className="absolute right-2 bottom-2">
             <button
-              className="m-4 p-2 px-4 text-center text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-400"
+              className="m-4 p-2 px-4 text-center text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
               onClick={handleSubmit}
               disabled={submitBtnDisabled}
             >

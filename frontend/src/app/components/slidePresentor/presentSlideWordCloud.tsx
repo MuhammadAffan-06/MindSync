@@ -1,109 +1,91 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import type { WordCloudContentProps } from "@/app/components/slideEditor/slideTypes/slideWordCloud";
+import { useState } from "react";
+import ReactWordcloud, { OptionsProp, Word } from "react-wordcloud";
 
-interface PresentSlideWordCloudProps {
+interface PresentSlideProps {
   content: string;
+  words: Word[];
   isPresenter: boolean;
-  onSubmit: (word: string) => Promise<void>;
-  userSubmission?: string;
+  onSubmit: (answer: string) => Promise<string>;
 }
 
-export default function PresentSlideWordCloud({
-  content,
-  isPresenter,
-  onSubmit,
-  userSubmission,
-}: PresentSlideWordCloudProps) {
+export interface ContentProps {
+  question: string;
+}
+
+const CLOUD_OPTIONS: OptionsProp = {
+  fontFamily: "Poppins",
+  fontWeight: "500",
+  fontSizes: [10, 100],
+  rotations: 0,
+  enableTooltip: false,
+  enableOptimizations: true,
+  spiral: "archimedean",
+};
+function capitalizeFirstLetter(str: string) {
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+export default function PresentSlideWordCloud({ content, words, isPresenter, onSubmit }: PresentSlideProps) {
   console.log("Present Slide Word Cloud Rendering");
+   const parsed: ContentProps = JSON.parse(content);
+  const [userWord, setUserWord] = useState<string>("");
+  
+    const [submitBtnDisabled, setSubmitBtnDisabled] = useState<boolean>(false);
+    const [submitBtnText, setSubmitBtnText] = useState<string>("Submit");
 
-  const parsed: WordCloudContentProps = JSON.parse(content);
-  const [inputValue, setInputValue] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-  const [hasSubmitted, setHasSubmitted] = useState<boolean>(false);
-
-  // Initialize submission status
-  useEffect(() => {
-    if (userSubmission) {
-      setHasSubmitted(true);
-      setInputValue(userSubmission);
-    }
-  }, [userSubmission]);
-
-  const handleSubmit = async () => {
-    if (!inputValue.trim() || isSubmitting || hasSubmitted) return;
-
-    setIsSubmitting(true);
-    try {
-      await onSubmit(inputValue);
-      setHasSubmitted(true);
-    } catch (error) {
-      console.error("Submission failed:", error);
-    } finally {
-      setIsSubmitting(false);
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value[value.length - 1] !== " " && value.length <= 20 && !value.includes(" ")) {
+      setUserWord(capitalizeFirstLetter(value));
     }
   };
+  const handleSubmit = async () => {
+    if(!userWord) return;
+    setSubmitBtnDisabled(true);
+    const formattedWord = capitalizeFirstLetter(userWord);
+      const message = await onSubmit(formattedWord);
+      setSubmitBtnText(message);
 
+      setTimeout(() => {
+        setSubmitBtnText("Submit");
+        setSubmitBtnDisabled(false);
+      }, 1000);
+    
+  };
   return (
-    <div className="relative w-full h-full">
-      <div className="px-8 py-12">
-        {/* Question Display */}
-        <div className="px-4 mb-8 text-center">
-          <h2 className="text-3xl font-bold">{parsed.question}</h2>
-          <p className="text-lg text-gray-600 mt-2">
-            Submit a single word response below
-          </p>
+    <div className="relative w-full h-full ">
+      <div className="px-8 py-12 flex flex-col">
+        <div className="px-4">
+          <div className="w-[45vw] text-3xl py-2">{parsed.question}</div>
         </div>
-
-        {/* User Submission Area */}
-        {!isPresenter && (
-          <div className="max-w-md mx-auto p-6 bg-gray-50 rounded-lg">
-            {hasSubmitted ? (
-              <div className="text-center">
-                <p className="text-lg font-medium text-green-600 mb-2">
-                  You submitted: "{inputValue}"
-                </p>
-                <p className="text-gray-500">
-                  Thank you for your contribution!
-                </p>
-              </div>
-            ) : (
-              <>
-                <label
-                  htmlFor="word-input"
-                  className="block text-sm font-medium text-gray-700 mb-2"
-                >
-                  Enter your word:
-                </label>
-                <div className="flex gap-2">
-                  <input
-                    id="word-input"
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
-                    className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Type your response..."
-                    disabled={isSubmitting}
-                    maxLength={20}
-                  />
-                  <button
-                    className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:bg-gray-400 transition-colors"
-                    onClick={handleSubmit}
-                    disabled={!inputValue.trim() || isSubmitting}
-                  >
-                    {isSubmitting ? "..." : "Submit"}
-                  </button>
-                </div>
-                <p className="mt-2 text-xs text-gray-500">
-                  Note: You can only submit once
-                </p>
-              </>
-            )}
-          </div>
-        )}
+        <div className="flex-1_1_100% h-full">
+          {isPresenter && <ReactWordcloud maxWords={20} words={words} options={CLOUD_OPTIONS} />}
+          {!isPresenter && (
+            <div>
+              <input
+                placeholder="Type your answer here..."
+                maxLength={20}
+                value={userWord}
+                max={20}
+                onChange={onChange}
+                className="placeholder-gray-500 text-3xl m-6 py-2 focus:outline-none focus:ring-0 w-full bg-transparent"
+              />
+            </div>
+          )}
+        </div>
       </div>
+      {!isPresenter && (
+        <div className="absolute right-2 bottom-2">
+          <button
+            onClick={() => handleSubmit()}
+            disabled={submitBtnDisabled}
+            className="m-4 p-2 px-8 text-center text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+          >
+            {submitBtnText}
+          </button>
+        </div>
+      )}
     </div>
   );
 }

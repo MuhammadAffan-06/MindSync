@@ -19,17 +19,20 @@ import { PresentationGetResponse } from "@/app/types/presentationTypes";
 function SlideBuilder() {
   console.log("Silde Builder Rendering..");
   const [mode, setMode] = useState<UserMode>("Building");
-
+  const router = useRouter();
   const { presentationId } = useParams();
   const [loading, setLoading] = useState(true);
   const presentationDataRef = useRef<PresentationGetResponse|null>(null);
   
   useEffect(() => {
     if (!presentationId) return;
-    (async () => {
-    
+    (async () => {    
       const response = await apiRequest("/presentation/get",{ presentationId:presentationId as string });
+    if(response.success){
         presentationDataRef.current = response;
+      }else{
+        router.push("/dashboard");
+      }
         setLoading(false);
     })();
   }, []);
