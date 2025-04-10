@@ -8,8 +8,8 @@ passport.use(
     {
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: `${process.env.SERVER_DOMAIN}:${process.env.PORT}/auth/google/callback`,
-      // callbackURL: "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google/callback",
+      // callbackURL: `${process.env.SERVER_DOMAIN}:${process.env.PORT}/auth/google/callback`,
+      callbackURL: "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google/callback",
     },
     async (accessToken, refreshToken, profile, done) => {
       try {
@@ -19,12 +19,17 @@ passport.use(
         if (user) {
           // Generate JWT token for the existing user
           const token = jwt.sign(
-            { id: user._id, email: user.email, name: user.name },
+            {
+              id: user._id,
+              email: user.email,
+              name: user.name,
+              picture: user.picture,
+            },
             process.env.JWT_SECRET,
             { expiresIn: "7d" }
           );
           return done(null, user, { token });
-        } 
+        }
 
         // If user does not exist, create a new user
         user = await User.create({
@@ -36,7 +41,12 @@ passport.use(
 
         // Generate JWT token for the new user
         const token = jwt.sign(
-          { id: user._id, email: user.email, name: user.name },
+          {
+            id: user._id,
+            email: user.email,
+            name: user.name,
+            picture: user.picture,
+          },
           process.env.JWT_SECRET,
           { expiresIn: "7d" }
         );
@@ -49,6 +59,5 @@ passport.use(
     }
   )
 );
-
 
 module.exports = passport;
