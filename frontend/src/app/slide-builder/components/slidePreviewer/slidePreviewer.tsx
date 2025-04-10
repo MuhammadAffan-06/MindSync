@@ -1,7 +1,8 @@
 "use client";
 import { useSlide } from "@/app/context/slideContext";
 import { Slide, SlideBaseProps, SlideType } from "../../../types/slideTypes";
-import SlideTypeSelector from "../slideEditor/slideTypes/slideTypeSelector";
+// import SlideTypeSelector from "../slideEditor/slideTypes/slideTypeSelector";
+import SlideTypeSelector from "@/app/components/slideEditor/slideTypes/slideTypeSelector";
 import PreviewSlideMCQ from "./previewSlideTypes/previewSlideMCQ";
 import PreviewSlidePlainText from "./previewSlideTypes/previewSlidePlainText";
 import PreviewSlidePoll from "./previewSlideTypes/previewSlidePoll";

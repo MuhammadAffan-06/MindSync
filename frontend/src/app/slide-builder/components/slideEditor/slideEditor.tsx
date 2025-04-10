@@ -3,12 +3,16 @@
 import React from 'react';
 import { Slide, SlideBaseProps, SlideType } from '@/app/types/slideTypes';
 
-import SlidePlainText from "./slideTypes/slidePlainText"
+// import SlidePlainText from "./slideTypes/slidePlainText"
+import SlidePlainText from '@/app/components/slideEditor/slideTypes/slidePlainText';
 import SlideWordCloud from "./slideTypes/slideWordCloud"
-import SlideNotSelected from './slideTypes/slideNotSelected';
-import SlideMCQ from './slideTypes/slideMCQ';
+// import SlideNotSelected from './slideTypes/slideNotSelected';
+import SlideNotSelected from '@/app/components/slideEditor/slideTypes/slideNotSelected';
+// import SlideMCQ from './slideTypes/slideMCQ';
+import SlideMCQ from '@/app/components/slideEditor/slideTypes/slideMCQ';
 import SlideDeletePopup from './slideTypes/slideDeletePopup';
-import SlideTypeSelector from './slideTypes/slideTypeSelector';
+// import SlideTypeSelector from './slideTypes/slideTypeSelector';
+import SlideTypeSelector from '@/app/components/slideEditor/slideTypes/slideTypeSelector';
 import { useSlide } from '@/app/context/slideContext';
 import SlidePoll from './slideTypes/slidePoll';
 
