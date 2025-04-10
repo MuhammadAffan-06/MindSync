@@ -261,7 +261,7 @@ export default function Auth() {
                 justify-center
                 p-3
                 rounded-md
-                my-4
+                my-3
                 bg-[#363636]
                 text-white
                 w-full

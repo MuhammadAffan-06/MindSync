@@ -8,6 +8,7 @@ function AuthSuccessContent() {
   const token = searchParams.get("token");
   const name = searchParams.get("name");
   const email = searchParams.get("email");
+  const picture = searchParams.get("picture");
   const router = useRouter();
 
   useEffect(() => {
@@ -18,6 +19,7 @@ function AuthSuccessContent() {
     localStorage.setItem("token", token);
     localStorage.setItem("userName", name);
     localStorage.setItem("userEmail", email);
+    localStorage.setItem("userPicture", picture ?? "/profile-avatar.svg");
 
     router.replace("/dashboard");
   }, [token, name, email, router]);
