@@ -1,10 +1,12 @@
 "use client";
 import { IoChevronBack } from "react-icons/io5";
 import "@/app/components/joinMobile/joinMobile.css";
+import { useRouter } from "next/navigation";
 
 export default function JoinMobile() {
+  const router = useRouter();
   const handleBack = () => {
-    window.location.href = "http://localhost:3000/";
+    router.push("https://mind-sync-u9h4.vercel.app/");
   };
 
   return (

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import ReactWordcloud, { Optional, OptionsProp, Word } from "react-wordcloud";
+import ReactWordcloud, { OptionsProp, Word } from "react-wordcloud";
 
 interface PreviewSlideProps {
   content: string;

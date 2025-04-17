@@ -1,6 +1,7 @@
 "use client";
 
-import { ContentProps } from "@/app/slide-builder/components/slideEditor/slideTypes/slideMCQ";
+// import { ContentProps } from "@/app/slide-builder/components/slideEditor/slideTypes/slideMCQ";
+import { ContentProps } from "@/app/components/slideEditor/slideTypes/slideMCQ";
 import { useState } from "react";
 
 interface PresentSlideProps {

@@ -4,7 +4,7 @@ import { useSlide } from "@/app/context/slideContext";
 import { Slide, SlideBaseProps } from "@/app/types/slideTypes";
 import html2canvas from "html2canvas";
 import React, { useEffect, useState, useRef } from "react";
-import ReactWordcloud, { Optional, OptionsProp } from "react-wordcloud";
+// import ReactWordcloud, { Optional, OptionsProp } from "react-wordcloud";
 
 export interface ContentProps {
   question: string;
@@ -13,7 +13,7 @@ export interface ContentProps {
 export default function SlideWordCloud({ id }: SlideBaseProps) {
   console.log("Slide Word Cloud Rendering");
 
-  const { activeSlideId, getActiveSlide, updateSlideInfoById } = useSlide();
+  const { getActiveSlide, updateSlideInfoById } = useSlide();
   const slide: Slide | undefined = getActiveSlide();
   if (!slide) return <p>Invalid Slide Id, {id}</p>;
   const parseSlideContent = (slide: Slide): ContentProps => {

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import TextStyle from "@tiptap/extension-text-style";
@@ -19,7 +19,7 @@ import {
   FaAlignLeft,
   FaAlignCenter,
   FaAlignRight,
-  FaAlignJustify
+  FaAlignJustify,
 } from "react-icons/fa";
 import { SlideBaseProps } from "@/app/types/slideTypes";
 import { UniqueIdentifier } from "@dnd-kit/core/dist";
@@ -76,8 +76,8 @@ const FontSize = Extension.create({
 });
 
 export default function SlidePlainText({ id }: SlideBaseProps) {
-  console.log("Slide Plain Text Rendering")
-  const { activeSlideId, getActiveSlide, updateSlideInfoById } = useSlide();
+  console.log("Slide Plain Text Rendering");
+  const { getActiveSlide, updateSlideInfoById } = useSlide();
   const slide = getActiveSlide();
   const contentRef = useRef(slide?.content || "<p>Text Here...</p>");
 
@@ -97,7 +97,7 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
       TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
     content: contentRef.current,
-    immediatelyRender: false, 
+    immediatelyRender: false,
     onUpdate: ({ editor }) => {
       contentRef.current = editor.getHTML();
     },
@@ -110,14 +110,17 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
     contentRef.current = slide.content;
   }, [id, editor]);
 
-
-  const updateSlideInfo = (id:UniqueIdentifier) => {
+  const updateSlideInfo = (id: UniqueIdentifier) => {
     if (divRef.current && contentRef.current) {
       html2canvas(divRef.current, { scale: 0.5 }).then((canvas) => {
-        updateSlideInfoById(id, contentRef.current, canvas.toDataURL("image/webp", 0.2));
+        updateSlideInfoById(
+          id,
+          contentRef.current,
+          canvas.toDataURL("image/webp", 0.2)
+        );
       });
     }
-  }
+  };
 
   const handleFontSize = (size: string) => {
     if (!size || size === "unset") {
@@ -192,13 +195,22 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
           value={bgColor}
           onChange={(e) => {
             setBgColor(e.target.value);
-            editor.chain().focus().toggleHighlight({ color: e.target.value }).run();
+            editor
+              .chain()
+              .focus()
+              .toggleHighlight({ color: e.target.value })
+              .run();
           }}
           className="w-6 h-6 border p-0"
           title="Highlight Color"
         />
 
-        <select onChange={(e) => editor.chain().focus().setFontFamily(e.target.value).run()} className="border rounded p-1">
+        <select
+          onChange={(e) =>
+            editor.chain().focus().setFontFamily(e.target.value).run()
+          }
+          className="border rounded p-1"
+        >
           <option value="Arial">Arial</option>
           <option value="Helvetica">Helvetica</option>
           <option value="Verdana">Verdana</option>
@@ -221,7 +233,10 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
           <option value="Futura">Futura</option>
         </select>
 
-        <select onChange={(e) => handleFontSize(e.target.value)} className="border rounded p-1">
+        <select
+          onChange={(e) => handleFontSize(e.target.value)}
+          className="border rounded p-1"
+        >
           <option value="14px">14</option>
           <option value="18px">18</option>
           <option value="24px">24</option>
@@ -234,7 +249,12 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
       </div>
 
       <div className="flex-grow border p-2 rounded overflow-auto prose max-w-[80vw]">
-        <EditorContent editor={editor} ref={divRef} onBlur={()=>updateSlideInfo(id)} className="border-none h-full w-full focus:ring-0 focus:outline-none appearance-none whitespace-pre-wrap break-words overflow-hidden" />
+        <EditorContent
+          editor={editor}
+          ref={divRef}
+          onBlur={() => updateSlideInfo(id)}
+          className="border-none h-full w-full focus:ring-0 focus:outline-none appearance-none whitespace-pre-wrap break-words overflow-hidden"
+        />
       </div>
     </div>
   );

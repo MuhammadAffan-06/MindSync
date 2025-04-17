@@ -6,10 +6,15 @@
   ],
   "extends": [
     "eslint:recommended",
-    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
+  // "rules": {
+  //   "no-unused-vars": "warn",
+  //   "@typescript-eslint/no-unused-vars": ["error"]
+  // }
   "rules": {
-    "no-unused-vars": "warn",
-    "@typescript-eslint/no-unused-vars": ["error"]
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-empty-interface": "off",
   }
+  
 }

@@ -1,5 +1,5 @@
 "use client";
-export default function Loading({message}:{message?:String}) {
+export default function Loading({message}:{message?:string}) {
   return (
     <div
       className="

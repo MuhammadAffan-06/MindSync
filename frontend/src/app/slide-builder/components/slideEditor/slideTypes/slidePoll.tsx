@@ -3,7 +3,7 @@
 import { useSlide } from "@/app/context/slideContext";
 import { Slide, SlideBaseProps } from "@/app/types/slideTypes";
 import html2canvas from "html2canvas";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 export interface ContentProps {
   question: string;
@@ -14,7 +14,7 @@ export interface ContentProps {
 export default function SlidePoll({ id }: SlideBaseProps) {
     console.log("Slide Poll Rendering")
   
-  const { activeSlideId, getActiveSlide, updateSlideInfoById } = useSlide();
+  const { getActiveSlide, updateSlideInfoById } = useSlide();
   const slide: Slide | undefined = getActiveSlide();
   if (!slide) return <p>Invalid Slide Id, {id}</p>;
   const parseSlideContent = (slide: Slide): ContentProps => {

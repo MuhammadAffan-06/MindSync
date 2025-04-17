@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 // import { useSlide } from "../../../[presentationId]/slideContext";
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
+// import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
+import { useSlide } from "@/app/context/slideContext";
 // import { Slide } from "../../../[presentationId]/types";
-import { Slide } from "@/app/slide-builder/[presentationId]/slideContext";
-
+// import { Slide } from "@/app/slide-builder/[presentationId]/slideContext";
+import { Slide } from "@/app/types/slideTypes";
 export default function SlideDeletePopup() {
   const { activeSlideId, getActiveSlide, removeSlide } = useSlide();
   const [visible, setVisibility] = useState<boolean>(false);

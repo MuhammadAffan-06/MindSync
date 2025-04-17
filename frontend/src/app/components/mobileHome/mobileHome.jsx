@@ -1,10 +1,13 @@
+"use client";
 import Image from "next/image";
 import "@/app/components/mobileHome/mobileHome.css";
 import { FaCheck } from "react-icons/fa6";
+import { useRouter } from "next/dist/client/router";
 
 export default function Mobilehome() {
+  const router = useRouter();
   const handleJoin = () => {
-    window.location.href = "http://localhost:3000/join";
+    router.push("https://mind-sync-u9h4.vercel.app/join");
   };
   return (
     <>
@@ -62,4 +65,3 @@ export default function Mobilehome() {
     </>
   );
 }
-

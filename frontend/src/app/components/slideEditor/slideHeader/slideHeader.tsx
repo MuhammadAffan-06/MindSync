@@ -2,9 +2,9 @@
 
 import Leaderboard, { LeaderboardType } from "@/app/components/leaderboard/leaderboard";
 import SlidePresentor from "@/app/components/slidePresentor/slidePresentor";
-import { fetchData, fetchDataJSON } from "@/app/components/utils/api";
-import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import { UserMode } from "@/app/slide-builder/[presentationId]/types";
+import { apiRequest } from "@/app/components/utils/api";
+import { useSlide } from "@/app/context/slideContext";
+import { UserMode } from "@/app/types/slideTypes";
 import React, { ChangeEvent, useEffect, useState } from "react";
 
 interface SlideHeaderProps {
@@ -14,7 +14,7 @@ interface SlideHeaderProps {
 
 export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
   console.log("Slide Header Rendering");
-  const { presentationNameRef, joinCode, presentationId, getActiveSlide, saveTheSlides } = useSlide();
+  const { presentationNameRef, joinCode, presentationId, getActiveSlide, saveSlidesToDB } = useSlide();
   const [presentDisabled, setPresentDisabled] = useState<boolean>(false);
   const [showPresenter, setShowPresenter] = useState<boolean>(false);
 
@@ -50,16 +50,12 @@ export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
 
   const presentSlides = async () => {
     setPresentDisabled(true);
-    await saveTheSlides();
-    try {
-      await fetchData(`presentation/${presentationId}/live`, "POST");
-      setPresentDisabled(false);
-      setShowPresenter(true);
-    } catch (error) {
-      console.error(error);
-      setPresentDisabled(false);
-    }
-  };
+    await saveSlidesToDB();
+   const {success} =  await apiRequest("/presentation/live", { presentationId });
+if(success) setShowPresenter(true);
+  setPresentDisabled(false);
+}
+
 
   return (
     <>

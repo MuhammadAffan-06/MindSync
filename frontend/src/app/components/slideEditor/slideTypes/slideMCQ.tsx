@@ -3,7 +3,7 @@
 import { useSlide } from "@/app/context/slideContext";
 import { Slide, SlideBaseProps } from "@/app/types/slideTypes";
 import html2canvas from "html2canvas";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 export interface ContentProps {
   question: string;
@@ -12,13 +12,17 @@ export interface ContentProps {
 }
 
 export default function SlideMCQ({ id }: SlideBaseProps) {
-    console.log("Slide MCQ Rendering")
-  
-  const { activeSlideId, getActiveSlide, updateSlideInfoById } = useSlide();
+  console.log("Slide MCQ Rendering");
+
+  const { getActiveSlide, updateSlideInfoById } = useSlide();
   const slide: Slide | undefined = getActiveSlide();
   if (!slide) return <p>Invalid Slide Id, {id}</p>;
   const parseSlideContent = (slide: Slide): ContentProps => {
-    const defaultContentProps: ContentProps = { question: "", answers: ["", ""], marks: 0 };
+    const defaultContentProps: ContentProps = {
+      question: "",
+      answers: ["", ""],
+      marks: 0,
+    };
 
     try {
       if (slide.content) {
@@ -30,8 +34,12 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
     }
   };
 
-  const [content, setContent] = useState<ContentProps>(() => parseSlideContent(slide));
-  const [correctAnswer, setCorrectAnswer] = useState<string>(slide.correctAnswer || "Not Selected");
+  const [content, setContent] = useState<ContentProps>(() =>
+    parseSlideContent(slide)
+  );
+  const [correctAnswer, setCorrectAnswer] = useState<string>(
+    slide.correctAnswer || "Not Selected"
+  );
   const contentRef = useRef<ContentProps>(content);
   const [answersCount, setAnswersCount] = useState(content.answers.length);
 
@@ -52,7 +60,12 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
   const updateSlideInfo = () => {
     if (divRef.current) {
       html2canvas(divRef.current, { scale: 0.5 }).then((canvas) => {
-        updateSlideInfoById(id, JSON.stringify(contentRef.current), canvas.toDataURL("image/webp", 0.2), correctAnswer);
+        updateSlideInfoById(
+          id,
+          JSON.stringify(contentRef.current),
+          canvas.toDataURL("image/webp", 0.2),
+          correctAnswer
+        );
       });
     }
   };
@@ -61,23 +74,33 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
     contentRef.current = updatedContent;
     setContent(updatedContent);
   };
-  const handleAnswersChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const updatedAnswerss = [...contentRef.current.answers];
-    updatedAnswerss[index] = e.target.value;
-    const updatedContent = { ...contentRef.current, answers: updatedAnswerss };
-    contentRef.current = updatedContent;
-    setContent(updatedContent);
-  };
+  const handleAnswersChange =
+    (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+      const updatedAnswerss = [...contentRef.current.answers];
+      updatedAnswerss[index] = e.target.value;
+      const updatedContent = {
+        ...contentRef.current,
+        answers: updatedAnswerss,
+      };
+      contentRef.current = updatedContent;
+      setContent(updatedContent);
+    };
   const handleMarksChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
     if (Number.isNaN(e.target.valueAsNumber)) return;
-    const updatedContent = { ...contentRef.current, marks: e.target.valueAsNumber };
+    const updatedContent = {
+      ...contentRef.current,
+      marks: e.target.valueAsNumber,
+    };
     contentRef.current = updatedContent;
     setContent(updatedContent);
   };
   const addAnswers = () => {
     if (answersCount < 5) {
       const updatedAnswerss = [...contentRef.current.answers, ""];
-      const updatedContent = { ...contentRef.current, answers: updatedAnswerss };
+      const updatedContent = {
+        ...contentRef.current,
+        answers: updatedAnswerss,
+      };
       contentRef.current = updatedContent;
       setContent(updatedContent);
       setAnswersCount(updatedAnswerss.length);
@@ -85,7 +108,9 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
     }
   };
 
-  const onAnswerInputRightClick = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
+  const onAnswerInputRightClick = (
+    e: React.MouseEvent<HTMLInputElement, MouseEvent>
+  ) => {
     e.preventDefault();
     setCorrectAnswer(e.currentTarget.value);
   };
@@ -122,7 +147,10 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
           {answersCount < 5 && (
             <li>
               <span className="border-black border border-dashed rounded-xl px-2 inline-block">
-                <button className="text-gray-500 py-1 w-[20vw] text-lg text-left" onClick={addAnswers}>
+                <button
+                  className="text-gray-500 py-1 w-[20vw] text-lg text-left"
+                  onClick={addAnswers}
+                >
                   + Add another Answers
                 </button>
               </span>

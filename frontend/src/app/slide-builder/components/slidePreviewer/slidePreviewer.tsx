@@ -1,6 +1,6 @@
 "use client";
 import { useSlide } from "@/app/context/slideContext";
-import { Slide, SlideBaseProps, SlideType } from "../../../types/slideTypes";
+import { Slide } from "../../../types/slideTypes";
 // import SlideTypeSelector from "../slideEditor/slideTypes/slideTypeSelector";
 import SlideTypeSelector from "@/app/components/slideEditor/slideTypes/slideTypeSelector";
 import PreviewSlideMCQ from "./previewSlideTypes/previewSlideMCQ";
@@ -8,11 +8,11 @@ import PreviewSlidePlainText from "./previewSlideTypes/previewSlidePlainText";
 import PreviewSlidePoll from "./previewSlideTypes/previewSlidePoll";
 import PreviewSlideWordCloud from "./previewSlideTypes/previewSlideWordCloud";
 
-interface PreviewSlideProps {
-  content: string;
-}
+// interface PreviewSlideProps {
+//   content: string;
+// }
 
-const SlideTypeInvalid = (props: PreviewSlideProps) => <div>Invalid Slide Type</div>;
+// const SlideTypeInvalid = (props: PreviewSlideProps) => <div>Invalid Slide Type</div>;
 
 export default function SlidePreviewer() {
   console.log("Slide Previewer Rendering");

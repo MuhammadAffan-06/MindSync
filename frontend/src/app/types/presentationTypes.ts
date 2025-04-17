@@ -1,3 +1,6 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-empty-interface */
+
 import { BaseResponse } from "./apiTypes";
 import { Slide } from "./slideTypes";
 

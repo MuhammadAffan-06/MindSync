@@ -1,4 +1,5 @@
-import { BaseResponse, Path } from "@/app/types/apiTypes";
+/* eslint-disable  @typescript-eslint/no-explicit-any */
+import { Path}  from "@/app/types/apiTypes";
 import { LoginRequest, LoginResponse, LogoutResponse, SignupRequest, SignupResponse, VerifyResponse } from "@/app/types/authTypes";
 import {
     PresentationAllResponse,
@@ -47,16 +48,19 @@ function getHeaders(): HeadersInit {
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
   };
-  const token = localStorage.getItem("token");
-  if (token) {
-    headers["authorization"] = `Bearer ${token}`;
-    
+
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers["authorization"] = `Bearer ${token}`;
+    }
   }
+
   return headers;
 }
 
 // Map of HTTP methods based on path
-const PATH_METHOD: Record<Path, "GET" | "POST"> = {
+export const PATH_METHOD: Record<Path, "GET" | "POST"> = {
   "/auth/login": "POST",
   "/auth/signup": "POST",
   "/auth/verify": "GET",

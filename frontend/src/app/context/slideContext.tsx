@@ -1,29 +1,37 @@
 "use client";
 
-import React, { createContext, MutableRefObject, useContext, useRef, useState } from "react";
+import React, { createContext, useContext, useRef, useState } from "react";
 import { UniqueIdentifier } from "@dnd-kit/core";
 import { toast } from "react-toastify";
 import { arrayMove } from "@dnd-kit/sortable";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { Slide, SlideType } from "../types/slideTypes";
 import { PresentationGetResponse } from "../types/presentationTypes";
 import { apiRequest } from "../components/utils/api";
- 
+
 interface ISlideContext {
   slides: Slide[];
   addSlide: () => void;
   removeSlide: (id: UniqueIdentifier) => void;
-  updateSlideIndex: (originalSlideId: UniqueIdentifier, newSlideId: UniqueIdentifier) => void;
+  updateSlideIndex: (
+    originalSlideId: UniqueIdentifier,
+    newSlideId: UniqueIdentifier
+  ) => void;
   getActiveSlide: () => Slide | undefined;
   activeSlideId: UniqueIdentifier;
   setActiveSlideId: (id: UniqueIdentifier) => void;
   setSlideType: (id: UniqueIdentifier, type: SlideType) => void;
   getSlideById: (id: UniqueIdentifier) => Slide | undefined;
-  updateSlideInfoById: (id: UniqueIdentifier, content: string, thumbnailUrl: string , correctAnswer?:string) => void;
+  updateSlideInfoById: (
+    id: UniqueIdentifier,
+    content: string,
+    thumbnailUrl: string,
+    correctAnswer?: string
+  ) => void;
   presentationNameRef: React.MutableRefObject<string>;
   presentationId: string;
   saveSlidesToDB: () => Promise<boolean>;
-  joinCode:string;
+  joinCode: string;
 }
 
 const SlideContext = createContext<ISlideContext | undefined>(undefined);
@@ -33,23 +41,32 @@ interface SlideProviderProps {
   presentationDataRef: React.MutableRefObject<PresentationGetResponse | null>;
 }
 
-export function SlideProvider({ children, presentationDataRef }: SlideProviderProps) {
+export function SlideProvider({
+  children,
+  presentationDataRef,
+}: SlideProviderProps) {
   if (!presentationDataRef.current) return;
-  const [slides, setSlides] = useState<Slide[]>(presentationDataRef.current.slideIds);
+  const [slides, setSlides] = useState<Slide[]>(
+    presentationDataRef.current.slideIds
+  );
   /* if  activeSlideId === 0 then => no slide is active. Show slideNotSelected instead*/
   /* else if its string then it must be id of particular slide, so show that slide*/
-  const [activeSlideId, setActiveSlideId] = useState<UniqueIdentifier>(slides.length === 0 ? 0: slides[0].clientId);
+  const [activeSlideId, setActiveSlideId] = useState<UniqueIdentifier>(
+    slides.length === 0 ? 0 : slides[0].clientId
+  );
   const presentationId = presentationDataRef.current._id;
-  const presentationNameRef: React.MutableRefObject<string> = useRef(presentationDataRef.current.title);
-  const joinCode:string = presentationDataRef.current.joinCode;
+  const presentationNameRef: React.MutableRefObject<string> = useRef(
+    presentationDataRef.current.title
+  );
+  const joinCode: string = presentationDataRef.current.joinCode;
   const addSlide = () => {
     if (getActiveSlide()?.type === "Undefined") return;
-    
+
     const newSlide: Slide = {
       clientId: uuidv4(),
       content: null,
       type: "Undefined",
-      correctAnswer: null
+      correctAnswer: null,
     };
     setSlides((prev) => [...prev, newSlide]);
 
@@ -67,12 +84,20 @@ export function SlideProvider({ children, presentationDataRef }: SlideProviderPr
     });
   };
 
-  const getSlideById = (id: UniqueIdentifier) => slides.find((slide) => slide.clientId === id);
+  const getSlideById = (id: UniqueIdentifier) =>
+    slides.find((slide) => slide.clientId === id);
 
-  const updateSlideIndex = (originalSlideId: UniqueIdentifier, newSlideId: UniqueIdentifier) => {
+  const updateSlideIndex = (
+    originalSlideId: UniqueIdentifier,
+    newSlideId: UniqueIdentifier
+  ) => {
     setSlides((prev) => {
-      const originalSlideIndex = prev.findIndex((slide) => slide.clientId === originalSlideId);
-      const newSlideIndex = prev.findIndex((slide) => slide.clientId === newSlideId);
+      const originalSlideIndex = prev.findIndex(
+        (slide) => slide.clientId === originalSlideId
+      );
+      const newSlideIndex = prev.findIndex(
+        (slide) => slide.clientId === newSlideId
+      );
       if (originalSlideIndex === -1 || newSlideIndex === -1) return prev;
       return arrayMove(prev, originalSlideIndex, newSlideIndex);
     });
@@ -97,12 +122,17 @@ export function SlideProvider({ children, presentationDataRef }: SlideProviderPr
     return slides.find((slide) => slide.clientId === activeSlideId);
   };
 
-  const updateSlideInfoById = (id: UniqueIdentifier, content: string, thumbnailUrl: string = "", correctAnswer?:string|null) => {
+  const updateSlideInfoById = (
+    id: UniqueIdentifier,
+    content: string,
+    thumbnailUrl: string = "",
+    correctAnswer?: string | null
+  ) => {
     setSlides((prev) => {
       const index = prev.findIndex((slide) => slide.clientId === id);
       if (index === -1) return prev;
-      const updatedSlide = { ...prev[index], content};
-      if(correctAnswer) updatedSlide.correctAnswer = correctAnswer;
+      const updatedSlide = { ...prev[index], content };
+      if (correctAnswer) updatedSlide.correctAnswer = correctAnswer;
       if (thumbnailUrl != "") updatedSlide.thumbnailUrl = thumbnailUrl;
       const newSlides = [...prev];
       newSlides[index] = updatedSlide;
@@ -111,12 +141,16 @@ export function SlideProvider({ children, presentationDataRef }: SlideProviderPr
   };
 
   const saveSlidesToDB = async () => {
-   const { success } = await apiRequest("/presentation/save",{ presentationId , presentationTitle: presentationNameRef.current, slides: slides.filter((slide) => slide.content) });
-   if(success){
-    toast.success("Slides Saved!");
-   }
+    const { success } = await apiRequest("/presentation/save", {
+      presentationId,
+      presentationTitle: presentationNameRef.current,
+      slides: slides.filter((slide) => slide.content),
+    });
+    if (success) {
+      toast.success("Slides Saved!");
+    }
 
-   return success;
+    return success;
   };
 
   return (
@@ -135,7 +169,7 @@ export function SlideProvider({ children, presentationDataRef }: SlideProviderPr
         presentationNameRef,
         presentationId,
         saveSlidesToDB,
-        joinCode
+        joinCode,
       }}
     >
       {children}
