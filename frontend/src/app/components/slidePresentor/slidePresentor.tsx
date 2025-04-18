@@ -6,10 +6,10 @@ import { io, Socket } from "socket.io-client";
 import Image from "next/image";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
-import  { LeaderboardType } from "../leaderboard/leaderboard";
+import { LeaderboardType } from "../leaderboard/leaderboard";
 import { SlideType } from "@/app/types/slideTypes";
-import {serverBaseUrl} from "../utils/api"
-import PresentSlidePoll from "./presentSlidePoll"
+import { serverBaseUrl } from "../utils/api";
+import PresentSlidePoll from "./presentSlidePoll";
 import PresentSlidePlainText from "./presentSlidePlainText";
 import PresentSlideMCQ from "./presentSlideMCQ";
 import PresentSlideWordCloud from "./presentSlideWordCloud";
@@ -19,7 +19,7 @@ interface SlidePresentorProps {
   isPresenter: boolean;
   setShowPresenter: React.Dispatch<React.SetStateAction<boolean>>;
   setShowLeaderboard: React.Dispatch<React.SetStateAction<boolean>>;
-  setLeaderboard:  React.Dispatch<React.SetStateAction<LeaderboardType|null>>
+  setLeaderboard: React.Dispatch<React.SetStateAction<LeaderboardType | null>>;
 }
 
 interface SlideResponse {
@@ -27,20 +27,28 @@ interface SlideResponse {
   content: string;
 }
 
-
-
-export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter,setShowLeaderboard,setLeaderboard }: SlidePresentorProps) {
+export default function SlidePresentor({
+  joinCode,
+  isPresenter,
+  setShowPresenter,
+  setShowLeaderboard,
+  setLeaderboard,
+}: SlidePresentorProps) {
   console.log("Slide Presentor Rendering");
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [activeSlideType, setActiveSlideType] = useState<SlideType | null>(null);
-  const [activeSlideContent, setActiveSlideContent] = useState<string | null>(null);
-  const [additionalData,setAdditionalData] = useState<any>(null);
+  const [activeSlideType, setActiveSlideType] = useState<SlideType | null>(
+    null
+  );
+  const [activeSlideContent, setActiveSlideContent] = useState<string | null>(
+    null
+  );
+  const [additionalData, setAdditionalData] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
 
-  const [nextBtnText,setNextBtnText] = useState<string>("Next Slide");
+  const [nextBtnText, setNextBtnText] = useState<string>("Next Slide");
+  const [activeUsersCount, setActiveUsersCount] = useState<number>(0);
 
-
-  const [previousBtnDisabled,setPreviousBtnDisabled] = useState<boolean>(true);
+  const [previousBtnDisabled, setPreviousBtnDisabled] = useState<boolean>(true);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
@@ -55,23 +63,33 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     newSocket.on("connect", () => {
       console.log("Connected to socket server:", newSocket.id);
       console.log("Joining presentation...");
-      newSocket.emit("join-presentation", joinCode, (success: boolean, text: string, slide: SlideResponse,additionalData:any, completed:number) => {
-        if (success) {
-          console.log("Successfully joined presentation", slide);
-          setTitle(text);
-          setActiveSlideType(slide.type);
-          setActiveSlideContent(slide.content);
-          setAdditionalData(additionalData);
-          setNextBtnText(completed===1?"End Presentation":"Next Slide");
-        } else {
-          console.log("Failed to join Presentation");
-          setShowPresenter(false);
-          toast.error(text);
+      newSocket.emit(
+        "join-presentation",
+        joinCode,
+        (
+          success: boolean,
+          text: string,
+          slide: SlideResponse,
+          additionalData: any,
+          completed: number
+        ) => {
+          if (success) {
+            console.log("Successfully joined presentation", slide);
+            setTitle(text);
+            setActiveSlideType(slide.type);
+            setActiveSlideContent(slide.content);
+            setAdditionalData(additionalData);
+            setNextBtnText(completed === 1 ? "End Presentation" : "Next Slide");
+          } else {
+            console.log("Failed to join Presentation");
+            setShowPresenter(false);
+            toast.error(text);
+          }
         }
-      });
+      );
     });
 
-    newSocket.on("presentation-data", ({ type, content },additionalData) => {
+    newSocket.on("presentation-data", ({ type, content }, additionalData) => {
       setActiveSlideType(type);
       setActiveSlideContent(content);
       setAdditionalData(additionalData);
@@ -80,16 +98,18 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
     newSocket.on("presentation-ended", (data) => {
       setShowPresenter(false);
       toast.warn(data.message);
-      setLeaderboard(data.leaderboard); 
+      setLeaderboard(data.leaderboard);
       setShowLeaderboard(true);
     });
 
     newSocket.on("disconnect", () => {
       console.log("Disconnected from socket server");
-      
+
       setShowPresenter(false);
     });
-
+    newSocket.on("active-users-count", (count: number) => {
+      setActiveUsersCount(count);
+    });
     return () => {
       setSocket(null);
       newSocket.disconnect();
@@ -98,18 +118,18 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
 
   const nextSlide = () => {
     if (isPresenter && socket) {
-      socket.emit("presentation-next-slide",(completed:number)=>{
-        setPreviousBtnDisabled(completed===0)
-        setNextBtnText(completed===1?"End Presentation":"Next Slide");
+      socket.emit("presentation-next-slide", (completed: number) => {
+        setPreviousBtnDisabled(completed === 0);
+        setNextBtnText(completed === 1 ? "End Presentation" : "Next Slide");
       });
     }
   };
 
   const previousSlide = () => {
     if (isPresenter && socket) {
-      socket.emit("presentation-previous-slide",(completed:number)=>{
-        setPreviousBtnDisabled(completed===0)
-        setNextBtnText(completed===1?"End Presentation":"Next Slide");
+      socket.emit("presentation-previous-slide", (completed: number) => {
+        setPreviousBtnDisabled(completed === 0);
+        setNextBtnText(completed === 1 ? "End Presentation" : "Next Slide");
       });
     }
   };
@@ -117,9 +137,13 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
   const onSubmitAnswer = async (answer: string): Promise<string> => {
     return new Promise((res, rej) => {
       if (socket) {
-        socket.emit("presentation-answer-submit", answer, (success: boolean, message: string) => {
-          res(message);
-        });
+        socket.emit(
+          "presentation-answer-submit",
+          answer,
+          (success: boolean, message: string) => {
+            res(message);
+          }
+        );
       } else rej("Socket doesn't exist");
     });
   };
@@ -131,24 +155,72 @@ export default function SlidePresentor({ joinCode, isPresenter, setShowPresenter
       <div className="fixed flex flex-col top-0 left-0 h-screen w-screen z-50 bg-white">
         <div className="flex justify-between mt-6 px-8 items-center">
           <span className="text-3xl font-semibold text-gray-500">{title}</span>
-          {isPresenter && <span className="text-2xl font-semibold text-gray-500">Join Code: {joinCode}</span>}
-          <Image className="max-[660px]:h-[64px] max-[660px]:w-[117px]" src="/logo.svg" alt="Logo" width={200} height={80} />
+          {isPresenter && (
+            <span className="text-2xl font-semibold text-gray-500">
+              Join Code: {joinCode}
+            </span>
+          )}
+          {isPresenter && (
+            <span className="text-2xl font-semibold text-gray-500">
+              Active Users: {activeUsersCount}
+            </span>
+          )}
+
+          <Image
+            className="max-[660px]:h-[64px] max-[660px]:w-[117px]"
+            src="/logo.svg"
+            alt="Logo"
+            width={200}
+            height={80}
+          />
         </div>
         <div className="bg-[var(--background)] m-8 flex flex-grow flex-shrink basis-full rounded-lg">
-          {activeSlideType === "PlainText" && <PresentSlidePlainText content={activeSlideContent} isPresenter={isPresenter} />}
-          {activeSlideType === "MCQ" && <PresentSlideMCQ content={activeSlideContent} isPresenter={isPresenter} onSubmit={onSubmitAnswer} />}
-          {activeSlideType === "Poll" && <PresentSlidePoll content={activeSlideContent} isPresenter={isPresenter} polls={additionalData} onSubmit={onSubmitAnswer} />}
-          {activeSlideType === "WordCloud" && <PresentSlideWordCloud content={activeSlideContent} isPresenter={isPresenter} words={additionalData} onSubmit={onSubmitAnswer} />}
+          {activeSlideType === "PlainText" && (
+            <PresentSlidePlainText
+              content={activeSlideContent}
+              isPresenter={isPresenter}
+            />
+          )}
+          {activeSlideType === "MCQ" && (
+            <PresentSlideMCQ
+              content={activeSlideContent}
+              isPresenter={isPresenter}
+              onSubmit={onSubmitAnswer}
+            />
+          )}
+          {activeSlideType === "Poll" && (
+            <PresentSlidePoll
+              content={activeSlideContent}
+              isPresenter={isPresenter}
+              polls={additionalData}
+              onSubmit={onSubmitAnswer}
+            />
+          )}
+          {activeSlideType === "WordCloud" && (
+            <PresentSlideWordCloud
+              content={activeSlideContent}
+              isPresenter={isPresenter}
+              words={additionalData}
+              onSubmit={onSubmitAnswer}
+            />
+          )}
         </div>
         {isPresenter && (
           <>
             <div className="absolute right-0 bottom-0 p-16">
-              <button onClick={nextSlide} className="p-3 bg-[var(--secondary-color)] text-white rounded-lg">
+              <button
+                onClick={nextSlide}
+                className="p-3 bg-[var(--secondary-color)] text-white rounded-lg"
+              >
                 {nextBtnText}
               </button>
             </div>
             <div className="absolute left-0 bottom-0 p-16">
-              <button onClick={previousSlide} disabled={previousBtnDisabled} className="p-3 bg-[var(--secondary-color)] text-white rounded-lg disabled:bg-gray-400">
+              <button
+                onClick={previousSlide}
+                disabled={previousBtnDisabled}
+                className="p-3 bg-[var(--secondary-color)] text-white rounded-lg disabled:bg-gray-400"
+              >
                 Previous Slide
               </button>
             </div>
