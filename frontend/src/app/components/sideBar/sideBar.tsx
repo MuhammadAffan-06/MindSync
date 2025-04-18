@@ -94,7 +94,11 @@ export default function Sidebar() {
               }}
             >
               <ListItemIcon>
-                <img src={customIcons[item.label]} alt={`${item.label} icon`} style={{ width: 24, height: 24 }} />
+                <img
+                  src={customIcons[item.label]}
+                  alt={`${item.label} icon`}
+                  style={{ width: 24, height: 24 }}
+                />
               </ListItemIcon>
               <ListItemText primary={item.label} />
             </ListItemButton>
@@ -127,7 +131,11 @@ export default function Sidebar() {
               }}
             >
               <ListItemIcon>
-                <img src={customIcons[item.label]} alt={`${item.label} icon`} style={{ width: 24, height: 24 }} />
+                <img
+                  src={customIcons[item.label]}
+                  alt={`${item.label} icon`}
+                  style={{ width: 24, height: 24 }}
+                />
               </ListItemIcon>
               <ListItemText primary={item.label} />
             </ListItemButton>
@@ -138,14 +146,22 @@ export default function Sidebar() {
   );
 
   return (
-    <Box sx={{ display: "flex", backgroundColor: "white", fontFamily: "Poppins" }}>
+    <Box
+      sx={{ display: "flex", backgroundColor: "white", fontFamily: "Poppins" }}
+    >
       <CssBaseline />
 
       <IconButton
         color="inherit"
         aria-label="open drawer"
         onClick={handleDrawerToggle}
-        sx={{ display: { md: "none" }, position: "fixed", top: 8, left: 8, zIndex: 1000 }}
+        sx={{
+          display: { md: "none" },
+          position: "fixed",
+          top: 8,
+          left: 8,
+          zIndex: 1000,
+        }}
       >
         <MenuIcon />
       </IconButton>
