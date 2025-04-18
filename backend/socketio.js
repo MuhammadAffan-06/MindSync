@@ -1,13 +1,14 @@
 const { Server } = require("socket.io");
 const jwt = require("jsonwebtoken");
-const  containsProfanity  = require("./utils/profanityfilter.js");
+const containsProfanity = require("./utils/profanityfilter.js");
 
 function setupSocket(server, app) {
   console.log("Initializing WebSocket (Socket.IO) Server");
 
   const io = new Server(server, {
     cors: {
-      origin: [process.env.CLIENT_BASE_URL,
+      origin: [
+        process.env.CLIENT_BASE_URL,
         "https://mind-sync-u9h4.vercel.app",
       ],
       methods: ["GET", "POST"],
@@ -41,43 +42,64 @@ function handleSocketConnection(io, livePresentations) {
   return (socket) => {
     console.log(`User connected: ${socket.id}, User ID: ${socket.user.id}`);
 
-    socket.on("join-presentation", handleJoinPresentation(socket, livePresentations));
-    socket.on("presentation-next-slide", handleSlideChange(socket, io, livePresentations, 1));
-    socket.on("presentation-previous-slide", handleSlideChange(socket, io, livePresentations, -1));
-    socket.on("presentation-answer-submit", handleAnswerSubmit(socket,io, livePresentations));
-    socket.on("presentation-end", handlePresentationEnd(socket, io, livePresentations));
+    socket.on(
+      "join-presentation",
+      handleJoinPresentation(socket, livePresentations)
+    );
+    socket.on(
+      "presentation-next-slide",
+      handleSlideChange(socket, io, livePresentations, 1)
+    );
+    socket.on(
+      "presentation-previous-slide",
+      handleSlideChange(socket, io, livePresentations, -1)
+    );
+    socket.on(
+      "presentation-answer-submit",
+      handleAnswerSubmit(socket, io, livePresentations)
+    );
+    socket.on(
+      "presentation-end",
+      handlePresentationEnd(socket, io, livePresentations)
+    );
     socket.on("disconnect", handleDisconnect(socket, io, livePresentations));
   };
 }
 function getPresentationJoinCode(socket) {
   return Array.from(socket.rooms).find((room) => room !== socket.id);
 }
-function getAdditionalData(livePresentation){
+function getAdditionalData(livePresentation) {
   const activeSlide = livePresentation.getActiveSlide();
   const activeIndex = livePresentation.activeSlide;
 
-  if(activeSlide.type === "Poll"){
+  if (activeSlide.type === "Poll") {
     //Recaculates and sends latest poll data to the all participants in the order of the answers in the poll
     //Recalculating is preffered over storing the data in the livePresentation object to avoid potential
     //stale data and inconsistency issues
-    const answerReverseIndexMap = Object.fromEntries(activeSlide.parsedContent.answers.map((answer,i)=>[answer,i]));
-    const polls = [0,0,0,0,0];
-    Object.entries(livePresentation.participants).forEach(([userId,{answers}])=>{
-      const answer = answers[activeIndex];
-      if(answer)polls[answerReverseIndexMap[answer]]++;
-    })
+    const answerReverseIndexMap = Object.fromEntries(
+      activeSlide.parsedContent.answers.map((answer, i) => [answer, i])
+    );
+    const polls = [0, 0, 0, 0, 0];
+    Object.entries(livePresentation.participants).forEach(
+      ([userId, { answers }]) => {
+        const answer = answers[activeIndex];
+        if (answer) polls[answerReverseIndexMap[answer]]++;
+      }
+    );
     return polls;
   }
-  if(activeSlide.type === "WordCloud"){
+  if (activeSlide.type === "WordCloud") {
     const wordsCount = {};
-    Object.entries(livePresentation.participants).forEach(([userId,{answers}])=>{
-      const answer = answers[activeIndex];
-      if(answer && answer !== "")      wordsCount[answer] = (wordsCount[answer] || 1) + 1;
-    })
-    return Object.entries(wordsCount).map(([text,value])=>({text,value}));
-    
+    Object.entries(livePresentation.participants).forEach(
+      ([userId, { answers }]) => {
+        const answer = answers[activeIndex];
+        if (answer && answer !== "")
+          wordsCount[answer] = (wordsCount[answer] || 1) + 1;
+      }
+    );
+    return Object.entries(wordsCount).map(([text, value]) => ({ text, value }));
   }
-  
+
   return null;
 }
 // Event Handlers
@@ -101,11 +123,17 @@ function handleJoinPresentation(socket, livePresentations) {
     livePresentation.participants[socket.user.id] = {
       answers: new Array(livePresentation.slides.length).fill(null),
       name: socket.user.name,
-      socket: socket
+      socket: socket,
     };
     socket.join(joinCode);
-    callback(true, livePresentation.title, livePresentation.getActiveSlide(),getAdditionalData(livePresentation),livePresentation.slides.length === 1 ? 1 : 0);
-
+    callback(
+      true,
+      livePresentation.title,
+      livePresentation.getActiveSlide(),
+      getAdditionalData(livePresentation),
+      livePresentation.slides.length === 1 ? 1 : 0
+    );
+    emitActiveUserCount(socket.to(joinCode), joinCode, livePresentation);
   };
 }
 
@@ -136,20 +164,31 @@ function handleSlideChange(socket, io, livePresentations, direction) {
       return;
     }
     if (newSlideIndex === livePresentation.slides.length) {
-
       endPresentation(io, joinCode, livePresentations);
       return;
     }
 
     livePresentation.activeSlide = newSlideIndex;
     const newSlide = livePresentation.getActiveSlide();
-    io.to(joinCode).emit("presentation-data", {type:newSlide.type,content:newSlide.content},getAdditionalData(livePresentation));
-    console.log(`Slide changed by presenter (${socket.user.id}) to slide #${livePresentation.activeSlide}`);
-    callback(newSlideIndex === livePresentation.slides.length - 1 ? 1 : newSlideIndex === 0 ? 0 : 0.5);
+    io.to(joinCode).emit(
+      "presentation-data",
+      { type: newSlide.type, content: newSlide.content },
+      getAdditionalData(livePresentation)
+    );
+    console.log(
+      `Slide changed by presenter (${socket.user.id}) to slide #${livePresentation.activeSlide}`
+    );
+    callback(
+      newSlideIndex === livePresentation.slides.length - 1
+        ? 1
+        : newSlideIndex === 0
+        ? 0
+        : 0.5
+    );
   };
 }
 
-function handleAnswerSubmit(socket,io, livePresentations) {
+function handleAnswerSubmit(socket, io, livePresentations) {
   return (answer, callback) => {
     const joinCode = getPresentationJoinCode(socket);
     if (!joinCode) {
@@ -163,7 +202,7 @@ function handleAnswerSubmit(socket,io, livePresentations) {
       callback(false, "Presentation not found");
       return;
     }
-    const participants =livePresentation.participants;
+    const participants = livePresentation.participants;
     const participant = participants[socket.user.id];
     if (!participant) {
       callback(false, "Participant not found");
@@ -174,21 +213,25 @@ function handleAnswerSubmit(socket,io, livePresentations) {
     if (participant.answers[activeSlideIndex]) {
       callback(false, "Already submitted");
       return;
-    } 
-    
-    if(answer){
-      if(containsProfanity(answer)){
+    }
+
+    if (answer) {
+      if (containsProfanity(answer)) {
         callback(false, "Profanity detected in answer");
         socket.disconnect(true);
-        
+
         return;
       }
       participant.answers[activeSlideIndex] = answer;
-      
-    const activeSlide = livePresentation.getActiveSlide();
-    const presenterId = livePresentation.presenterId;
-    const presenterSocket = participants[presenterId].socket;
-    presenterSocket.emit("presentation-data", {type:activeSlide.type,content:activeSlide.content},getAdditionalData(livePresentation));
+
+      const activeSlide = livePresentation.getActiveSlide();
+      const presenterId = livePresentation.presenterId;
+      const presenterSocket = participants[presenterId].socket;
+      presenterSocket.emit(
+        "presentation-data",
+        { type: activeSlide.type, content: activeSlide.content },
+        getAdditionalData(livePresentation)
+      );
 
       callback(true, "Submitted");
       console.log(
@@ -228,15 +271,29 @@ function handleDisconnect(socket, io, livePresentations) {
     console.log(`User disconnected: ${socket.id}`);
 
     Object.entries(livePresentations).forEach(([joinCode, presentation]) => {
+      // If the disconnected user is the presenter, end the presentation
       if (presentation.presenterId.toString() === socket.user.id) {
         console.log(
           `Presenter ${socket.user.id} disconnected. Ending presentation ${joinCode}.`
         );
         endPresentation(io, joinCode, livePresentations);
       }
+
+      // If the disconnected user is a participant, remove them
+      else if (presentation.participants?.[socket.user.id]) {
+        console.log(
+          `Participant ${socket.user.id} disconnected from presentation ${joinCode}.`
+        );
+
+        delete presentation.participants[socket.user.id];
+
+        // ✅ Emit updated active user count to others in the room
+        emitActiveUserCount(io.to(joinCode), joinCode, presentation);
+      }
     });
   };
 }
+
 function calculateResult(livePresentation) {
   const { slides, participants, presenterId } = livePresentation;
 
@@ -247,13 +304,13 @@ function calculateResult(livePresentation) {
     if (correctAnswer) {
       const parsedContent = JSON.parse(content);
       marks = parsedContent.marks || 0;
-
     }
 
     return { correctAnswer, marks };
   });
-  const leaderboard = Object.entries(participants).filter(([userId]) => userId !== presenterId).map(
-    ([userId, { answers, name }]) => {
+  const leaderboard = Object.entries(participants)
+    .filter(([userId]) => userId !== presenterId)
+    .map(([userId, { answers, name }]) => {
       let totalMarks = 0;
 
       answers.forEach((answer, index) => {
@@ -293,6 +350,11 @@ function endPresentation(io, joinCode, livePresentations) {
 
   delete livePresentations[joinCode];
   console.log(`Presentation ${joinCode} ended.`);
+}
+//Emit user join count
+function emitActiveUserCount(target, joinCode, livePresentation) {
+  const count = Object.keys(livePresentation.participants).length - 1;
+  target.emit("active-users-count", count);
 }
 
 module.exports = { setupSocket };
