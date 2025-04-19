@@ -5,9 +5,7 @@ import React from "react";
 //   SlideBaseProps,
 //   SlideType,
 // } from "@/app/slide-builder/[presentationId]/types";
-import {
-  Slide
-} from "@/app/types/slideTypes"
+import { Slide } from "@/app/types/slideTypes";
 
 import SlidePlainText from "./slideTypes/slidePlainText";
 import SlideWordCloud from "./slideTypes/slideWordCloud";
@@ -15,7 +13,7 @@ import SlideNotSelected from "./slideTypes/slideNotSelected";
 import SlideMCQ from "./slideTypes/slideMCQ";
 // import { useSlide } from '../../[presentationId]/slideContext';
 // import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
-import {useSlide} from "@/app/context/slideContext" //updated while build
+import { useSlide } from "@/app/context/slideContext"; //updated while build
 import SlideDeletePopup from "./slideTypes/slideDeletePopup";
 // import SlideDeletePopup from "./slideTypes/slideDeletePopup"
 import SlideTypeSelector from "./slideTypes/slideTypeSelector";

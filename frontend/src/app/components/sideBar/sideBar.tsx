@@ -14,16 +14,17 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import InfoIcon from "@mui/icons-material/Info";
 import { usePathname, useRouter } from "next/navigation";
 
 const drawerWidth = 240;
 
 const menuItems: any = [
   { label: "Dashboard", route: "/dashboard" },
-  { label: "Messages", route: "/messages" },
-  { label: "Session History", route: "/session-history" },
-  { label: "Analytics", route: "/analytics" },
-  { label: "Calender", route: "/calender" },
+  { label: "Messages", route: "/messages", disabled: true },
+  { label: "Session History", route: "/session-history", disabled: true },
+  { label: "Analytics", route: "/analytics", disabled: true },
+  { label: "About Us", route: "/about-us" },
   { label: "Contact Us", route: "/contact-us" },
 ];
 
@@ -34,7 +35,8 @@ const customIcons: any = {
   Messages: "/icons/messages-icon.svg",
   "Session History": "/icons/session-history-icon.svg",
   Analytics: "/icons/analytics-icon.svg",
-  Calender: "/icons/calender-icon.svg",
+  // AboutUs: "/icons/calender-icon.svg",
+  "About Us": <InfoIcon />,
   "Contact Us": "/icons/contact-us-icon.svg",
   "Log Out": "/icons/log-out-icons.svg",
 };
@@ -73,9 +75,12 @@ export default function Sidebar() {
           <ListItem key={item.label} disablePadding>
             <ListItemButton
               selected={selectedItem === item.route}
-              onClick={() => handleNavigation(item)}
+              onClick={() => !item.disabled && handleNavigation(item)}
+              disabled={item.disabled}
               sx={{
                 borderRadius: "8px",
+                opacity: item.disabled ? 0.5 : 1,
+                pointerEvents: item.disabled ? "none" : "auto",
                 "&.Mui-selected": {
                   backgroundColor: "#5a3ec8",
                   color: "#fff",
@@ -84,22 +89,27 @@ export default function Sidebar() {
                   },
                 },
                 "&:hover": {
-                  backgroundColor: "#5a3ec8",
-                  color: "#fff",
+                  backgroundColor: item.disabled ? "transparent" : "#5a3ec8",
+                  color: item.disabled ? "inherit" : "#fff",
                   "& .MuiListItemIcon-root img": {
-                    filter: "invert(100%)",
+                    filter: item.disabled ? "none" : "invert(100%)",
                   },
                 },
                 margin: "4px",
               }}
             >
               <ListItemIcon>
-                <img
-                  src={customIcons[item.label]}
-                  alt={`${item.label} icon`}
-                  style={{ width: 24, height: 24 }}
-                />
+                {typeof customIcons[item.label] === "string" ? (
+                  <img
+                    src={customIcons[item.label]}
+                    alt={`${item.label} icon`}
+                    style={{ width: 24, height: 24 }}
+                  />
+                ) : (
+                  customIcons[item.label]
+                )}
               </ListItemIcon>
+
               <ListItemText primary={item.label} />
             </ListItemButton>
           </ListItem>
