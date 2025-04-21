@@ -20,7 +20,7 @@ export default function SlideTypeSelector({ id }: SlideBaseProps) {
       label: "Word Cloud",
       type: "WordCloud",
     },
-    { icon: "/icons/qa-icon.svg", label: "Q&A", type: "QA" },
+    { icon: "/icons/qa-icon.svg", label: "Q&A", type: "QA", disabled: true},
     { icon: "/icons/text-icon.svg", label: "Plain Text", type: "PlainText" },
     {
       icon: "/icons/image-icon.svg",
@@ -28,7 +28,7 @@ export default function SlideTypeSelector({ id }: SlideBaseProps) {
       type: "Image",
       disabled: true,
     },
-    { icon: "/icons/mcq-icon.svg", label: "MCQ", type: "MCQ", disabled: true },
+    { icon: "/icons/mcq-icon.svg", label: "MCQ", type: "MCQ" },
   ];
 
   const { setSlideType } = useSlide();
