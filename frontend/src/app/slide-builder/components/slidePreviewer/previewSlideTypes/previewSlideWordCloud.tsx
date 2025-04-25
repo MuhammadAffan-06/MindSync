@@ -14,7 +14,7 @@ export interface ContentProps {
 const CLOUD_OPTIONS: OptionsProp = {
   fontFamily: "Poppins",
   fontWeight: "500",
-  fontSizes: [10, 100],
+  fontSizes: [20, 100],
   rotations: 0,
   enableTooltip: false,
   enableOptimizations: true,

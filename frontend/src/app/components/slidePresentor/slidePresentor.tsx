@@ -152,9 +152,9 @@ export default function SlidePresentor({
 
   return createPortal(
     <>
-      <div className="fixed flex flex-col top-0 left-0 h-screen w-screen z-50 bg-white">
+      <div className="fixed inset-0 flex flex-col top-0 left-0 h-screen w-screen z-50 bg-white">
         <div className="flex justify-between mt-6 px-8 items-center">
-          <span className="text-3xl font-semibold text-gray-500">{title}</span>
+          <span className="text-lg lg:text-3xl font-semibold text-gray-500">{title}</span>
           {isPresenter && (
             <span className="text-2xl font-semibold text-gray-500">
               Join Code: {joinCode}
@@ -174,7 +174,7 @@ export default function SlidePresentor({
             height={80}
           />
         </div>
-        <div className="bg-[var(--background)] m-8 flex flex-grow flex-shrink basis-full rounded-lg">
+        <div className="bg-[var(--background)] m-8 flex flex-grow flex-shrink basis-full rounded-lg absolute inset-x-0 top-16 bottom-0 overflow-y-auto overscroll-contain   px-6 py-4 space-y-8 bg-gray-50">
           {activeSlideType === "PlainText" && (
             <PresentSlidePlainText
               content={activeSlideContent}

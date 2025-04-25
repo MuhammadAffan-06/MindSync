@@ -41,8 +41,8 @@ export type PathResponseMap = {
   "/presentation/isLive": PresentationIsLiveResponse;
 };
 
-// const serverBaseUrl = "http://localhost:5000";
-const serverBaseUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net"
+const serverBaseUrl = "http://localhost:5000";
+// const serverBaseUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net"
 
 
 function getHeaders(): HeadersInit {

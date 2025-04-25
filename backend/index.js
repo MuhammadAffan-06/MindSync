@@ -28,8 +28,9 @@ if(!serverDomain) {
 }
 app.use(
   cors({
-    origin: [ clientBaseUrl, "https://mind-sync-u9h4.vercel.app"],
-    methods: ["GET", "POST"],
+   // origin: [ clientBaseUrl, "https://mind-sync-u9h4.vercel.app"],
+    origin: [ clientBaseUrl, "http://localhost:3000"],
+   methods: ["GET", "POST"],
     credentials: true,
   })
 );

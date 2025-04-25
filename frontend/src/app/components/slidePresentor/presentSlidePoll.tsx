@@ -49,17 +49,15 @@ export default function PresentSlidePoll({
 
   return (
     <div className="relative w-full ">
-      <div className="px-8 py-12">
-        <div className="px-4">
-          <div className="w-[45vw] text-3xl py-2">{parsed.question}</div>
-        </div>
-        <ul className="p-8 space-y-5">
+      <div className="p-2 lg:p-8 py-4 lg:py-12">
+          <div className="w-full text-md lg:w-[60vw] lg:text-2xl py-2">{parsed.question}</div>
+        <ul className="p-2 lg:p-8  space-y-5">
           {parsed.answers.map((answer, index) => {
             if (isPresenter) {
               return (
                 <li key={index + answer} className="py-1 text-lg">
                   <label className="flex items-center select-none cursor-pointer">
-                    <span className="px-2 inline-block min-w-32 text-right">
+                    <span className="inline-block min-w-32 max-w-32 whitespace-break-spaces text-right">
                       {answer}
                     </span>
                     <div className="flex w-full items-center">
@@ -71,7 +69,7 @@ export default function PresentSlidePoll({
                           backgroundColor: pollColors[index],
                         }}
                       ></div>{" "}
-                      <div className="text-xl text-gray-500">
+                      <div className="w-full text-sm lg:w-[60vw] lg:text-lg text-gray-500">
                         {polls[index]}
                       </div>{" "}
                     </div>
@@ -80,14 +78,14 @@ export default function PresentSlidePoll({
               );
             } else
               return (
-                <li key={index + answer} className="py-1 w-[20vw] text-lg">
+                <li key={index + answer} className="py-1 w-full text-sm lg:w-[60vw] lg:text-lg">
                   <label className="flex items-center select-none cursor-pointer">
                     <input
                       type="checkbox"
                       value={answer}
                       checked={selectedAnswer === answer}
                       onChange={(e) => setSelectedAnswer(e.target.value)}
-                      className="w-6 h-6"
+                      className="w-3 lg:w-6 w-3 lg:h-6"
                     />
                     <span className="px-2 inline-block">{answer}</span>
                   </label>
@@ -96,11 +94,10 @@ export default function PresentSlidePoll({
           })}
         </ul>
       </div>
-      <div className="absolute right-2 bottom-2">
-        {!isPresenter && selectedAnswer !== "" && (
+       {!isPresenter && selectedAnswer !== "" && (
           <div className="absolute right-2 bottom-2">
             <button
-              className="m-4 p-2 px-4 text-center text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+              className="m-2 p-2 px-4 text-center text-sm sm:text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
               onClick={handleSubmit}
               disabled={submitBtnDisabled}
             >
@@ -108,7 +105,6 @@ export default function PresentSlidePoll({
             </button>
           </div>
         )}
-      </div>
     </div>
   );
 }

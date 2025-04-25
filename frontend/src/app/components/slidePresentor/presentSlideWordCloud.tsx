@@ -17,7 +17,7 @@ export interface ContentProps {
 const CLOUD_OPTIONS: OptionsProp = {
   fontFamily: "Poppins",
   fontWeight: "500",
-  fontSizes: [10, 100],
+  fontSizes: [20, 100],
   rotations: 0,
   enableTooltip: false,
   enableOptimizations: true,
@@ -55,10 +55,8 @@ export default function PresentSlideWordCloud({ content, words, isPresenter, onS
   };
   return (
     <div className="relative w-full h-full ">
-      <div className="px-8 py-12 flex flex-col">
-        <div className="px-4">
+      <div className="px-2 lg:px-8 py-4 lg:py-12 flex flex-col">
           <div className="w-[45vw] text-3xl py-2">{parsed.question}</div>
-        </div>
         <div className="flex-1_1_100% h-full">
           {isPresenter && <ReactWordcloud maxWords={20} words={words} options={CLOUD_OPTIONS} />}
           {!isPresenter && (
@@ -80,7 +78,7 @@ export default function PresentSlideWordCloud({ content, words, isPresenter, onS
           <button
             onClick={() => handleSubmit()}
             disabled={submitBtnDisabled}
-            className="m-4 p-2 px-8 text-center text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="m-2 p-2 px-4 text-center text-sm sm:text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             {submitBtnText}
           </button>

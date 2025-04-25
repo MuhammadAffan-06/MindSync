@@ -117,38 +117,41 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
   return (
     <div className="relative w-full">
       <div className="px-8 py-12" ref={divRef}>
-        <div className="border-black border border-dashed rounded-xl px-4 w-min">
+        <span className="border-black border border-dashed rounded-xl px-4 inline-block">
           <input
             placeholder="Add Your Question Here"
-            maxLength={48}
+            maxLength={80}
+            size={content.question.length}
             value={content.question}
             onChange={handleQuestionChange}
             onBlur={updateSlideInfo}
-            className="placeholder-gray-500 w-[45vw] text-3xl py-2 focus:outline-none focus:ring-0"
+            className="placeholder-gray-500 w-full text-md lg:w[60vw] lg:text-2xl py-2 focus:outline-none focus:ring-0"
           />
-        </div>
+        </span>
         <ul className="p-8 space-y-5">
           {content.answers.map((answers, index) => (
             <li key={index}>
               <span
-                className={`border rounded-xl px-2 inline-block ${correctAnswer === answers ? "border-lime-500 border-solid" : "border-black border-dashed"}`}
+                className={`border rounded-xl px-1 inline-block ${correctAnswer === answers ? "border-lime-500 border-solid" : "border-black border-dashed"}`}
               >
                 <input
                   placeholder={`Type Answers ${index + 1}`}
                   value={answers}
+                  size={answers.length}
+                  maxLength={80}
                   onChange={handleAnswersChange(index)}
                   onContextMenu={(e) => onAnswerInputRightClick(e)}
                   onBlur={updateSlideInfo}
-                  className="placeholder-gray-500 py-1 w-[20vw] text-lg focus:outline-none focus:ring-0"
+                  className="placeholder-gray-500 py-1 w-full text-sm lg:w[60vw] lg:text-lg focus:outline-none focus:ring-0"
                 />
               </span>
             </li>
           ))}
           {answersCount < 5 && (
             <li>
-              <span className="border-black border border-dashed rounded-xl px-2 inline-block">
+              <span className="border-black border border-dashed rounded-xl px-2 inline-block w-max">
                 <button
-                  className="text-gray-500 py-1 w-[20vw] text-lg text-left"
+                  className="text-gray-500 py-1 w-full text-sm lg:w[60vw] lg:text-lg text-left"
                   onClick={addAnswers}
                 >
                   + Add another Answers
