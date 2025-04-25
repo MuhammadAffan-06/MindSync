@@ -74,7 +74,7 @@ export default function PresentSlideWordCloud({ content, words, isPresenter, onS
         </div>
       </div>
       {!isPresenter && (
-        <div className="absolute right-2 bottom-2">
+        <div className="fixed right-2 bottom-2">
           <button
             onClick={() => handleSubmit()}
             disabled={submitBtnDisabled}

@@ -59,7 +59,7 @@ export default function PresentSlideMCQ({
         </ul>
       </div>
       {!isPresenter && selectedAnswer !== "" && (
-        <div className="absolute right-2 bottom-2">
+        <div className="fixed right-2 bottom-2">
           <button
             className="p-2 px-4 text-center text-sm sm:text-xl rounded-full bg-[var(--secondary-color)] text-white disabled:bg-gray-400"
             onClick={handleSubmit}
