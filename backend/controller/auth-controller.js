@@ -2,7 +2,7 @@ const User = require("../models/users");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const validator = require("validator");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // Sign-up API
 const signup = async (req, res) => {
