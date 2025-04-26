@@ -10,7 +10,7 @@ passport.use(
       clientSecret: process.env.CLIENT_SECRET,
       //  callbackURL: `${process.env.SERVER_DOMAIN}:${process.env.PORT}/auth/google/callback`,
       //callbackURL: "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net/auth/google/callback", Salman environment
-      callbackURL: "https://mindsync-cbbee2f6dmf9hma5.uaenorth-01.azurewebsites.net/auth/google/callback"
+      callbackURL: "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net/auth/google/callback"
       
     },
     async (accessToken, refreshToken, profile, done) => {

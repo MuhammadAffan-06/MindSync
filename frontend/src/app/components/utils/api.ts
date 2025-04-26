@@ -43,7 +43,7 @@ export type PathResponseMap = {
 
 // const serverBaseUrl = "http://localhost:5000";
 // const serverBaseUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net" Salman Development Environment
-const serverBaseUrl = "https://mindsync-cbbee2f6dmf9hma5.uaenorth-01.azurewebsites.net"
+const serverBaseUrl = "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net"
 
 function getHeaders(): HeadersInit {
   const headers: Record<string, string> = {
