@@ -255,7 +255,6 @@ export default function Auth() {
             {/* GOOGLE SIGNUP/LOGIN BUTTON */}
             <button
               onClick={handleGoogleAuth}
-              disabled
               className="
                 flex
                 items-center
