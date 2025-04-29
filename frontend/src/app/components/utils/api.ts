@@ -1,8 +1,15 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import { Path}  from "@/app/types/apiTypes";
-import { LoginRequest, LoginResponse, LogoutResponse, SignupRequest, SignupResponse, VerifyResponse } from "@/app/types/authTypes";
+import { Path } from "@/app/types/apiTypes";
 import {
-    PresentationAllResponse,
+  LoginRequest,
+  LoginResponse,
+  LogoutResponse,
+  SignupRequest,
+  SignupResponse,
+  VerifyResponse,
+} from "@/app/types/authTypes";
+import {
+  PresentationAllResponse,
   PresentationCreateResponse,
   PresentationGetRequest,
   PresentationGetResponse,
@@ -41,8 +48,9 @@ export type PathResponseMap = {
   "/presentation/isLive": PresentationIsLiveResponse;
 };
 
-const serverBaseUrl = "http://localhost:5000";
-// const serverBaseUrl = "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net" Salman Development Environment
+// const serverBaseUrl = "http://localhost:5000";
+const serverBaseUrl =
+  "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net";
 // const serverBaseUrl = "https://mindsync-cbbee2f6dmf9hma5.eastasia-01.azurewebsites.net"
 
 function getHeaders(): HeadersInit {
@@ -74,31 +82,30 @@ export const PATH_METHOD: Record<Path, "GET" | "POST"> = {
   "/presentation/isLive": "POST",
 };
 export async function apiRequest<T extends Path>(
-    path: T,
-    body: PathBodyMap[T]
-  ): Promise<PathResponseMap[T]> {
-    const options: RequestInit = {
-      method: PATH_METHOD[path],
-      headers: getHeaders(),
-      ...(body ? { body: JSON.stringify(body) } : {}),
-    };
-  
-    try {
-      const response = await fetch(serverBaseUrl + path, options);
-      const json = await response.json();
-  
-      if (!response.ok) {
-        console.error("Error response:", json);
-        if(json.message)
-        toast.error(json.message);
-      }
-      json.success = response.ok;
-      return json as PathResponseMap[T];
-    } catch (error: any) {
-        console.error(error);
-      toast.error(error.message || 'An unexpected error occurred');
-      return {success: false} as PathResponseMap[T];
+  path: T,
+  body: PathBodyMap[T]
+): Promise<PathResponseMap[T]> {
+  const options: RequestInit = {
+    method: PATH_METHOD[path],
+    headers: getHeaders(),
+    ...(body ? { body: JSON.stringify(body) } : {}),
+  };
+
+  try {
+    const response = await fetch(serverBaseUrl + path, options);
+    const json = await response.json();
+
+    if (!response.ok) {
+      console.error("Error response:", json);
+      if (json.message) toast.error(json.message);
     }
+    json.success = response.ok;
+    return json as PathResponseMap[T];
+  } catch (error: any) {
+    console.error(error);
+    toast.error(error.message || "An unexpected error occurred");
+    return { success: false } as PathResponseMap[T];
   }
-  
+}
+
 export { serverBaseUrl };
