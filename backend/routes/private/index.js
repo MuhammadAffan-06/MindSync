@@ -7,7 +7,7 @@ const privateRouter = express.Router();
 
 privateRouter
   .use("/auth", presenterRouter)
-  .use("/presentation",verifyToken, presentationRouter)
-  //.use("/slide", verifyToken, slideRouter);
+  .use("/presentation", verifyToken, presentationRouter);
+//.use("/slide", verifyToken, slideRouter);
 
 module.exports = privateRouter;

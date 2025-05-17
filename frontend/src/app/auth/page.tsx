@@ -60,7 +60,8 @@ export default function Auth() {
       toast.error("Name should only contain letters and spaces.");
       return false;
     }
-    const passwordRequirements = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const passwordRequirements =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
     if (!passwordRequirements.test(password)) {
       toast.error(
         <>
@@ -94,7 +95,10 @@ export default function Auth() {
   const handleLoginSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    const { success, message, user ,token} = await apiRequest("/auth/login", loginData);
+    const { success, message, user, token } = await apiRequest(
+      "/auth/login",
+      loginData
+    );
     if (success) {
       toast.success(message);
       localStorage.setItem("userName", user.name);
@@ -144,13 +148,18 @@ export default function Auth() {
               width={350}
               height={125}
             />
-            <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold">{isSignup ? "Create an Account" : "Nice to see you again"}</h2>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-semibold">
+              {isSignup ? "Create an Account" : "Nice to see you again"}
+            </h2>
           </div>
 
           <div className="w-full flex flex-col items-center">
             {/* SIGNUP FORM */}
             {isSignup ? (
-              <form onSubmit={handleSignupSubmit} className="flex flex-col items-center">
+              <form
+                onSubmit={handleSignupSubmit}
+                className="flex flex-col items-center"
+              >
                 <input
                   type="text"
                   name="name"
@@ -209,7 +218,10 @@ export default function Auth() {
               </form>
             ) : (
               /* LOGIN FORM */
-              <form onSubmit={handleLoginSubmit} className="flex flex-col items-center">
+              <form
+                onSubmit={handleLoginSubmit}
+                className="flex flex-col items-center"
+              >
                 <input
                   type="email"
                   name="email"
@@ -269,8 +281,15 @@ export default function Auth() {
                 border-0
               "
             >
-              <Image src="/GoogleIcon.svg" alt="Google Icon" width={20} height={20} />
-              <span className="ml-3">Or {isSignup ? "Sign Up" : "Sign In"} with Google</span>
+              <Image
+                src="/GoogleIcon.svg"
+                alt="Google Icon"
+                width={20}
+                height={20}
+              />
+              <span className="ml-3">
+                Or {isSignup ? "Sign Up" : "Sign In"} with Google
+              </span>
             </button>
 
             {/* Mobile toggle: only visible on small screens */}
@@ -278,14 +297,20 @@ export default function Auth() {
               {isSignup ? (
                 <>
                   <p className="whitespace-nowrap">Got an Account?</p>
-                  <button onClick={toggleForm} className="justify-self-end underline text-[#4830e2]">
+                  <button
+                    onClick={toggleForm}
+                    className="justify-self-end underline text-[#4830e2]"
+                  >
                     Sign In
                   </button>
                 </>
               ) : (
                 <>
                   <p className="whitespace-nowrap">No Account Yet?</p>
-                  <button onClick={toggleForm} className="justify-self-end underline text-[#4830e2]">
+                  <button
+                    onClick={toggleForm}
+                    className="justify-self-end underline text-[#4830e2]"
+                  >
                     Sign Up
                   </button>
                 </>
@@ -312,7 +337,10 @@ export default function Auth() {
           {isSignup ? (
             <>
               <h1 className="text-4xl mb-4">Got an Account?</h1>
-              <p className="mb-4">Reconnect and enhance your presentations with real-time engagement tools.</p>
+              <p className="mb-4">
+                Reconnect and enhance your presentations with real-time
+                engagement tools.
+              </p>
               <button
                 onClick={toggleForm}
                 className="
@@ -332,7 +360,10 @@ export default function Auth() {
           ) : (
             <>
               <h1 className="text-4xl mb-4">Need an Account?</h1>
-              <p className="mb-4">Create one and explore real-time engagement tools for your presentations.</p>
+              <p className="mb-4">
+                Create one and explore real-time engagement tools for your
+                presentations.
+              </p>
               <button
                 onClick={toggleForm}
                 className="

@@ -85,6 +85,7 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
   const [bgColor, setBgColor] = useState("#FFFF00");
 
   const divRef = useRef<HTMLDivElement>(null);
+  const defaultContent = "<p>Text Here...</p>";
 
   const editor = useEditor({
     extensions: [
@@ -97,7 +98,7 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
       TextAlign.configure({ types: ["heading", "paragraph"] }),
     ],
     content: contentRef.current,
-    immediatelyRender: false,
+    autofocus: false,
     onUpdate: ({ editor }) => {
       contentRef.current = editor.getHTML();
     },
@@ -105,20 +106,34 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
 
   useEffect(() => {
     if (!slide || !editor) return;
-    if (!slide?.content) slide.content = "<p>Text Here...</p>";
-    editor.commands.setContent(slide.content);
-    contentRef.current = slide.content;
+    const initialContent = slide?.content || defaultContent;
+    editor.commands.setContent(initialContent);
+    contentRef.current = initialContent;
   }, [id, editor]);
 
   const updateSlideInfo = (id: UniqueIdentifier) => {
-    if (divRef.current && contentRef.current) {
-      html2canvas(divRef.current, { scale: 0.5 }).then((canvas) => {
-        updateSlideInfoById(
-          id,
-          contentRef.current,
-          canvas.toDataURL("image/webp", 0.2)
-        );
-      });
+    if (!editor || !divRef.current) return;
+    const currentHTML = editor.getHTML();
+    if (currentHTML === "<p></p>" || currentHTML === "<p><br></p>") {
+      editor.commands.setContent(defaultContent);
+      contentRef.current = defaultContent;
+    } else {
+      contentRef.current = currentHTML;
+    }
+
+    html2canvas(divRef.current, { scale: 0.5 }).then((canvas) => {
+      updateSlideInfoById(
+        id,
+        contentRef.current,
+        canvas.toDataURL("image/webp", 0.2)
+      );
+    });
+  };
+
+  const handleEditorFocus = () => {
+    if (!editor) return;
+    if (editor.getHTML() === defaultContent) {
+      editor.commands.clearContent();
     }
   };
 
@@ -134,7 +149,7 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
   if (!editor) return null;
 
   return (
-    <div className="w-full h-full flex flex-col p-2 space-y-2 overflow-y-auto ">
+    <div className="w-full h-full flex flex-col p-2 space-y-2 overflow-y-auto">
       <div className="flex flex-wrap items-center gap-2 border-b pb-2 mb-2">
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
@@ -195,20 +210,14 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
           value={bgColor}
           onChange={(e) => {
             setBgColor(e.target.value);
-            editor
-              .chain()
-              .focus()
-              .toggleHighlight({ color: e.target.value })
-              .run();
+            editor.chain().focus().toggleHighlight({ color: e.target.value }).run();
           }}
           className="w-6 h-6 border p-0"
           title="Highlight Color"
         />
 
         <select
-          onChange={(e) =>
-            editor.chain().focus().setFontFamily(e.target.value).run()
-          }
+          onChange={(e) => editor.chain().focus().setFontFamily(e.target.value).run()}
           className="border rounded p-1"
         >
           <option value="Arial">Arial</option>
@@ -252,6 +261,7 @@ export default function SlidePlainText({ id }: SlideBaseProps) {
         <EditorContent
           editor={editor}
           ref={divRef}
+          onFocus={handleEditorFocus}
           onBlur={() => updateSlideInfo(id)}
           className="border-none h-full w-full focus:ring-0 focus:outline-none appearance-none whitespace-pre-wrap break-words overflow-hidden"
         />

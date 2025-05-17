@@ -21,6 +21,7 @@ export default function Nav() {
   useEffect(() => {
     const checkAuth = () => {
       const googleToken = Cookies.get("authToken");
+      console.log("Local Stroage:", localStorage);
       console.log("Google Auth Token from Cookies:", googleToken);
 
       if (googleToken) {

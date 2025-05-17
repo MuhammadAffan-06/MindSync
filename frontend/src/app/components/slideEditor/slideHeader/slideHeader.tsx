@@ -1,6 +1,8 @@
 "use client";
 
-import Leaderboard, { LeaderboardType } from "@/app/components/leaderboard/leaderboard";
+import Leaderboard, {
+  LeaderboardType,
+} from "@/app/components/leaderboard/leaderboard";
 import SlidePresentor from "@/app/components/slidePresentor/slidePresentor";
 import { apiRequest } from "@/app/components/utils/api";
 import { useSlide } from "@/app/context/slideContext";
@@ -14,7 +16,13 @@ interface SlideHeaderProps {
 
 export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
   console.log("Slide Header Rendering");
-  const { presentationNameRef, joinCode, presentationId, getActiveSlide, saveSlidesToDB } = useSlide();
+  const {
+    presentationNameRef,
+    joinCode,
+    presentationId,
+    getActiveSlide,
+    saveSlidesToDB,
+  } = useSlide();
   const [presentDisabled, setPresentDisabled] = useState<boolean>(false);
   const [showPresenter, setShowPresenter] = useState<boolean>(false);
 
@@ -35,7 +43,8 @@ export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
   }, []);
 
   const onPresentationNameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.currentTarget.value === "") presentationNameRef.current = e.currentTarget.placeholder;
+    if (e.currentTarget.value === "")
+      presentationNameRef.current = e.currentTarget.placeholder;
     else presentationNameRef.current = e.currentTarget.value;
   };
 
@@ -44,18 +53,24 @@ export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
       setMode("Building");
     } else {
       const activeSlide = getActiveSlide();
-      if (activeSlide && activeSlide.type !== "Undefined" && activeSlide.content) setMode("Previewing");
+      if (
+        activeSlide &&
+        activeSlide.type !== "Undefined" &&
+        activeSlide.content
+      )
+        setMode("Previewing");
     }
   };
 
   const presentSlides = async () => {
     setPresentDisabled(true);
     await saveSlidesToDB();
-   const {success} =  await apiRequest("/presentation/live", { presentationId });
-if(success) setShowPresenter(true);
-  setPresentDisabled(false);
-}
-
+    const { success } = await apiRequest("/presentation/live", {
+      presentationId,
+    });
+    if (success) setShowPresenter(true);
+    setPresentDisabled(false);
+  };
 
   return (
     <>
@@ -69,14 +84,21 @@ if(success) setShowPresenter(true);
               onChange={(e) => onPresentationNameChange(e)}
             />
           ) : (
-            <div className="text-[#414141] text-3xl my-auto">{presentationNameRef.current}</div>
+            <div className="text-[#414141] text-3xl my-auto">
+              {presentationNameRef.current}
+            </div>
           )}
         </span>
         <span className="flex p-1 space-x-2">
-          <button className="text-white bg-[var(--accent-color)] rounded-full px-8 disabled:hidden" disabled>
+          <button
+            className="text-white bg-[var(--accent-color)] rounded-full px-8 disabled:hidden"
+            disabled
+          >
             Save
           </button>
-          <button className="text-[var(--secondary-color)] bg-[var(--background)] rounded-full px-8">Share</button>
+          <button className="text-[var(--secondary-color)] bg-[var(--background)] rounded-full px-8">
+            Share
+          </button>
           <button
             className="text-[var(--secondary-color)] border-2 border-[var(--secondary-color)] rounded-full px-8"
             onClick={onPreviewClick}
@@ -102,7 +124,12 @@ if(success) setShowPresenter(true);
           setShowLeaderboard={setShowLeaderboard}
         />
       )}
-      {showLeaderboard && <Leaderboard leaderboard={leaderboard} setShowLeaderboard={setShowLeaderboard} />}
+      {showLeaderboard && (
+        <Leaderboard
+          leaderboard={leaderboard}
+          setShowLeaderboard={setShowLeaderboard}
+        />
+      )}
     </>
   );
 }

@@ -17,6 +17,7 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
   const { getActiveSlide, updateSlideInfoById } = useSlide();
   const slide: Slide | undefined = getActiveSlide();
   if (!slide) return <p>Invalid Slide Id, {id}</p>;
+
   const parseSlideContent = (slide: Slide): ContentProps => {
     const defaultContentProps: ContentProps = {
       question: "",
@@ -69,11 +70,13 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
       });
     }
   };
+
   const handleQuestionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const updatedContent = { ...contentRef.current, question: e.target.value };
     contentRef.current = updatedContent;
     setContent(updatedContent);
   };
+
   const handleAnswersChange =
     (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
       const updatedAnswerss = [...contentRef.current.answers];
@@ -85,15 +88,7 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
       contentRef.current = updatedContent;
       setContent(updatedContent);
     };
-  const handleMarksChange = () => (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (Number.isNaN(e.target.valueAsNumber)) return;
-    const updatedContent = {
-      ...contentRef.current,
-      marks: e.target.valueAsNumber,
-    };
-    contentRef.current = updatedContent;
-    setContent(updatedContent);
-  };
+
   const addAnswers = () => {
     if (answersCount < 5) {
       const updatedAnswerss = [...contentRef.current.answers, ""];
@@ -114,6 +109,18 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
     e.preventDefault();
     setCorrectAnswer(e.currentTarget.value);
   };
+
+  const handleMarksChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const numericValue = parseInt(value, 10);
+    const updatedContent = {
+      ...contentRef.current,
+      marks: isNaN(numericValue) ? 0 : numericValue,
+    };
+    contentRef.current = updatedContent;
+    setContent(updatedContent);
+  };
+
   return (
     <div className="relative w-full">
       <div className="px-8 py-12" ref={divRef}>
@@ -140,7 +147,7 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
                   size={answers.length}
                   maxLength={80}
                   onChange={handleAnswersChange(index)}
-                  onContextMenu={(e) => onAnswerInputRightClick(e)}
+                  onContextMenu={onAnswerInputRightClick}
                   onBlur={updateSlideInfo}
                   className="placeholder-gray-500 py-1 w-full text-sm lg:w[60vw] lg:text-lg focus:outline-none focus:ring-0"
                 />
@@ -164,9 +171,9 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
       <div className="absolute right-2 bottom-2">
         <input
           type="number"
-          value={content.marks}
-          onChange={handleMarksChange()}
-          onInput={updateSlideInfo}
+          value={content.marks === 0 ? "" : content.marks}
+          onChange={handleMarksChange}
+          onBlur={updateSlideInfo}
           min={0}
           className="m-4 w-24 p-2 px-2 text-center text-xl rounded-full bg-[var(--secondary-color)] placeholder-white text-white focus:ring-0 focus:outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
           title="Marks"
