@@ -68,7 +68,7 @@ function Dashboard() {
             </button>
           </Link>
         </div>
-        <div className="mt-12">
+        {/* <div className="mt-12">
           
           <h1 className="text-xl sm:text-2xl font-bold text-gray-600 mb-5">Start from Templates:</h1>
           <div className="flex overflow-x-auto snap-x snap-mandatory space-x-3 scrollbar-hide">
@@ -80,7 +80,7 @@ function Dashboard() {
               />
             ))}
           </div>
-        </div>
+        </div> */}
         <div className="mt-12">
           
           <h1 className="text-xl sm:text-2xl font-bold text-gray-600 mb-5">Saved Presentations:</h1>
