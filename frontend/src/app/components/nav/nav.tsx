@@ -2,8 +2,8 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import Cookies from "js-cookie";
-import { jwtDecode } from "jwt-decode";
+//import Cookies from "js-cookie";
+//import { jwtDecode } from "jwt-decode";
 
 export default function Nav() {
   interface CustomJwtPayload {
@@ -18,44 +18,44 @@ export default function Nav() {
   const [userRole, setUserRole] = useState("student");
   const router = useRouter();
 
-  useEffect(() => {
-    const checkAuth = () => {
-      const googleToken = Cookies.get("authToken");
-      console.log("Local Stroage:", localStorage);
-      console.log("Google Auth Token from Cookies:", googleToken);
+  // useEffect(() => {
+  //   const checkAuth = () => {
+  //     const googleToken = Cookies.get("authToken");
+  //     console.log("Local Stroage:", localStorage);
+  //     console.log("Google Auth Token from Cookies:", googleToken);
 
-      if (googleToken) {
-        try {
-          const decodedToken = jwtDecode<CustomJwtPayload>(googleToken);
-          console.log("Decoded Google Token:", decodedToken);
+  //     if (googleToken) {
+  //       try {
+  //         const decodedToken = jwtDecode<CustomJwtPayload>(googleToken);
+  //         console.log("Decoded Google Token:", decodedToken);
 
-          if (decodedToken.name) {
-            setUserName(decodedToken.name);
-            localStorage.setItem("userName", decodedToken.name);
+  //         if (decodedToken.name) {
+  //           setUserName(decodedToken.name);
+  //           localStorage.setItem("userName", decodedToken.name);
 
-            // You can extract role from token if available
-            // or set it based on other criteria
-            if (decodedToken.email?.endsWith("@admin.com")) {
-              setUserRole("admin");
-            }
-          }
-        } catch (error) {
-          console.error("Error decoding Google token:", error);
-          handleFallbackAuth();
-        }
-      } else {
-        handleFallbackAuth();
-      }
-    };
+  //           // You can extract role from token if available
+  //           // or set it based on other criteria
+  //           if (decodedToken.email?.endsWith("@admin.com")) {
+  //             setUserRole("admin");
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.error("Error decoding Google token:", error);
+  //         handleFallbackAuth();
+  //       }
+  //     } else {
+  //       handleFallbackAuth();
+  //     }
+  //   };
 
-    const handleFallbackAuth = () => {
-      const name = localStorage.getItem("userName");
-      console.log("Name from localStorage:", name);
-      setUserName(name || "Guest");
-    };
+  //   const handleFallbackAuth = () => {
+  //     const name = localStorage.getItem("userName");
+  //     console.log("Name from localStorage:", name);
+  //     setUserName(name || "Guest");
+  //   };
 
-    checkAuth();
-  }, []);
+  //   checkAuth();
+  // }, []);
 
   const handleProfileClick = () => {
     router.push("/profile");
