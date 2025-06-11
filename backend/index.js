@@ -10,27 +10,24 @@ const passport = require("./utils/passportConfig");
 const http = require("http");
 const { setupSocket } = require("./socketio");
 
-
-
-
-if(!port) {
+if (!port) {
   console.error("PORT is not defined in .env file");
   process.exit(1);
 }
 
-if(!clientBaseUrl) {
+if (!clientBaseUrl) {
   console.error("CLIENT_BASE_URL is not defined in .env file");
   process.exit(1);
 }
-if(!serverDomain) {
+if (!serverDomain) {
   console.error("SERVER_DOMAIN is not defined in .env file");
   process.exit(1);
 }
 app.use(
   cors({
-   //origin: [ clientBaseUrl, "https://mind-sync-u9h4.vercel.app"],
-     origin: [ clientBaseUrl, "http://localhost:3000"],
-   methods: ["GET", "POST"],
+    origin: [clientBaseUrl, "https://mind-sync-u9h4.vercel.app"],
+    origin: [clientBaseUrl, "http://localhost:3000"],
+    methods: ["GET", "POST"],
     credentials: true,
   })
 );
