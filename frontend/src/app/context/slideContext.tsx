@@ -32,6 +32,7 @@ interface ISlideContext {
   presentationId: string;
   saveSlidesToDB: () => Promise<boolean>;
   joinCode: string;
+  slidesUpdated: boolean;
 }
 
 const SlideContext = createContext<ISlideContext | undefined>(undefined);
@@ -59,6 +60,7 @@ export function SlideProvider({
     presentationDataRef.current.title
   );
   const joinCode: string = presentationDataRef.current.joinCode;
+  const [slidesUpdated,setSlidesUpdated] = useState<boolean>(false)
   const addSlide = () => {
     if (getActiveSlide()?.type === "Undefined") return;
 
@@ -69,7 +71,7 @@ export function SlideProvider({
       correctAnswer: null,
     };
     setSlides((prev) => [...prev, newSlide]);
-
+    if(!slidesUpdated) setSlidesUpdated(true)
     setActiveSlideId(newSlide.clientId);
   };
 
@@ -82,6 +84,7 @@ export function SlideProvider({
       }
       return newSlides;
     });
+    if(!slidesUpdated) setSlidesUpdated(true)
   };
 
   const getSlideById = (id: UniqueIdentifier) =>
@@ -101,6 +104,7 @@ export function SlideProvider({
       if (originalSlideIndex === -1 || newSlideIndex === -1) return prev;
       return arrayMove(prev, originalSlideIndex, newSlideIndex);
     });
+    if(!slidesUpdated) setSlidesUpdated(true)
   };
 
   const setSlideType = (id: UniqueIdentifier, type: SlideType) => {
@@ -138,9 +142,16 @@ export function SlideProvider({
       newSlides[index] = updatedSlide;
       return newSlides;
     });
+    if(!slidesUpdated) setSlidesUpdated(true)
   };
 
   const saveSlidesToDB = async () => {
+    
+    if(!slidesUpdated) {
+      toast.warn("Slides are already saved!")
+      return false
+    }
+      setSlidesUpdated(false)
     const { success } = await apiRequest("/presentation/save", {
       presentationId,
       presentationTitle: presentationNameRef.current,
@@ -170,6 +181,7 @@ export function SlideProvider({
         presentationId,
         saveSlidesToDB,
         joinCode,
+        slidesUpdated
       }}
     >
       {children}

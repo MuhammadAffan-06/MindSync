@@ -14,10 +14,10 @@ interface SlideHeaderProps {
 
 export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
   console.log("Slide Header Rendering");
-  const { presentationNameRef, joinCode, presentationId, getActiveSlide, saveSlidesToDB } = useSlide();
+  const { presentationNameRef, joinCode, presentationId,slidesUpdated, getActiveSlide, saveSlidesToDB } = useSlide();
   const [presentDisabled, setPresentDisabled] = useState<boolean>(false);
   const [showPresenter, setShowPresenter] = useState<boolean>(false);
-
+  const [savingSlides, setSavingSlides] = useState<boolean>(false);
   const [leaderboard, setLeaderboard] = useState<LeaderboardType | null>(null);
   const [showLeaderboard, setShowLeaderboard] = useState<boolean>(false);
 
@@ -48,6 +48,11 @@ export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
     }
   };
 
+  const saveSlides = async()=>{
+    setSavingSlides(true)
+    await saveSlidesToDB();
+    setSavingSlides(false)
+  }
   const presentSlides = async () => {
     setPresentDisabled(true);
     await saveSlidesToDB();
@@ -73,7 +78,7 @@ if(success) setShowPresenter(true);
           )}
         </span>
         <span className="flex p-1 space-x-2">
-          <button className="text-white bg-[var(--accent-color)] rounded-full px-8 disabled:hidden" disabled>
+          <button className="text-white bg-[var(--accent-color)] rounded-full px-8 disabled:bg-gray-400" disabled={savingSlides || !slidesUpdated} onClick={()=>saveSlides()}>
             Save
           </button>
           <button className="text-[var(--secondary-color)] bg-[var(--background)] rounded-full px-8">Share</button>
