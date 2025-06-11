@@ -2,7 +2,7 @@
 const { handleUpload } = require('@vercel/blob/client');
 
 const VALID_EXTENSIONS = ["jpg", "jpeg", "png", "webp"];
-const SHA256_REGEX = /^[0-9a-f]{64}\.(jpg|jpeg|png|webp)$/;
+const SHA256_REGEX = /^[0-9a-f]{64}\.(jpg|jpeg|png|webp|jfif)$/;
 
 exports.getBlobUploadUrl = async (req, res) => {
   try {
