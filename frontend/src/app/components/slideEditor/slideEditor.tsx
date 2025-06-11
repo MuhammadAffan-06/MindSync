@@ -14,7 +14,6 @@ import SlideMCQ from "./slideTypes/slideMCQ";
 // import { useSlide } from '../../[presentationId]/slideContext';
 // import { useSlide } from "@/app/slide-builder/[presentationId]/slideContext";
 import { useSlide } from "@/app/context/slideContext"; //updated while build
-import SlideDeletePopup from "./slideTypes/slideDeletePopup";
 // import SlideDeletePopup from "./slideTypes/slideDeletePopup"
 import SlideTypeSelector from "./slideTypes/slideTypeSelector";
 
@@ -43,7 +42,6 @@ export default function SlideEditor() {
       {slide.type === "WordCloud" && <SlideWordCloud id={slide.clientId} />}
       {slide.type === "Undefined" && <SlideTypeSelector id={slide.clientId} />}
 
-      <SlideDeletePopup />
     </div>
   );
 }

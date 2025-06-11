@@ -9,7 +9,6 @@ import SlideWordCloud from "./slideTypes/slideWordCloud";
 import SlideNotSelected from "@/app/components/slideEditor/slideTypes/slideNotSelected";
 // import SlideMCQ from './slideTypes/slideMCQ';
 import SlideMCQ from "@/app/components/slideEditor/slideTypes/slideMCQ";
-import SlideDeletePopup from "./slideTypes/slideDeletePopup";
 // import SlideTypeSelector from './slideTypes/slideTypeSelector';
 import SlideTypeSelector from "@/app/components/slideEditor/slideTypes/slideTypeSelector";
 import { useSlide } from "@/app/context/slideContext";
@@ -37,7 +36,6 @@ export default function SlideEditor() {
       {slide.type === "Poll" && <SlidePoll id={slide.clientId} />}
       {slide.type === "Undefined" && <SlideTypeSelector id={slide.clientId} />}
 
-      <SlideDeletePopup />
     </div>
   );
 }

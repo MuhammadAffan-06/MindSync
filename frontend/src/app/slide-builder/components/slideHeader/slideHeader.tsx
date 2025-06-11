@@ -55,7 +55,7 @@ export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
   }
   const presentSlides = async () => {
     setPresentDisabled(true);
-    await saveSlidesToDB();
+    if(slidesUpdated) await saveSlidesToDB();
    const {success} =  await apiRequest("/presentation/live", { presentationId });
 if(success) setShowPresenter(true);
   setPresentDisabled(false);

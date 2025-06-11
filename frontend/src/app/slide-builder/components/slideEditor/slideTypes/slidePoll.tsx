@@ -134,7 +134,7 @@ export default function SlidePoll({ id }: SlideBaseProps) {
             <li key={index}>
               <span
                 className={`border rounded-xl px-2 inline-block ${
-                  correctAnswer === answer ? "border-lime-500 border-solid" : "border-black border-dashed"
+                  correctAnswer === answer ? "border-[var(--accent-color)]" : "border-black border-dashed"
                 }`}
               >
                 <input
@@ -158,7 +158,7 @@ export default function SlidePoll({ id }: SlideBaseProps) {
                     hidden={answer == correctAnswer}
                     onMouseDown={(e) => e.preventDefault()}
                     onClick={() => setCorrectAnswer(answer)}
-                    className="ml-2 py-1 px-2 rounded bg-lime-500 text-white disabled:bg-gray-400"
+                    className="ml-2 py-1 px-2 rounded bg-[var(--accent-color)] text-white disabled:bg-gray-400"
                     title="Mark option as correct"
                   >
                     Mark
