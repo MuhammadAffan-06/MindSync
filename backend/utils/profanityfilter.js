@@ -52,4 +52,6 @@ function containsProfanity(text) {
   return profanityList.some((word) => normalized.includes(word));
 }
 
+console.log("Profanity List Size:", profanityList.length);
+console.log("Profanity List Sample:", profanityList);
 module.exports = containsProfanity;
