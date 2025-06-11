@@ -43,8 +43,8 @@ export type PathResponseMap = {
   "/blob/upload": { url: string; token: string };
 };
 
-const serverBaseUrl = "http://localhost:5000";
-// const serverBaseUrl = "https://your-deployment.com";
+// const serverBaseUrl = "http://localhost:5000";
+const serverBaseUrl =  "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net";
 
 function getHeaders(): HeadersInit {
   const headers: Record<string, string> = {
