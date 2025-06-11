@@ -13,6 +13,7 @@ import PresentSlidePoll from "./presentSlidePoll";
 import PresentSlidePlainText from "./presentSlidePlainText";
 import PresentSlideMCQ from "./presentSlideMCQ";
 import PresentSlideWordCloud from "./presentSlideWordCloud";
+import PresentSlideImage from "./presentSlideImage";
 
 interface SlidePresentorProps {
   joinCode: string;
@@ -36,12 +37,8 @@ export default function SlidePresentor({
 }: SlidePresentorProps) {
   console.log("Slide Presentor Rendering");
   const [socket, setSocket] = useState<Socket | null>(null);
-  const [activeSlideType, setActiveSlideType] = useState<SlideType | null>(
-    null
-  );
-  const [activeSlideContent, setActiveSlideContent] = useState<string | null>(
-    null
-  );
+  const [activeSlideType, setActiveSlideType] = useState<SlideType | null>(null);
+  const [activeSlideContent, setActiveSlideContent] = useState<string | null>(null);
   const [additionalData, setAdditionalData] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
 
@@ -66,13 +63,7 @@ export default function SlidePresentor({
       newSocket.emit(
         "join-presentation",
         joinCode,
-        (
-          success: boolean,
-          text: string,
-          slide: SlideResponse,
-          additionalData: any,
-          completed: number
-        ) => {
+        (success: boolean, text: string, slide: SlideResponse, additionalData: any, completed: number) => {
           if (success) {
             console.log("Successfully joined presentation", slide);
             setTitle(text);
@@ -137,13 +128,9 @@ export default function SlidePresentor({
   const onSubmitAnswer = async (answer: string): Promise<string> => {
     return new Promise((res, rej) => {
       if (socket) {
-        socket.emit(
-          "presentation-answer-submit",
-          answer,
-          (success: boolean, message: string) => {
-            res(message);
-          }
-        );
+        socket.emit("presentation-answer-submit", answer, (success: boolean, message: string) => {
+          res(message);
+        });
       } else rej("Socket doesn't exist");
     });
   };
@@ -155,46 +142,18 @@ export default function SlidePresentor({
       <div className="fixed inset-0 flex flex-col top-0 left-0 h-screen w-screen z-50 bg-white">
         <div className="flex justify-between mt-6 px-8 items-center">
           <span className="text-lg lg:text-3xl font-semibold text-gray-500">{title}</span>
-          {isPresenter && (
-            <span className="text-2xl font-semibold text-gray-500">
-              Join Code: {joinCode}
-            </span>
-          )}
-          {isPresenter && (
-            <span className="text-2xl font-semibold text-gray-500">
-              Active Users: {activeUsersCount}
-            </span>
-          )}
+          {isPresenter && <span className="text-2xl font-semibold text-gray-500">Join Code: {joinCode}</span>}
+          {isPresenter && <span className="text-2xl font-semibold text-gray-500">Active Users: {activeUsersCount}</span>}
 
-          <Image
-            className="max-[660px]:h-[64px] max-[660px]:w-[117px]"
-            src="/logo.svg"
-            alt="Logo"
-            width={200}
-            height={80}
-          />
+          <Image className="max-[660px]:h-[64px] max-[660px]:w-[117px]" src="/logo.svg" alt="Logo" width={200} height={80} />
         </div>
         <div className="bg-[var(--background)] m-8 flex flex-grow flex-shrink basis-full rounded-lg absolute inset-x-0 top-16 bottom-0 overflow-y-auto overscroll-contain   px-6 py-4 space-y-8 bg-gray-50">
-          {activeSlideType === "PlainText" && (
-            <PresentSlidePlainText
-              content={activeSlideContent}
-              isPresenter={isPresenter}
-            />
-          )}
+          {activeSlideType === "PlainText" && <PresentSlidePlainText content={activeSlideContent} isPresenter={isPresenter} />}
           {activeSlideType === "MCQ" && (
-            <PresentSlideMCQ
-              content={activeSlideContent}
-              isPresenter={isPresenter}
-              onSubmit={onSubmitAnswer}
-            />
+            <PresentSlideMCQ content={activeSlideContent} isPresenter={isPresenter} onSubmit={onSubmitAnswer} />
           )}
           {activeSlideType === "Poll" && (
-            <PresentSlidePoll
-              content={activeSlideContent}
-              isPresenter={isPresenter}
-              polls={additionalData}
-              onSubmit={onSubmitAnswer}
-            />
+            <PresentSlidePoll content={activeSlideContent} isPresenter={isPresenter} polls={additionalData} onSubmit={onSubmitAnswer} />
           )}
           {activeSlideType === "WordCloud" && (
             <PresentSlideWordCloud
@@ -204,14 +163,12 @@ export default function SlidePresentor({
               onSubmit={onSubmitAnswer}
             />
           )}
+          {activeSlideType === "Image" && <PresentSlideImage content={activeSlideContent} isPresenter={isPresenter} />}
         </div>
         {isPresenter && (
           <>
             <div className="absolute right-0 bottom-0 p-16">
-              <button
-                onClick={nextSlide}
-                className="p-3 bg-[var(--secondary-color)] text-white rounded-lg"
-              >
+              <button onClick={nextSlide} className="p-3 bg-[var(--secondary-color)] text-white rounded-lg">
                 {nextBtnText}
               </button>
             </div>

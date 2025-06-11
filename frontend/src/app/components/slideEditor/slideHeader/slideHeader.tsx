@@ -96,9 +96,6 @@ export default function SlideHeader({ mode, setMode }: SlideHeaderProps) {
           >
             Save
           </button>
-          <button className="text-[var(--secondary-color)] bg-[var(--background)] rounded-full px-8">
-            Share
-          </button>
           <button
             className="text-[var(--secondary-color)] border-2 border-[var(--secondary-color)] rounded-full px-8"
             onClick={onPreviewClick}

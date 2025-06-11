@@ -1,13 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import { Path } from "@/app/types/apiTypes";
-import {
-  LoginRequest,
-  LoginResponse,
-  LogoutResponse,
-  SignupRequest,
-  SignupResponse,
-  VerifyResponse,
-} from "@/app/types/authTypes";
+import { LoginRequest, LoginResponse, LogoutResponse, SignupRequest, SignupResponse, VerifyResponse } from "@/app/types/authTypes";
 import {
   PresentationAllResponse,
   PresentationCreateResponse,
@@ -33,6 +26,7 @@ export type PathBodyMap = {
   "/presentation/get": PresentationGetRequest;
   "/presentation/all": null;
   "/presentation/isLive": PresentationIsLiveRequest;
+  "/blob/upload": null;
 };
 
 export type PathResponseMap = {
@@ -46,28 +40,27 @@ export type PathResponseMap = {
   "/presentation/get": PresentationGetResponse;
   "/presentation/all": PresentationAllResponse;
   "/presentation/isLive": PresentationIsLiveResponse;
+  "/blob/upload": { url: string; token: string };
 };
 
 const serverBaseUrl = "http://localhost:5000";
-//const serverBaseUrl =  "https://mindsync-hpauf7bfegd9dudz.westindia-01.azurewebsites.net";
+// const serverBaseUrl = "https://your-deployment.com";
 
-
-  function getHeaders(): HeadersInit {
-    const headers: Record<string, string> = {
-      "Content-Type": "application/json",
-    };
-
-    if (typeof window !== "undefined") {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers["authorization"] = `Bearer ${token}`;
-      }
-    }
-
-    return headers;
+function getHeaders(): HeadersInit {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
   };
 
-// Map of HTTP methods based on path
+  if (typeof window !== "undefined") {
+    const token = localStorage.getItem("token");
+    if (token) {
+      headers["authorization"] = `Bearer ${token}`;
+    }
+  }
+
+  return headers;
+}
+
 export const PATH_METHOD: Record<Path, "GET" | "POST"> = {
   "/auth/login": "POST",
   "/auth/signup": "POST",
@@ -79,25 +72,34 @@ export const PATH_METHOD: Record<Path, "GET" | "POST"> = {
   "/presentation/get": "POST",
   "/presentation/all": "GET",
   "/presentation/isLive": "POST",
+  "/blob/upload": "GET",
 };
+
 export async function apiRequest<T extends Path>(
   path: T,
-  body: PathBodyMap[T]
+  body: PathBodyMap[T],
+  query?: Record<string, string>
 ): Promise<PathResponseMap[T]> {
+  const method = PATH_METHOD[path];
+  const headers = getHeaders();
+
+  const queryString = query ? "?" + new URLSearchParams(query).toString() : "";
+
   const options: RequestInit = {
-    method: PATH_METHOD[path],
-    headers: getHeaders(),
-    ...(body ? { body: JSON.stringify(body) } : {}),
+    method,
+    headers,
+    ...(method === "POST" && body ? { body: JSON.stringify(body) } : {}),
   };
 
   try {
-    const response = await fetch(serverBaseUrl + path, options);
+    const response = await fetch(`${serverBaseUrl}${path}${queryString}`, options);
     const json = await response.json();
 
     if (!response.ok) {
       console.error("Error response:", json);
       if (json.message) toast.error(json.message);
     }
+
     json.success = response.ok;
     return json as PathResponseMap[T];
   } catch (error: any) {

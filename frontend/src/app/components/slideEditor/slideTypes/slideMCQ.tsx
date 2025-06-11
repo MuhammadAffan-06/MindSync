@@ -147,7 +147,7 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
           {content.answers.map((answer, index) => (
             <li key={index}>
               <span
-                className={`border rounded-xl px-1 inline-block ${correctAnswer === answer ? "border-[var(--accent-color)] border-solid" : "border-black border-dashed"}`}
+                className={`border rounded-xl px-1 inline-block ${correctAnswer === answer ? "border-[var(--secondary-color)] border-solid" : "border-black border-dashed"}`}
               >
                 <input
                   placeholder={`Type Answer ${index + 1}`}
@@ -169,7 +169,7 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
                   hidden={answer == correctAnswer}
                   onMouseDown={(e) => e.preventDefault()}
                   onClick={() => setCorrectAnswer(answer)}
-                  className="ml-2 py-1 px-2 rounded bg-[var(--accent-color)] text-white disabled:bg-gray-400"
+                  className="ml-2 py-1 px-2 rounded bg-[var(--secondary-color)] text-white disabled:bg-gray-400"
                   title="Mark option as correct"
                 >
                   Mark

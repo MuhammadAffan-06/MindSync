@@ -78,10 +78,9 @@ if(success) setShowPresenter(true);
           )}
         </span>
         <span className="flex p-1 space-x-2">
-          <button className="text-white bg-[var(--accent-color)] rounded-full px-8 disabled:bg-gray-400" disabled={savingSlides || !slidesUpdated} onClick={()=>saveSlides()}>
+          <button className="text-white bg-[var(--secondary-color)] rounded-full px-8 disabled:bg-gray-400" disabled={savingSlides || !slidesUpdated} onClick={()=>saveSlides()}>
             Save
           </button>
-          <button className="text-[var(--secondary-color)] bg-[var(--background)] rounded-full px-8">Share</button>
           <button
             className="text-[var(--secondary-color)] border-2 border-[var(--secondary-color)] rounded-full px-8"
             onClick={onPreviewClick}

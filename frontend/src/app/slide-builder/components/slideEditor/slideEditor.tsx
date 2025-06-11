@@ -11,8 +11,10 @@ import SlideNotSelected from "@/app/components/slideEditor/slideTypes/slideNotSe
 import SlideMCQ from "@/app/components/slideEditor/slideTypes/slideMCQ";
 // import SlideTypeSelector from './slideTypes/slideTypeSelector';
 import SlideTypeSelector from "@/app/components/slideEditor/slideTypes/slideTypeSelector";
-import { useSlide } from "@/app/context/slideContext";
 import SlidePoll from "./slideTypes/slidePoll";
+import SlideImage from "@/app/components/slideEditor/slideTypes/slideImage";
+
+import { useSlide } from "@/app/context/slideContext";
 
 export default function SlideEditor() {
   console.log("Silde Editor Rendering..");
@@ -34,6 +36,7 @@ export default function SlideEditor() {
       {slide.type === "MCQ" && <SlideMCQ id={slide.clientId} />}
       {slide.type === "WordCloud" && <SlideWordCloud id={slide.clientId} />}
       {slide.type === "Poll" && <SlidePoll id={slide.clientId} />}
+      {slide.type === "Image" && <SlideImage id={slide.clientId} />}
       {slide.type === "Undefined" && <SlideTypeSelector id={slide.clientId} />}
 
     </div>

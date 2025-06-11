@@ -44,7 +44,7 @@ function SlideBuilder() {
         <SlideProvider presentationDataRef={presentationDataRef}>
           <SlideHeader mode={mode} setMode={setMode} />
           <div className="flex flex-col p-4 rounded-xl lg:flex-row bg-[var(--background)] lg:max-h-[calc(100vh-130px)] h-[calc(100vh-130px)] lg:h-[calc(100vh-130px)]">
-            <SlidePanel/>
+            {mode == "Building" && <SlidePanel/>}
             {mode === "Building" && <SlideEditor />}
             {mode === "Previewing" && <SlidePreviewer />}
           </div>

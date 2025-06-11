@@ -10,6 +10,7 @@ export const PATHS = [
   "/presentation/get",
   "/presentation/all",
   "/presentation/isLive",
+  "/blob/upload"
 ] as const;
 
 export type Path = (typeof PATHS)[number];

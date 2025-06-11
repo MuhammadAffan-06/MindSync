@@ -25,8 +25,7 @@ export default function SlideTypeSelector({ id }: SlideBaseProps) {
     {
       icon: "/icons/image-icon.svg",
       label: "Add Image",
-      type: "Image",
-      disabled: true,
+      type: "Image"
     },
     { icon: "/icons/mcq-icon.svg", label: "MCQ", type: "MCQ" },
   ];
