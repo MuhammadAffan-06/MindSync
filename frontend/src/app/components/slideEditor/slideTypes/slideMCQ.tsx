@@ -4,6 +4,7 @@ import { useSlide } from "@/app/context/slideContext";
 import { Slide, SlideBaseProps } from "@/app/types/slideTypes";
 import html2canvas from "html2canvas";
 import React, { useEffect, useState, useRef } from "react";
+import { BsX } from "react-icons/bs";
 
 export interface ContentProps {
   question: string;
@@ -35,16 +36,15 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
     }
   };
 
-  const [content, setContent] = useState<ContentProps>(() =>
-    parseSlideContent(slide)
-  );
-  const [correctAnswer, setCorrectAnswer] = useState<string>(
-    slide.correctAnswer || "Not Selected"
-  );
+  const [content, setContent] = useState<ContentProps>(() => parseSlideContent(slide));
+  const [correctAnswer, setCorrectAnswer] = useState<string>(slide.correctAnswer || "Not Selected");
   const contentRef = useRef<ContentProps>(content);
   const [answersCount, setAnswersCount] = useState(content.answers.length);
 
   const divRef = useRef<HTMLDivElement>(null);
+
+  const [focusedAnswerIndex, setFocusedAnswerIndex] = useState<number | null>(null);
+
   useEffect(() => {
     if (!slide) return;
     const newContent = parseSlideContent(slide);
@@ -55,18 +55,13 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
   }, [id]);
 
   useEffect(() => {
-    updateSlideInfo();
+    setTimeout(updateSlideInfo, 0);
   }, [correctAnswer]);
 
   const updateSlideInfo = () => {
     if (divRef.current) {
       html2canvas(divRef.current, { scale: 0.5 }).then((canvas) => {
-        updateSlideInfoById(
-          id,
-          JSON.stringify(contentRef.current),
-          canvas.toDataURL("image/webp", 0.2),
-          correctAnswer
-        );
+        updateSlideInfoById(id, JSON.stringify(contentRef.current), canvas.toDataURL("image/webp", 0.2), correctAnswer);
       });
     }
   };
@@ -77,17 +72,16 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
     setContent(updatedContent);
   };
 
-  const handleAnswersChange =
-    (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const updatedAnswerss = [...contentRef.current.answers];
-      updatedAnswerss[index] = e.target.value;
-      const updatedContent = {
-        ...contentRef.current,
-        answers: updatedAnswerss,
-      };
-      contentRef.current = updatedContent;
-      setContent(updatedContent);
+  const handleAnswersChange = (index: number) => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const updatedAnswerss = [...contentRef.current.answers];
+    updatedAnswerss[index] = e.target.value;
+    const updatedContent = {
+      ...contentRef.current,
+      answers: updatedAnswerss,
     };
+    contentRef.current = updatedContent;
+    setContent(updatedContent);
+  };
 
   const addAnswers = () => {
     if (answersCount < 5) {
@@ -99,16 +93,30 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
       contentRef.current = updatedContent;
       setContent(updatedContent);
       setAnswersCount(updatedAnswerss.length);
-      updateSlideInfo();
+    setFocusedAnswerIndex(null)
+
+      setTimeout(updateSlideInfo, 0);
     }
   };
 
-  const onAnswerInputRightClick = (
-    e: React.MouseEvent<HTMLInputElement, MouseEvent>
-  ) => {
-    e.preventDefault();
-    setCorrectAnswer(e.currentTarget.value);
+  const deleteAnswer = (index: number) => {
+    const updatedAnswers = contentRef.current.answers.filter((_, i) => i !== index);
+
+    if (contentRef.current.answers[index] === correctAnswer) {
+      setCorrectAnswer("Not Selected");
+    }
+    const updatedContent = {
+      ...contentRef.current,
+      answers: updatedAnswers,
+    };
+    contentRef.current = updatedContent;
+    setContent(updatedContent);
+    setAnswersCount(updatedAnswers.length);
+    setFocusedAnswerIndex(null)
+
+    setTimeout(updateSlideInfo, 0);
   };
+
 
   const handleMarksChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -136,31 +144,54 @@ export default function SlideMCQ({ id }: SlideBaseProps) {
           />
         </span>
         <ul className="p-8 space-y-5">
-          {content.answers.map((answers, index) => (
+          {content.answers.map((answer, index) => (
             <li key={index}>
               <span
-                className={`border rounded-xl px-1 inline-block ${correctAnswer === answers ? "border-lime-500 border-solid" : "border-black border-dashed"}`}
+                className={`border rounded-xl px-1 inline-block ${correctAnswer === answer ? "border-lime-500 border-solid" : "border-black border-dashed"}`}
               >
                 <input
-                  placeholder={`Type Answers ${index + 1}`}
-                  value={answers}
-                  size={answers.length}
+                  placeholder={`Type Answer ${index + 1}`}
+                  value={answer}
+                  size={answer.length}
                   maxLength={80}
                   onChange={handleAnswersChange(index)}
-                  onContextMenu={onAnswerInputRightClick}
-                  onBlur={updateSlideInfo}
+                  onBlur={(e) => {
+                    setFocusedAnswerIndex(null);
+                    setTimeout(updateSlideInfo, 0);
+                  }}
+                  onFocus={() => setFocusedAnswerIndex(index)}
                   className="placeholder-gray-500 py-1 w-full text-sm lg:w[60vw] lg:text-lg focus:outline-none focus:ring-0"
                 />
               </span>
+              {focusedAnswerIndex === index && (
+              <span>
+                  <button
+                  hidden={answer == correctAnswer}
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => setCorrectAnswer(answer)}
+                  className="ml-2 py-1 px-2 rounded bg-lime-500 text-white disabled:bg-gray-400"
+                  title="Mark option as correct"
+                >
+                  Mark
+                </button>
+                
+                  <button
+                  onMouseDown={(e) => e.preventDefault()}
+                  onClick={() => deleteAnswer(index)}
+                  className="ml-2 py-1 px-2 rounded bg-red-500 text-white"
+                  title="Delete this answer"
+                >
+                  X
+                </button>
+                
+              </span>
+              )}
             </li>
           ))}
           {answersCount < 5 && (
             <li>
               <span className="border-black border border-dashed rounded-xl px-2 inline-block w-max">
-                <button
-                  className="text-gray-500 py-1 w-full text-sm lg:w[60vw] lg:text-lg text-left"
-                  onClick={addAnswers}
-                >
+                <button className="text-gray-500 py-1 w-full text-sm lg:w[60vw] lg:text-lg text-left" onClick={addAnswers}>
                   + Add another Answers
                 </button>
               </span>
